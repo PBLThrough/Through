@@ -65,6 +65,10 @@ public class MailReader {
 
             FetchProfile fetchProfile = new FetchProfile();
             fetchProfile.add(FetchProfile.Item.ENVELOPE);
+            fetchProfile.add(FetchProfile.Item.FLAGS);
+            fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
+            fetchProfile.add("X-mailer");
+
             folder.fetch(messages, fetchProfile);
 
 
