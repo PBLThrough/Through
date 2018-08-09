@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/text_sender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/image_check"
+            android:layout_marginRight="10dp"
+            android:singleLine="true"
+            android:textSize="17dp"
+            android:textColor="@color/blackColor"
+            android:text="cafe.daum.net"/>
+
+        <ImageView
+            android:id="@+id/image_check"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="23dp"
+            android:layout_height="23dp" />
+
+        <TextView
+            android:id="@+id/text_subject"
+            android:layout_below="@+id/text_sender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:singleLine="true"
+            android:textSize="18dp"
+            android:text="카페는 남문에 하품과 투썸플레이스와 여러가지가 있다"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grayColor"
+        >
+    </View>
+</LinearLayout>
