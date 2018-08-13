@@ -58,8 +58,8 @@ public class MailReader {
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_ONLY);
 
-            Message messages[] = folder.getMessages(1,11);
             count=folder.getMessageCount();
+            Message messages[] = folder.getMessages(count - 15, count);
 
             Log.v("count", Integer.toString(count));
 
@@ -72,7 +72,7 @@ public class MailReader {
             folder.fetch(messages, fetchProfile);
 
 
-            for (int i = 1; i < 11; i++) {
+            for (int i = 15; i > 0; i--) {
                 String subject = messages[i].getSubject();
                 String from = String.valueOf(messages[i].getFrom()[0]);
                 readList.add(new ReadData(from, subject, false));

@@ -81,7 +81,8 @@ class ReadFragment : Fragment(), View.OnClickListener {
 
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = MailReader()
-            reader.readMail("dream7739", "hjmh9811387")
+
+            reader.readMail("djgmd1021@gmail.com", "@!gorden10")
             Log.v("list",readList.toString())
             return null
         }
