@@ -25,6 +25,7 @@ class SignActivity : AppCompatActivity() {
             var name = sign_name.text.toString()
             var id = sign_id.text.toString()
             var pwd = sign_pwd.text.toString()
+
             if (name == "" || id == "" || pwd == "") {
                 Toast.makeText(applicationContext, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show()
             } else {

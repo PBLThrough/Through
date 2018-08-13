@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import jm.through.R
+import javax.mail.internet.MimeUtility
 
 class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
@@ -14,8 +15,8 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         var content:String=dataList!!.get(position).mailContent
         var check:Boolean=dataList!!.get(position).check
 
-        holder!!.mailSender.text=title
-        holder!!.mailSubject.text=content
+        holder!!.mailSender.text= "발신자 : " + MimeUtility.decodeText(title)
+        holder!!.mailSubject.text= MimeUtility.decodeText(content)
 
         if(check)
         holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
