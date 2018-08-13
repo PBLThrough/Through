@@ -3,6 +3,8 @@ package jm.through.read;
 import android.util.Log;
 
 import javax.mail.*;
+import javax.mail.internet.MimeMessage;
+import javax.mail.search.FlagTerm;
 
 import java.security.Security;
 import java.util.*;
@@ -58,7 +60,8 @@ public class MailReader {
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_ONLY);
 
-            Message messages[] = folder.getMessages(1,11);
+
+           Message messages[] = folder.getMessages(1,11);
             count=folder.getMessageCount();
 
             Log.v("count", Integer.toString(count));
@@ -68,7 +71,6 @@ public class MailReader {
             fetchProfile.add(FetchProfile.Item.FLAGS);
             fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
             fetchProfile.add("X-mailer");
-
             folder.fetch(messages, fetchProfile);
 
 
