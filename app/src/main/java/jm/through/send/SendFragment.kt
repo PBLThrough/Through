@@ -20,8 +20,9 @@ class SendFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
-        var send_btn = view.findViewById(R.id.send) as Button
-        var attach_btn= view.findViewById(R.id.attach) as Button
+        var send_btn = view.findViewById(R.id.send) as Button //메일 보내기 버튼
+        var attach_btn= view.findViewById(R.id.attach) as Button //첨부파일 보내기 버튼
+
 
         attach_btn.setOnClickListener{
             val intent = Intent(Intent.ACTION_PICK)
