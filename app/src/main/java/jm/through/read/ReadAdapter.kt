@@ -8,6 +8,7 @@ import jm.through.R
 
 class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
+
     override fun onBindViewHolder(holder: ReadViewHolder?, position: Int) {
         var title:String=dataList!!.get(position).mailTitle
         var content:String=dataList!!.get(position).mailContent
