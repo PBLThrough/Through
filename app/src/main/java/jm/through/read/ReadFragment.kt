@@ -1,6 +1,7 @@
 package jm.through.read
 
 import android.app.Fragment
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -33,6 +34,11 @@ class ReadFragment : Fragment(), View.OnClickListener {
     @RequiresApi(Build.VERSION_CODES.M)
 
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        var readTask = ReadTask()
+        readTask.execute()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +49,6 @@ class ReadFragment : Fragment(), View.OnClickListener {
         checkRecycler = checkView.findViewById(R.id.recycler) as RecyclerView
         readProgress = checkView.findViewById(read_progress) as ProgressBar
 
-        var readTask = ReadTask()
-        readTask.execute()
 
         return checkView
     }
