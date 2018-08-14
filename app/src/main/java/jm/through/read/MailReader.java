@@ -67,18 +67,6 @@ public class MailReader {
             Message messages[] = localFolder.getMessages(count - 15, count);
 
 
-            Log.v("count", Integer.toString(count));
-
-            FetchProfile fetchProfile = new FetchProfile();
-<<<<<<< HEAD
-            fetchProfile.add(FetchProfile.Item.ENVELOPE);
-            fetchProfile.add(FetchProfile.Item.FLAGS);
-            fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
-            fetchProfile.add("X-mailer");
-            folder.fetch(messages, fetchProfile);
-=======
-            localFolder.fetch(messages, fetchProfile);
->>>>>>> c11166c4416e187b437a1c2bddb1b6843d8f062c
 
             for (int i = 15; i > 0; i--) {
                 String subject = messages[i].getSubject();
