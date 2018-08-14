@@ -19,11 +19,14 @@ import jm.through.R
 
 
 class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mail)
         toolbarSetting() //toolbar에 대한 설정
         nav_view.setNavigationItemSelectedListener(this) //navigationView(서랍)에 클릭리스너 달기
+
     }
 
     //menu 파일 inflate

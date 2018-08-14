@@ -70,7 +70,7 @@ public class MailReader {
             fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
             fetchProfile.add("X-mailer");
             folder.fetch(messages, fetchProfile);
-            
+
             for (int i = 15; i > 0; i--) {
                 String subject = messages[i].getSubject();
                 String from = String.valueOf(messages[i].getFrom()[0]);
