@@ -23,12 +23,6 @@ import kotlinx.android.synthetic.main.check_board_item.view.*
 
 class ReadFragment : Fragment(), View.OnClickListener  {
 
-    //TODO 너무 많은 시간이 걸림(가장 큰 문제)
-    //TODO 얼마만큼의 메일을 읽어올 것인지 모름(상의 후 수정)
-
-    //TODO 위의 문제가 해결이 된다면
-    //TODO 된다면 progressbar의 색을 변경하고 싶음
-    //TODO Adapter와 Listener부분을 잘 이해하지 못하겠음
 
     //var readList = ArrayList<ReadData>()//Data를 넣을 ArrayList
     lateinit var rAdapter: ReadAdapter //recycler연결시킬 adapte
@@ -63,10 +57,16 @@ class ReadFragment : Fragment(), View.OnClickListener  {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onClick(v: View?) {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
-        Toast.makeText(context, idx.toString(), Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, idx.toString(), Toast.LENGTH_SHORT).show()
+        var bundle = Bundle();
+            bundle.putInt("position",idx);
+//        bundle.putString("mailtitle",checkRecycler.text_sender);
+//        bundle.putString("mailmemo",checkRecycler.text_subject);
 
         var message = MessageFragment() as Fragment//메일 보내는 fragment
         var fm = fragmentManager //fragment교체에 필요한 fragmentManager
+
+        message.arguments = bundle;
 
         fm.beginTransaction().replace(R.id.fragment_container, message).commit()
     }
@@ -95,6 +95,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             var reader = MailReader()
 
             reader.readMail("cisspmit@naver.com", "@!qortls")
+
             Log.v("list",readList.toString())
             return null
         }
