@@ -25,7 +25,6 @@ public class MessageFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

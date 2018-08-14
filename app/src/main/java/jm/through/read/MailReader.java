@@ -3,6 +3,8 @@ package jm.through.read;
 import android.util.Log;
 
 import javax.mail.*;
+import javax.mail.internet.MimeMessage;
+import javax.mail.search.FlagTerm;
 
 import java.security.Security;
 import java.util.*;
@@ -23,13 +25,15 @@ public class MailReader {
 
         final String id = userName;
         final String pass = password;
+        final String host = "pop.naver.com";
         int count = 0;
         int position;
+
 
         try {
             Log.v("start success", "success");
             Properties props = new Properties();
-            props.put("mail.pop3.host", "pop.gmail.com");
+            props.put("mail.pop3.host",host);
             props.put("mail.pop3.port", "995");
             props.put("mail.pop3.socketFactory.port", "995");
             props.put("mail.pop3.socketFactory.class",
@@ -53,28 +57,20 @@ public class MailReader {
 
             Store store = session.getStore("pop3s");
 
-            store.connect("pop.gmail.com", id, pass);
+            store.connect(host, id, pass);
+
 
             Folder localFolder = store.getFolder("INBOX");
             localFolder.open(Folder.READ_ONLY);
 
-//            localFolder = store.getFolder("INBOX");
-//            localFolder.open(Folder.READ_ONLY);
-
-
             count = localFolder.getMessageCount();
             Message messages[] = localFolder.getMessages(count - 15, count);
+
 
             Log.v("count", Integer.toString(count));
 
             FetchProfile fetchProfile = new FetchProfile();
-//            fetchProfile.add(FetchProfile.Item.ENVELOPE);
-//            fetchProfile.add(FetchProfile.Item.FLAGS);
-//            fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
-//            fetchProfile.add("X-mailer");
-
             localFolder.fetch(messages, fetchProfile);
-
 
             for (int i = 15; i > 0; i--) {
                 String subject = messages[i].getSubject();
