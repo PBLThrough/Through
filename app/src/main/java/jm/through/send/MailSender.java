@@ -24,7 +24,7 @@ import java.security.Security;
 import java.util.Properties;
 
 public class MailSender extends javax.mail.Authenticator{
-    private String mailhost = "smtp.gmail.com";
+    private String mailhost = "smtp.naver.com";
     private String user;
     private String password;
     private Session session;

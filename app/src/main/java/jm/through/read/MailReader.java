@@ -19,18 +19,21 @@ public class MailReader {
     }
 
     static ArrayList<ReadData> readList = new ArrayList<>();
-
+//    static Folder localFolder;
+//    static int count;
     public ArrayList<ReadData> readMail(String userName, String password) {
 
         final String id = userName;
         final String pass = password;
+        final String host = "pop.naver.com";
         int count = 0;
         int position;
+
 
         try {
             Log.v("start success", "success");
             Properties props = new Properties();
-            props.put("mail.pop3.host", "pop.gmail.com");
+            props.put("mail.pop3.host",host);
             props.put("mail.pop3.port", "995");
             props.put("mail.pop3.socketFactory.port", "995");
             props.put("mail.pop3.socketFactory.class",
@@ -52,24 +55,30 @@ public class MailReader {
             Session session = Session.getDefaultInstance(props, auth);
             session.setDebug(true); //디버깅 로그
 
-
             Store store = session.getStore("pop3s");
 
-            store.connect("pop.gmail.com", id, pass);
+            store.connect(host, id, pass);
 
-            Folder folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_ONLY);
-            count=folder.getMessageCount();
-            Message messages[] = folder.getMessages(count - 15, count);
+
+            Folder localFolder = store.getFolder("INBOX");
+            localFolder.open(Folder.READ_ONLY);
+
+            count = localFolder.getMessageCount();
+            Message messages[] = localFolder.getMessages(count - 15, count);
+
 
             Log.v("count", Integer.toString(count));
 
             FetchProfile fetchProfile = new FetchProfile();
+<<<<<<< HEAD
             fetchProfile.add(FetchProfile.Item.ENVELOPE);
             fetchProfile.add(FetchProfile.Item.FLAGS);
             fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
             fetchProfile.add("X-mailer");
             folder.fetch(messages, fetchProfile);
+=======
+            localFolder.fetch(messages, fetchProfile);
+>>>>>>> c11166c4416e187b437a1c2bddb1b6843d8f062c
 
             for (int i = 15; i > 0; i--) {
                 String subject = messages[i].getSubject();
@@ -77,7 +86,7 @@ public class MailReader {
                 readList.add(new ReadData(from, subject, false));
             }
 
-            folder.close(false);
+            localFolder.close(false);
             store.close();
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
