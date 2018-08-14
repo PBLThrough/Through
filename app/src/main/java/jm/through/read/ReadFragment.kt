@@ -23,7 +23,6 @@ import jm.through.read.MailReader.readList
 class ReadFragment : Fragment(), View.OnClickListener  {
 
 
-    //var readList = ArrayList<ReadData>()//Data를 넣을 ArrayList
     lateinit var rAdapter: ReadAdapter //recycler연결시킬 adapte
     lateinit var checkRecycler: RecyclerView
     lateinit var readProgress: ProgressBar
@@ -85,7 +84,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = MailReader()
 
-            reader.readMail("dream7739", "ghdwjdals7739")
+            reader.readMail("youremail", "yourpass")
             Log.v("list",readList.toString())
             return null
         }

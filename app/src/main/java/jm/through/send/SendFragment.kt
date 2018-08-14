@@ -1,7 +1,6 @@
 package jm.through.send
 
 import android.app.Fragment
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,21 +14,26 @@ import android.annotation.TargetApi
 import android.provider.MediaStore.Images.Media.getBitmap
 import android.graphics.Bitmap
 import android.app.Activity.RESULT_OK
-import android.content.ContentResolver
 import android.os.Build
 import android.provider.MediaStore
-import android.content.CursorLoader
 import android.R.attr.data
 import android.annotation.SuppressLint
+import android.content.*
+import android.database.Cursor
 import android.net.Uri
+import android.os.Environment
 import android.provider.DocumentsContract
-
-
+import jm.through.R.drawable.cursor
+import android.os.Environment.getExternalStorageDirectory
+import android.support.annotation.RequiresApi
+import android.widget.Toast
+import java.net.URISyntaxException
 
 
 class SendFragment : Fragment() {
      val REQ_PICK_CODE = 100
-     var attach_url = ""
+     var attach_url:String? = null
+     var attach_list:ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +41,7 @@ class SendFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
         var send_btn = view.findViewById(R.id.send) as Button //메일 보내기 버튼
@@ -51,8 +56,6 @@ class SendFragment : Fragment() {
 
 
         }
-
-
 
 
         send_btn.setOnClickListener {
@@ -72,10 +75,12 @@ class SendFragment : Fragment() {
 
                         //받는사람, 제목, 내용은 변수로 받고 보내는 이는 서버의 user정보
                         //Mail을 보내는 부분
+                        Log.v("listlist", attach_list.toString())
                         sender.sendMail(subject,
-                                "youremail", recipient, body, attach_url)
+                                "youremail", recipient, body, attach_list)
                     } catch (e: Exception) {
                         Log.e("SendMail", e.message)
+                        Toast.makeText(context, "메일 전송 실패",Toast.LENGTH_SHORT).show()
                     }
                 }
             }.start()
@@ -91,8 +96,15 @@ class SendFragment : Fragment() {
         if (resultCode == RESULT_OK) {
             if(requestCode == REQ_PICK_CODE)
             {
-                val uri = data!!.data
-                attach_url = getRealPathFromURI(uri)
+                try {
+                    val uri = data!!.data
+                    attach_url = getPath(context,uri)
+                    attach_list.add(attach_url!!)
+                    Log.v("afterUri",attach_url)
+                }catch (e: Exception){
+                    Log.v("Fail", e.message)
+                }
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -100,24 +112,89 @@ class SendFragment : Fragment() {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private fun getRealPathFromURI(uri: Uri): String {
-        var filePath = ""
-        val fileId = DocumentsContract.getDocumentId(uri)
-        // Split at colon, use second item in the array
-        val id = fileId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-        val column = arrayOf(MediaStore.Images.Media.DATA)
-        val selector = MediaStore.Images.Media._ID + "=?"
-        val cursor = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, selector, arrayOf(id), null)
-        val columnIndex = cursor.getColumnIndex(column[0])
-        if (cursor.moveToFirst()) {
-            filePath = cursor.getString(columnIndex)
+    //TODO 공부해야 하는 부분
+    @Throws(URISyntaxException::class)
+    fun getPath(context: Context, uri: Uri): String? {
+        var uri = uri
+        val needToCheckUri = Build.VERSION.SDK_INT >= 19
+        var selection: String? = null
+        var selectionArgs: Array<String>? = null
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        // deal with different Uris.
+        if (needToCheckUri && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                Log.v("hi1", "hi")
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+            } else if (isDownloadsDocument(uri)) {
+                Log.v("hi2", "hi")
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                return split[1]
+
+//                val id = DocumentsContract.getDocumentId(uri)
+//                uri = ContentUris.withAppendedId(
+//                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+            } else if (isMediaDocument(uri)) {
+                Log.v("hi3", "hi")
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val type = split[0]
+                if ("image" == type) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                } else if ("video" == type) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                } else if ("audio" == type) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                }
+                selection = "_id=?"
+                selectionArgs = arrayOf(split[1])
+            }
         }
-        cursor.close()
+        if ("content".equals(uri.scheme, ignoreCase = true)) {
+            val projection = arrayOf(MediaStore.Images.Media.DATA)
+            var cursor: Cursor? = null
+            try {
+                cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null)
+                val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index)
+                }
+            } catch (e: Exception) {
+            }
 
-        Log.v("hihi", filePath)
-        return filePath
-
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            Log.v("hi5", "hi")
+            return uri.path
+        }
+        return null
     }
-}
+
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    fun isExternalStorageDocument(uri: Uri): Boolean {
+        return "com.android.externalstorage.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    fun isDownloadsDocument(uri: Uri): Boolean {
+        return "com.android.providers.downloads.documents" == uri.authority
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    fun isMediaDocument(uri: Uri): Boolean {
+        return "com.android.providers.media.documents" == uri.authority
+    }
+
+ }
+
