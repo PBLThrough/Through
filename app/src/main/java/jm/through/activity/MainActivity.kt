@@ -19,38 +19,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-<<<<<<< HEAD
-=======
-    // 액티비티 실행 시 호출, 리소스 초기화 (Button, TextView..)
-    private fun setupPermissions() {val permission = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.RECORD_AUDIO)
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.RECORD_AUDIO)) {
-                val builder = AlertDialog.Builder(this)
-                builder.setMessage("Permission to access the microphone is required for this app to record audio.")
-                        .setTitle("Permission required")
-
-                builder.setPositiveButton("OK"
-                ) { dialog, id -> makeRequest()
-                }
-
-                val dialog = builder.create()
-                dialog.show()
-            } else {
-                makeRequest()
-            }
-        }
-
-    }
-
-    private fun makeRequest() {
-        ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                RECORD_REQUEST_CODE)
-    }
->>>>>>> 00207eb2718d487479a496693fb5d2b3386afbaf
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
