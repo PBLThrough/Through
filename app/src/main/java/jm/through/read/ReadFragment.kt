@@ -19,6 +19,7 @@ import android.widget.Toast
 import jm.through.R
 import jm.through.R.id.*
 import jm.through.read.MailReader.readList
+import kotlinx.android.synthetic.main.check_board_item.view.*
 
 class ReadFragment : Fragment(), View.OnClickListener  {
 
@@ -35,18 +36,20 @@ class ReadFragment : Fragment(), View.OnClickListener  {
     lateinit var readProgress: ProgressBar
     @RequiresApi(Build.VERSION_CODES.M)
 
-
+    // Activity에 fragment 가 호출될 때
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         var readTask = ReadTask()
         readTask.execute()
     }
 
+    // 초기화해야하는 리스트를 초기화함
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
+    // 레이아웃을 inflate 하는 곳.
+    // view 객체를 얻을 수 있고 TextView, Button 등 초기화 가능
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val checkView: View = inflater!!.inflate(R.layout.fragment_check, container, false)
         checkRecycler = checkView.findViewById(R.id.recycler) as RecyclerView
@@ -91,7 +94,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = MailReader()
 
-            reader.readMail("id", "password")
+            reader.readMail("cisspmit@naver.com", "@!qortls")
             Log.v("list",readList.toString())
             return null
         }
