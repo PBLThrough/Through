@@ -29,7 +29,6 @@ public class MailReader {
         int count = 0;
         int position;
 
-
         try {
             Log.v("start success", "success");
             Properties props = new Properties();
@@ -63,16 +62,19 @@ public class MailReader {
             Folder localFolder = store.getFolder("INBOX");
             localFolder.open(Folder.READ_ONLY);
 
-            count = localFolder.getMessageCount();
-            Message messages[] = localFolder.getMessages(count - 15, count);
 
+            count = localFolder.getMessageCount();
+            // 메일 확인 , 메일 확인 누를시 중복 메일 발생
+            Message messages[] = localFolder.getMessages(count - 15, count);
 
 
             for (int i = 15; i > 0; i--) {
                 String subject = messages[i].getSubject();
                 String from = String.valueOf(messages[i].getFrom()[0]);
+//                String messages = String.valueOf()
                 readList.add(new ReadData(from, subject, false));
             }
+
 
             localFolder.close(false);
             store.close();

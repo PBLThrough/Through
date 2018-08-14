@@ -70,8 +70,8 @@ class SendFragment : Fragment() {
 
 
                         //서버에서 받아와야하는 정보 id, pwd(임의로 넣음)
-                        var sender: MailSender = MailSender("youremail",
-                                "yourpass")
+                        var sender: MailSender = MailSender("",
+                                "")
 
                         //받는사람, 제목, 내용은 변수로 받고 보내는 이는 서버의 user정보
                         //Mail을 보내는 부분
