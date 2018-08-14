@@ -2,10 +2,12 @@ package jm.through.read
 
 import android.app.Fragment
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,10 +17,10 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import jm.through.R
-import jm.through.R.id.read_progress
+import jm.through.R.id.*
 import jm.through.read.MailReader.readList
 
-class ReadFragment : Fragment(), View.OnClickListener {
+class ReadFragment : Fragment(), View.OnClickListener  {
 
     //TODO 너무 많은 시간이 걸림(가장 큰 문제)
     //TODO 얼마만큼의 메일을 읽어올 것인지 모름(상의 후 수정)
@@ -42,6 +44,7 @@ class ReadFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -49,14 +52,20 @@ class ReadFragment : Fragment(), View.OnClickListener {
         checkRecycler = checkView.findViewById(R.id.recycler) as RecyclerView
         readProgress = checkView.findViewById(read_progress) as ProgressBar
 
-
         return checkView
     }
 
+
+    //여기는 셀 하나를 클릭했을 때의 이벤트를 처리하는 곳이기 때문에 onClickListener를 사용할 필요가 읎요오!!!!!!!!!!!
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onClick(v: View?) {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
         Toast.makeText(context, idx.toString(), Toast.LENGTH_SHORT).show()
+
+        var message = MessageFragment() as Fragment//메일 보내는 fragment
+        var fm = fragmentManager //fragment교체에 필요한 fragmentManager
+
+        fm.beginTransaction().replace(R.id.fragment_container, message).commit()
     }
 
 
@@ -82,7 +91,7 @@ class ReadFragment : Fragment(), View.OnClickListener {
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = MailReader()
 
-            reader.readMail("djgmd1021@gmail.com", "@!gorden10")
+            reader.readMail("djgmd1021@gmail.com", "@!Gorden10")
             Log.v("list",readList.toString())
             return null
         }

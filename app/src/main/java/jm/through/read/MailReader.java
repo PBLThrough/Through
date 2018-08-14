@@ -17,7 +17,8 @@ public class MailReader {
     }
 
     static ArrayList<ReadData> readList = new ArrayList<>();
-
+//    static Folder localFolder;
+//    static int count;
     public ArrayList<ReadData> readMail(String userName, String password) {
 
         final String id = userName;
@@ -50,26 +51,29 @@ public class MailReader {
             Session session = Session.getDefaultInstance(props, auth);
             session.setDebug(true); //디버깅 로그
 
-
             Store store = session.getStore("pop3s");
 
             store.connect("pop.gmail.com", id, pass);
 
-            Folder folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_ONLY);
+            Folder localFolder = store.getFolder("INBOX");
+            localFolder.open(Folder.READ_ONLY);
 
-            count=folder.getMessageCount();
-            Message messages[] = folder.getMessages(count - 15, count);
+//            localFolder = store.getFolder("INBOX");
+//            localFolder.open(Folder.READ_ONLY);
+
+
+            count = localFolder.getMessageCount();
+            Message messages[] = localFolder.getMessages(count - 15, count);
 
             Log.v("count", Integer.toString(count));
 
             FetchProfile fetchProfile = new FetchProfile();
-            fetchProfile.add(FetchProfile.Item.ENVELOPE);
-            fetchProfile.add(FetchProfile.Item.FLAGS);
-            fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
-            fetchProfile.add("X-mailer");
+//            fetchProfile.add(FetchProfile.Item.ENVELOPE);
+//            fetchProfile.add(FetchProfile.Item.FLAGS);
+//            fetchProfile.add(FetchProfile.Item.CONTENT_INFO);
+//            fetchProfile.add("X-mailer");
 
-            folder.fetch(messages, fetchProfile);
+            localFolder.fetch(messages, fetchProfile);
 
 
             for (int i = 15; i > 0; i--) {
@@ -78,7 +82,7 @@ public class MailReader {
                 readList.add(new ReadData(from, subject, false));
             }
 
-            folder.close(false);
+            localFolder.close(false);
             store.close();
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
