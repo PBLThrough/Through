@@ -58,10 +58,13 @@ public class MailSender extends javax.mail.Authenticator{
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String sender, String recipients, String body, ArrayList<String> attachment_PathList) throws Exception {
+    public synchronized void sendMail(String subject, String sender, String recipients,
+                                      String body, ArrayList<String> attachment_PathList) throws Exception {
+
+
         try{
 
-            //TODO 다중 수신자
+            //TODO 다중 수신자 & chips 사용
 
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));

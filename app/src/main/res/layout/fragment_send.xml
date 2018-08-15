@@ -24,12 +24,21 @@
             android:text="받는 사람: "
             android:textSize="20dp" />
 
+
         <EditText
             android:id="@+id/edit_receiver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/text_receiver"
             android:textSize="20dp" />
+
+
+        <!--<com.pchmn.materialchips.ChipsInput-->
+            <!--android:id="@+id/chips_input"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@id/text_receiver"-->
+            <!--app:hint="Enter a name" />-->
     </RelativeLayout>
 
 
@@ -47,32 +56,13 @@
             android:text="제목: "
             android:textSize="20dp" />
 
+
         <EditText
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/text_title"
             android:textSize="20dp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right">
-
-        <Button
-            android:id="@+id/attach"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="첨부파일" />
-
-        <Button
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/attach"
-            android:text="보내기" />
     </RelativeLayout>
 
 

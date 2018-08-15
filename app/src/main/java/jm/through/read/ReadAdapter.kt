@@ -1,6 +1,7 @@
 package jm.through.read
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,14 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
         holder!!.mailSender.text = title.split("<")[0] // 발신자
         holder!!.mailSubject.text = content // 내용
-        holder!!.mailDate.text = dates.split(" ")[3];
+
+        if (dates != null) {
+            holder!!.mailDate.text = dates//.split(" ")[3];
+        } else {
+            holder!!.mailDate.text = dates
+        }
+        Log.v("printing title :" ,title);
+        Log.v("printing dates :", dates);
 
 //        if(check)
 //        holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
