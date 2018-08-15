@@ -35,15 +35,6 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    //툴바 클릭시 이벤트( 툴바 = 상단바)
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item!!.itemId
-
-        return if (id == R.id.action_settings) {
-            true
-        } else super.onOptionsItemSelected(item)
-
-    }
 
     /**서랍 아이템 클릭 시*/
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
