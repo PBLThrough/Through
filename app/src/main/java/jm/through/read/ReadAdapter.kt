@@ -14,14 +14,16 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         // ReadDate 요소 가져오기
         var title:String=dataList!!.get(position).mailTitle
         var content:String=dataList!!.get(position).mailContent
-        var check:Boolean=dataList!!.get(position).check
+        var dates:String =dataList!!.get(position).mailDate
+//        var check:Boolean=dataList!!.get(position).check
 
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
-        holder!!.mailSender.text = "발신자 : " + MimeUtility.decodeText(title)
-        holder!!.mailSubject.text = MimeUtility.decodeText(content)
+        holder!!.mailSender.text = title.split("<")[0] // 발신자
+        holder!!.mailSubject.text = content // 내용
+        holder!!.mailDate.text = dates.split(" ")[3];
 
-        if(check)
-        holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
+//        if(check)
+//        holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReadViewHolder {
