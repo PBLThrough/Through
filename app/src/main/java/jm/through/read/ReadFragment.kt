@@ -19,34 +19,30 @@ import android.widget.Toast
 import jm.through.R
 import jm.through.R.id.*
 import jm.through.read.MailReader.readList
+import kotlinx.android.synthetic.main.check_board_item.view.*
 
 class ReadFragment : Fragment(), View.OnClickListener  {
 
-    //TODO 너무 많은 시간이 걸림(가장 큰 문제)
-    //TODO 얼마만큼의 메일을 읽어올 것인지 모름(상의 후 수정)
 
-    //TODO 위의 문제가 해결이 된다면
-    //TODO 된다면 progressbar의 색을 변경하고 싶음
-    //TODO Adapter와 Listener부분을 잘 이해하지 못하겠음
-
-    //var readList = ArrayList<ReadData>()//Data를 넣을 ArrayList
     lateinit var rAdapter: ReadAdapter //recycler연결시킬 adapte
     lateinit var checkRecycler: RecyclerView
     lateinit var readProgress: ProgressBar
     @RequiresApi(Build.VERSION_CODES.M)
 
-
+    // Activity에 fragment 가 호출될 때
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         var readTask = ReadTask()
         readTask.execute()
     }
 
+    // 초기화해야하는 리스트를 초기화함
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
+    // 레이아웃을 inflate 하는 곳.
+    // view 객체를 얻을 수 있고 TextView, Button 등 초기화 가능
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val checkView: View = inflater!!.inflate(R.layout.fragment_check, container, false)
         checkRecycler = checkView.findViewById(R.id.recycler) as RecyclerView
@@ -60,10 +56,16 @@ class ReadFragment : Fragment(), View.OnClickListener  {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onClick(v: View?) {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
-        Toast.makeText(context, idx.toString(), Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, idx.toString(), Toast.LENGTH_SHORT).show()
+        var bundle = Bundle();
+            bundle.putInt("position",idx);
+//        bundle.putString("mailtitle",checkRecycler.text_sender);
+//        bundle.putString("mailmemo",checkRecycler.text_subject);
 
         var message = MessageFragment() as Fragment//메일 보내는 fragment
         var fm = fragmentManager //fragment교체에 필요한 fragmentManager
+
+        message.arguments = bundle;
 
         fm.beginTransaction().replace(R.id.fragment_container, message).commit()
     }
@@ -91,7 +93,8 @@ class ReadFragment : Fragment(), View.OnClickListener  {
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = MailReader()
 
-            reader.readMail("id", "password")
+
+            reader.readMail("youremail", "yourpass")
             Log.v("list",readList.toString())
             return null
         }

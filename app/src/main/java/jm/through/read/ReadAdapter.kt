@@ -17,8 +17,8 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         var check:Boolean=dataList!!.get(position).check
 
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
-        holder!!.mailSender.text= "발신자 : " + MimeUtility.decodeText(title)
-        holder!!.mailSubject.text= MimeUtility.decodeText(content)
+        holder!!.mailSender.text = "발신자 : " + MimeUtility.decodeText(title)
+        holder!!.mailSubject.text = MimeUtility.decodeText(content)
 
         if(check)
         holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
