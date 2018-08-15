@@ -1,6 +1,7 @@
 package jm.through.send;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class MailSender extends javax.mail.Authenticator{
@@ -55,38 +57,41 @@ public class MailSender extends javax.mail.Authenticator{
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String sender, String recipients, String body, String attach_url) throws Exception {
+    public synchronized void sendMail(String subject, String sender, String recipients, String body, ArrayList<String> attachment_PathList) throws Exception {
         try{
-            MimeMessage message = new MimeMessage(session);
 
-            // DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
-            message.setSender(new InternetAddress(sender));
+            //TODO 다중 수신자
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(sender));
             message.setSubject(subject);
-           // message.setDataHandler(handler);
 
             if (recipients.indexOf(',') > 0)
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
             else
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
 
-
-            BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText(body); //본문 메세지
-
-            //첨부파일 담기 위한 멀티파트
             Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(messageBodyPart);
 
-            // Part two is attachment
-            String filename = attach_url;
-            DataSource source = new FileDataSource(filename);
-            messageBodyPart.setDataHandler(new DataHandler(source));
-            messageBodyPart.setFileName(filename);
-            multipart.addBodyPart(messageBodyPart);
+            //메시지
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText(body);
+            multipart.addBodyPart(messageBodyPart); //본문 메세지
+
+            //첨부파일
+            if(attachment_PathList.size() != 0) {
+                for (String str : attachment_PathList) {
+                    messageBodyPart= new MimeBodyPart();
+                    DataSource source = new FileDataSource(str);
+                    messageBodyPart.setDataHandler(new DataHandler(source));
+                    messageBodyPart.setFileName(source.getName());
+                    multipart.addBodyPart(messageBodyPart);
+                }
+            }
 
             message.setContent(multipart);
-
             Transport.send(message);
+
         }catch(Exception e){
             e.printStackTrace();
         }

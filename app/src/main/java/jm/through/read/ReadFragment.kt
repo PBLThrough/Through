@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.check_board_item.view.*
 class ReadFragment : Fragment(), View.OnClickListener  {
 
 
-    //var readList = ArrayList<ReadData>()//Data를 넣을 ArrayList
     lateinit var rAdapter: ReadAdapter //recycler연결시킬 adapte
     lateinit var checkRecycler: RecyclerView
     lateinit var readProgress: ProgressBar
@@ -94,8 +93,8 @@ class ReadFragment : Fragment(), View.OnClickListener  {
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = MailReader()
 
-            reader.readMail("youremail","");
 
+            reader.readMail("youremail", "yourpass")
             Log.v("list",readList.toString())
             return null
         }
