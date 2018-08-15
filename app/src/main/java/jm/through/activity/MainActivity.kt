@@ -1,6 +1,8 @@
 package jm.through.activity
 
 import android.Manifest
+import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -16,9 +18,16 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import jm.through.R
 import kotlinx.android.synthetic.main.activity_main.*
+import java.security.Permission
 
 class MainActivity : AppCompatActivity() {
 
+    //퍼미션을 위한 변수
+    private var REQUEST_STORAGE = 1
+    private var PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+    @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,6 +44,12 @@ class MainActivity : AppCompatActivity() {
             sp_pwd = sp?.getString("pwd", "")
             edit_id.setText(sp_id)
             edit_pwd.setText(sp_pwd)
+        }
+
+        //권한 요청
+        if(!(checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)&&
+                checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))){
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         }
 
 
@@ -64,6 +79,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    //퍼미션을 체크하는 함수, 유저가 권한을 가지고 있을 경우 반환되는 값은 PackageManager.PERMISSION_GRANTED
+     fun checkPermission(activity: Activity, permission: String): Boolean {
+
+        var permissionResult:Int = ActivityCompat.checkSelfPermission(activity, permission)
+
+        return permissionResult == PackageManager.PERMISSION_GRANTED //true, false 반환
+    }
+
+//    fun requestPermission(activity:Activity, permissions:Array<String>, requestCode:Int){
+//        ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,REQUEST_STORAGE)
+//    }
 
     /**뒤로가기키 메인에서 누를 시 다이얼로그 출력**/
     override fun onBackPressed() {
