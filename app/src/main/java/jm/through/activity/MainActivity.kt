@@ -15,8 +15,10 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.widget.Toast
 import jm.through.R
+import jm.through.read.MessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.security.Permission
 
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
     //퍼미션을 체크하는 함수, 유저가 권한을 가지고 있을 경우 반환되는 값은 PackageManager.PERMISSION_GRANTED
      fun checkPermission(activity: Activity, permission: String): Boolean {
 
@@ -95,8 +98,37 @@ class MainActivity : AppCompatActivity() {
 
     /**뒤로가기키 메인에서 누를 시 다이얼로그 출력**/
     override fun onBackPressed() {
-        super.onBackPressed()
+//        if (getFragmentManager().getBackStackEntryCount() > 0){
+//            getFragmentManager().popBackStack();
+//        }else {
+//            super.onBackPressed()
+//        }
+        Log.v("MainActivity : ","onBackPressed Called")
+        super.onBackPressed();
+//
+//
+//        @Override
+//        public void onBackPressed() {
+//            if ( pressedTime == 0 ) {
+//                Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
+//                pressedTime = System.currentTimeMillis();
+//            }
+//            else {
+//                int seconds = (int) (System.currentTimeMillis() - pressedTime);
+//
+//                if ( seconds > 2000 ) {
+//                    Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
+//                    pressedTime = 0 ;
+//                }
+//                else {
+//                    super.onBackPressed();
+////                finish(); // app 종료 시키기
+//                }
+//            }
+//        }
 
+
+       
     }
 
 

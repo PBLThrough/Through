@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 public class MailSender extends javax.mail.Authenticator{
@@ -69,6 +70,7 @@ public class MailSender extends javax.mail.Authenticator{
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender));
             message.setSubject(subject);
+            message.setSentDate(new Date());
 
             if (recipients.indexOf(',') > 0)
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));

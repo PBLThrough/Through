@@ -56,11 +56,10 @@ class ReadFragment : Fragment(), View.OnClickListener  {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onClick(v: View?) {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
-        //Toast.makeText(context, idx.toString(), Toast.LENGTH_SHORT).show()
+
         var bundle = Bundle();
             bundle.putInt("position",idx);
-//        bundle.putString("mailtitle",checkRecycler.text_sender);
-//        bundle.putString("mailmemo",checkRecycler.text_subject);
+
 
         var message = MessageFragment() as Fragment//메일 보내는 fragment
         var fm = fragmentManager //fragment교체에 필요한 fragmentManager
@@ -94,7 +93,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             var reader = MailReader()
 
 
-            reader.readMail("youremail", "yourpass")
+            reader.readMail("youremail", "yourpassword")
             Log.v("list",readList.toString())
             return null
         }
@@ -111,6 +110,4 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             super.onPreExecute()
         }
     }
-
-
 }

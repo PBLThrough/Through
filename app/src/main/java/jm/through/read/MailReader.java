@@ -4,15 +4,19 @@ import android.util.Log;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.mail.search.FlagTerm;
 
 import java.security.Security;
 import java.util.*;
 
 import jm.through.send.JSSEProvider;
+import jm.through.send.MailSender;
 
-
-public class MailReader {
+/**
+ * MailReader = Pop3 하는 곳
+ * */
+public class MailReader extends javax.mail.Authenticator{
     static {
         Security.addProvider(new JSSEProvider());
 
@@ -69,10 +73,23 @@ public class MailReader {
 
 
             for (int i = 15; i > 0; i--) {
-                String subject = messages[i].getSubject();
-                String from = String.valueOf(messages[i].getFrom()[0]);
-//                String messages = String.valueOf()
-                readList.add(new ReadData(from, subject, false));
+                Message msg = messages[i];
+
+                String subject = MimeUtility.decodeText(msg.getSubject()); // 제목
+                String from = MimeUtility.decodeText(String.valueOf(msg.getFrom()[0])); // 발신자 + <계정>
+                String date = String.valueOf(msg.getSentDate()).split("G")[0];
+
+                // from 세분화 목록
+//                String fromName = from.split("<")[0]; // 발신자
+//                String fromAccount = from.substring(s+1,f-1); // 계정
+
+                // date 세분화 목록
+//                String date = String.valueOf(msg.getSentDate()).split("G")[0]; // 전체 내용
+//                String date_time = date.split(" ")[3]; // 시간
+//                int idx = date.indexOf(" ",8);
+//                String date_weekend = date.substring(0, idx); // 시간 제외 날짜
+
+                readList.add(new ReadData(from, subject, date,false));
             }
 
 
