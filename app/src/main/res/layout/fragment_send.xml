@@ -25,22 +25,22 @@
             android:textSize="20dp" />
 
 
-        <EditText
-            android:id="@+id/edit_receiver"
+
+        <com.pchmn.materialchips.ChipsInput
+            android:id="@+id/chips_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/text_receiver"
-            android:textSize="20dp" />
-
-
-        <!--<com.pchmn.materialchips.ChipsInput-->
-            <!--android:id="@+id/chips_input"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_toRightOf="@id/text_receiver"-->
-            <!--app:hint="Enter a name" />-->
+            android:layout_toRightOf="@id/text_receiver"
+            app:hint="Enter a name" />
     </RelativeLayout>
 
+
+    <EditText
+    android:id="@+id/edit_receiver"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/text_receiver" android:hint="수신자 입력"
+    android:textSize="20dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
