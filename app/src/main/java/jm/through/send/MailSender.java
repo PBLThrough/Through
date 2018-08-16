@@ -16,6 +16,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class MailSender extends javax.mail.Authenticator{
                     messageBodyPart= new MimeBodyPart();
                     DataSource source = new FileDataSource(str);
                     messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(source.getName());
+                    messageBodyPart.setFileName(MimeUtility.encodeText(source.getName()));
                     multipart.addBodyPart(messageBodyPart);
                 }
             }
