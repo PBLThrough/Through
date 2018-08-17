@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
+import jm.through.read.AttachData;
+
 public class MailSender extends javax.mail.Authenticator{
     private String mailhost = "smtp.naver.com";
     private String user;
@@ -60,7 +62,7 @@ public class MailSender extends javax.mail.Authenticator{
     }
 
     public synchronized void sendMail(String subject, String sender, String recipients,
-                                      String body, ArrayList<String> attachment_PathList) throws Exception {
+                                      String body, ArrayList<AttachData> attachment_PathList) throws Exception {
 
 
         try{
@@ -88,9 +90,9 @@ public class MailSender extends javax.mail.Authenticator{
 
             //첨부파일
             if(attachment_PathList.size() != 0) {
-                for (String str : attachment_PathList) {
+                for (AttachData data : attachment_PathList) {
                     messageBodyPart= new MimeBodyPart();
-                    DataSource source = new FileDataSource(str);
+                    DataSource source = new FileDataSource(data.getFileUri());
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(MimeUtility.encodeText(source.getName()));
                     multipart.addBodyPart(messageBodyPart);

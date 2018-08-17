@@ -28,7 +28,7 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignActivity" />
         <activity android:name=".activity.MailActivity" />
-        <activity android:name=".send.SendFragment" />
+        <activity android:name=".send.SendActivity" />
         <activity android:name=".read.ReadFragment" />
         <activity android:name=".send.PracticeActivity" />
     </application>

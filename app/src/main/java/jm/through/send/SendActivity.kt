@@ -30,46 +30,99 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.PermissionChecker.checkSelfPermission
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.Toast
 import com.pchmn.materialchips.ChipsInput
 import com.pchmn.materialchips.model.ChipInterface
-import jm.through.R.id.action_attach
-import jm.through.R.id.action_send
 import jm.through.chips.ContactChip
+import jm.through.read.AttachAdapter
+import jm.through.read.AttachData
+import kotlinx.android.synthetic.main.app_bar_mail.*
+import java.io.File
 import java.net.URISyntaxException
 
 
+class SendActivity : AppCompatActivity() {
+    lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapte
 
-
-class SendFragment : Fragment() {
-     val REQ_PICK_CODE = 100
-     var attach_url:String? = null
-     var attach_list:ArrayList<String> = ArrayList()
+    val REQ_PICK_CODE = 100
+    var attach_uri: String? = null
+    var attach_list: ArrayList<AttachData> = ArrayList()
 
     //Chips
-     lateinit var mChipsInput:ChipsInput
-     private lateinit var mContactList: ArrayList<ContactChip>
+    lateinit var mChipsInput: ChipsInput
+    private lateinit var mContactList: ArrayList<ContactChip>
 
 
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setContentView(R.layout.fragment_send)
+
+       // addChips()
+        addToolbar()
+        addRecycler()
     }
 
 
-    //menu 재정의
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.sendmenu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+    fun addRecycler() {
+        rAdapter = AttachAdapter(attach_list)
+        attach_recycler.adapter = rAdapter
+        attach_recycler.layoutManager = LinearLayoutManager(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    fun addToolbar() {
+        setSupportActionBar(toolbar)
+        toolbar.title = "메일 쓰기"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true) //뒤로가기 만들
+    }
+
+//    @TargetApi(Build.VERSION_CODES.M)
+//    fun addChips()
+//        //chips 연락처
+//        mContactList = ArrayList()
+//        mChipsInput = findViewById(R.id.chips_input)
+//
+//        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
+//            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
+//                Log.e(TAG, "chip added, $newSize")
+//            }
+//
+//            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
+//                Log.e(TAG, "chip removed, $newSize")
+//            }
+//
+//            override fun onTextChanged(text: CharSequence) {
+//                Log.e(TAG, "text changed: " + text.toString())
+//            }
+//        })
+//
+//        //permission Check (위치 애매)
+//        if (checkSelfPermission(this,
+//                        android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
+//                    1)
+//        } else {
+//            getContactList()
+//        }
+//    }
+
+
+    //toolbar menu create
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.sendmenu, menu)
+        return true
+    }
+
+    //toolbar item select
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
-        Log.v("item_id", item.toString())
         when (item!!.itemId) {
+
+            android.R.id.home -> finish() //뒤로 가기 누르면 꺼지게
+
             R.id.action_attach -> {
                 Log.i("item id ", item.getItemId().toString() + "")
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -77,13 +130,14 @@ class SendFragment : Fragment() {
                 startActivityForResult(intent, REQ_PICK_CODE)
                 return true
             }
+
             R.id.action_send -> {
                 Log.i("item id ", item.getItemId().toString() + "")
                 //Exception 나서 네트워크 연결 시 Thread사용
                 if (goMail()) {
-                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show()
-                }else {
-                    Toast.makeText(context, "fail", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "success", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
                 }
                 return true
             }
@@ -92,71 +146,45 @@ class SendFragment : Fragment() {
     }
 
 
-
-
-    //onCreateView
-    @TargetApi(Build.VERSION_CODES.M)
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
-        mChipsInput = view.findViewById(R.id.chips_input) as ChipsInput
-        mContactList = ArrayList()
-
-
-        // chips listener
-        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
-            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
-                Log.e(TAG, "chip added, $newSize")
-            }
-
-            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
-                Log.e(TAG, "chip removed, $newSize")
-            }
-
-            override fun onTextChanged(text: CharSequence) {
-                Log.e(TAG, "text changed: " + text.toString())
-            }
-        })
-
-
-        return view
-    }
-
-
-
+    //file manager select result
     @TargetApi(Build.VERSION_CODES.M)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
-            if(requestCode == REQ_PICK_CODE)
-            {
+            if (requestCode == REQ_PICK_CODE) {
                 try {
                     val uri = data!!.data
-                    attach_url = getPath(context,uri)
-                    attach_list.add(attach_url!!)
-                    Log.v("afterUri",attach_url)
-                }catch (e: Exception){
+                    attach_uri = getPath(this, uri)
+                    addAttach(attach_uri!!) //첨부파일 첨부
+                    Log.v("afterUri", attach_uri)
+                } catch (e: Exception) {
                     Log.v("Fail", e.message)
                 }
+                rAdapter.notifyDataSetChanged()
 
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if (checkSelfPermission(context,
-                        android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ) {
-            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
-                    1)
-        } else {
-            getContactList()
-        }
+    fun addAttach(uri: String) {
+        var file: File = File(uri)
+
+        var fileUri = uri
+        var fileSize = file.length()
+        var fileName = file.name
+        var fileType = fileName.split('.')[1]
+
+        attach_list.add(AttachData(fileUri,fileType, fileName, fileSize))
+        Log.v("fileInfo", attach_list.toString())
     }
 
+
+
+
+    //sending email
     @TargetApi(Build.VERSION_CODES.M)
-    fun goMail () : Boolean{
+    fun goMail(): Boolean {
         var flag = true
 
         Thread {
@@ -175,7 +203,7 @@ class SendFragment : Fragment() {
                     //Mail을 보내는 부분
                     Log.v("listlist", attach_list.toString())
                     sender.sendMail(subject,
-                           "dream7739@naver.com", recipient, body, attach_list)
+                            "dream7739@naver.com", recipient, body, attach_list)
                 } catch (e: Exception) {
                     Log.e("SendMail", e.message)
                     flag = false
@@ -187,9 +215,8 @@ class SendFragment : Fragment() {
     }
 
 
-
-
     //TODO 공부해야 하는 부분
+    //get file path from file manager
     @Throws(URISyntaxException::class)
     fun getPath(context: Context, uri: Uri): String? {
         var uri = uri
@@ -274,15 +301,11 @@ class SendFragment : Fragment() {
     }
 
 
-
-    /**
-     * Get the contacts of the user and add each contact in the mContactList
-     * And finally pass the mContactList to the mChipsInput
-     */
+    //get contactList
     @TargetApi(Build.VERSION_CODES.M)
     fun getContactList() {
         Log.v("hello", "hihi")
-        val phones = context.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+        val phones = this.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
 
         // loop over all contacts
         if (phones != null) {
@@ -298,7 +321,7 @@ class SendFragment : Fragment() {
 
                 // get phone number
                 if (Integer.parseInt(phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    val pCur = context.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                    val pCur = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf<String>(id), null)
 
                     while (pCur != null && pCur!!.moveToNext()) {
@@ -311,7 +334,7 @@ class SendFragment : Fragment() {
 
                 val contactChip = ContactChip(id, avatarUri, name, phoneNumber)
                 // add contact to the list
-               mContactList.add(contactChip)
+                mContactList.add(contactChip)
             }
             phones!!.close()
         }
@@ -320,7 +343,6 @@ class SendFragment : Fragment() {
         mChipsInput.filterableList = mContactList
     }
 
-// pass the ContactChip list
 
 
 
