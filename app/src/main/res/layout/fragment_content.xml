@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     >
 
-
+<!-- 메일 상세내용 창 -->
     <TextView
         android:id="@+id/message_content_title"
         android:layout_width="wrap_content"

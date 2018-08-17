@@ -8,11 +8,6 @@ import java.io.*;
 /**
  * imap 실험중
  * */
-/**
- * My JavaMail email address extractor.
- * A JavaMail API example.
- * @author alvin alexander, alvinalexander.com.
- */
 public class AddressExtractor
 {
 
