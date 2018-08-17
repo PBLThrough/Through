@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
 <!-- 메일 상세내용 창 -->
     <TextView
@@ -27,6 +26,12 @@
         android:layout_margin="5dp"
         android:textColor="@color/grayColor"
         />
+
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/content_recycler"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</android.support.v7.widget.RecyclerView>
 
     <TextView
         android:id="@+id/message_content_memo"

@@ -15,6 +15,7 @@ import com.sun.mail.iap.Argument;
 import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -55,7 +56,16 @@ public class MessageFragment extends Fragment {
 
             String getSubject = readList.get(a).component1().split("<")[0]; // subject
             String getFrom = readList.get(a).component2(); // from
-            String getDate = readList.get(a).component3(); // date
+            Date getDate = readList.get(a).component3(); // date
+
+//            SimpleDateFormat df = new SimpleDateFormat("EE M/d/yy");
+//            System.out.println("1 getDate = "+getDate);
+//            System.out.println("1 dated = " +df.format(dated));
+//            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
+//            String mTime = mSimpleDateFormat.format(getDate);
+
+
+
 
             if (getDate != "null") {
                 String getDate_date = getDate.split(" ")[3]; // 시간

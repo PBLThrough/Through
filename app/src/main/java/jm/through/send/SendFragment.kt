@@ -168,14 +168,14 @@ class SendFragment : Fragment() {
 
 
                     //서버에서 받아와야하는 정보 id, pwd(임의로 넣음)
-                    var sender: MailSender = MailSender("youremail",
-                            "yourpassword")
+                    var sender: MailSender = MailSender("dream7739@naver.com",
+                            "ghdwjdals7739")
 
                     //받는사람, 제목, 내용은 변수로 받고 보내는 이는 서버의 user정보
                     //Mail을 보내는 부분
                     Log.v("listlist", attach_list.toString())
                     sender.sendMail(subject,
-                           "youremail", recipient, body, attach_list)
+                           "dream7739@naver.com", recipient, body, attach_list)
                 } catch (e: Exception) {
                     Log.e("SendMail", e.message)
                     flag = false

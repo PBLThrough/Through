@@ -73,6 +73,7 @@ public class MailSender extends javax.mail.Authenticator{
             message.setSubject(subject);
             message.setSentDate(new Date());
 
+
             if (recipients.indexOf(',') > 0)
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
             else
@@ -96,6 +97,7 @@ public class MailSender extends javax.mail.Authenticator{
                 }
             }
 
+            Log.v("messageDate",message.getSentDate().toString());
             message.setContent(multipart);
             Transport.send(message);
 
