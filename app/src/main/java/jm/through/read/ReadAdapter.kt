@@ -6,10 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import jm.through.R
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.mail.internet.MimeUtility
 
 class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
+    // 현재 시각
+    val currentTime = Date()
+    val mSimpleDateFormat = SimpleDateFormat("yy.MM.dd", Locale.KOREA)
+    val mTime = mSimpleDateFormat.format(currentTime)
 
     override fun onBindViewHolder(holder: ReadViewHolder?, position: Int) {
         // ReadDate 요소 가져오기
@@ -21,14 +27,33 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
         holder!!.mailSender.text = title.split("<")[0] // 발신자
         holder!!.mailSubject.text = content // 내용
+        println("currentdate = "+currentTime  );
 
-        if (dates != null) {
-            holder!!.mailDate.text = dates//.split(" ")[3];
+
+        if (dates != "null") {
+            var returnValue = dates.split(" ")[3];
+            var timeset = Integer.parseInt(returnValue.substring(0,2)); // 오전, 오후로 나눌 시간
+            var behinddates = returnValue.substring(3,5);
+
+            // 오늘일 경우
+            if (dates.toString().substring(0,9) == currentTime.toString().substring(0,9)){
+                // 오전, 오후
+                if (timeset >= 12 && timeset <=24) {
+                    timeset -= 12;
+                    returnValue = "오후 " + timeset +":"+ behinddates;
+                }
+                else if (timeset >=0){
+                    returnValue = "오전 " + timeset +":"+ behinddates;
+                }
+                holder!!.mailDate.text = returnValue
+            }
+            else {
+                holder!!.mailDate.text = mTime
+            }
         } else {
-            holder!!.mailDate.text = dates
+            // date = "null"
+            holder!!.mailDate.text = "정보 없음"
         }
-        Log.v("printing title :" ,title);
-        Log.v("printing dates :", dates);
 
 //        if(check)
 //        holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)

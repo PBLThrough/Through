@@ -1,5 +1,6 @@
 package jm.through.send
 
+import android.Manifest
 import android.app.Fragment
 import android.os.Bundle
 import android.util.Log
@@ -16,19 +17,26 @@ import android.provider.MediaStore
 import android.R.attr.data
 import android.annotation.SuppressLint
 import android.content.*
+import android.content.ContentValues.TAG
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import jm.through.R.drawable.cursor
 import android.os.Environment.getExternalStorageDirectory
+import android.provider.ContactsContract
 import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.PermissionChecker.checkSelfPermission
 import android.view.*
 import android.widget.Toast
 import com.pchmn.materialchips.ChipsInput
 import com.pchmn.materialchips.model.ChipInterface
 import jm.through.R.id.action_attach
 import jm.through.R.id.action_send
+import jm.through.chips.ContactChip
 import java.net.URISyntaxException
 
 
@@ -39,11 +47,19 @@ class SendFragment : Fragment() {
      var attach_url:String? = null
      var attach_list:ArrayList<String> = ArrayList()
 
+    //Chips
+     lateinit var mChipsInput:ChipsInput
+     private lateinit var mContactList: ArrayList<ContactChip>
+
+
+    @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
+
+    //menu 재정의
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.sendmenu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -78,23 +94,34 @@ class SendFragment : Fragment() {
 
 
 
+    //onCreateView
+    @TargetApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
-//        var chipsInput: ChipsInput = view.findViewById(R.id.chips_input)
-//
-//        var contactList =  ArrayList<ContactChip>()
-//        contactList.add(ContactChip())
-//        chipsInput.setFilterableList(contactList);
-//
-//        val contactsSelected = chipsInput.selectedChipList as List<ContactChip>
+        mChipsInput = view.findViewById(R.id.chips_input) as ChipsInput
+        mContactList = ArrayList()
 
 
-// pass the ContactChip list
+        // chips listener
+        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
+            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
+                Log.e(TAG, "chip added, $newSize")
+            }
+
+            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
+                Log.e(TAG, "chip removed, $newSize")
+            }
+
+            override fun onTextChanged(text: CharSequence) {
+                Log.e(TAG, "text changed: " + text.toString())
+            }
+        })
 
 
         return view
-
     }
+
+
 
     @TargetApi(Build.VERSION_CODES.M)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,6 +143,17 @@ class SendFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (checkSelfPermission(context,
+                        android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ) {
+            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
+                    1)
+        } else {
+            getContactList()
+        }
+    }
 
     @TargetApi(Build.VERSION_CODES.M)
     fun goMail () : Boolean{
@@ -237,5 +275,54 @@ class SendFragment : Fragment() {
 
 
 
- }
+    /**
+     * Get the contacts of the user and add each contact in the mContactList
+     * And finally pass the mContactList to the mChipsInput
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    fun getContactList() {
+        Log.v("hello", "hihi")
+        val phones = context.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+
+        // loop over all contacts
+        if (phones != null) {
+            while (phones!!.moveToNext()) {
+                // get contact info
+                var phoneNumber: String? = null
+                val id = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts._ID))
+                val name = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val avatarUriString = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
+                var avatarUri: Uri? = null
+                if (avatarUriString != null)
+                    avatarUri = Uri.parse(avatarUriString)
+
+                // get phone number
+                if (Integer.parseInt(phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                    val pCur = context.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf<String>(id), null)
+
+                    while (pCur != null && pCur!!.moveToNext()) {
+                        phoneNumber = pCur!!.getString(pCur!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    }
+
+                    pCur!!.close()
+
+                }
+
+                val contactChip = ContactChip(id, avatarUri, name, phoneNumber)
+                // add contact to the list
+               mContactList.add(contactChip)
+            }
+            phones!!.close()
+        }
+
+        // pass contact list to chips input
+        mChipsInput.filterableList = mContactList
+    }
+
+// pass the ContactChip list
+
+
+
+}
 
