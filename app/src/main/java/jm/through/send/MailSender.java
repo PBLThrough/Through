@@ -66,9 +66,10 @@ public class MailSender extends javax.mail.Authenticator{
         try{
 
             //TODO 다중 수신자 & chips 사용
+            //TODO 메일 보낼 때 에러나면 fail메시지 처리
 
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(sender));
+            message.setFrom(new  InternetAddress(sender));
             message.setSubject(subject);
             message.setSentDate(new Date());
 
