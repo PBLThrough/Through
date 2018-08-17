@@ -77,7 +77,8 @@ public class MailReader extends javax.mail.Authenticator{
 
                 String subject = MimeUtility.decodeText(msg.getSubject()); // 제목
                 String from = MimeUtility.decodeText(String.valueOf(msg.getFrom()[0])); // 발신자 + <계정>
-                String date = String.valueOf(msg.getSentDate()).split("G")[0];
+                Date date = msg.getSentDate();
+
 
                 //Date tempdate = msg.getSentDate();
 

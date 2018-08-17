@@ -46,9 +46,6 @@ public class MessageFragment extends Fragment {
         final TextView memoString = (TextView)v.findViewById(R.id.message_content_memo);
         final TextView dateString = (TextView)v.findViewById(R.id.message_content_time);
 
-//        Date date = new Date();
-//        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yy.MM.dd");
-//        String mTime = mSimpleDateFormat.format(date);
 
         if (getArguments() != null) {
             Bundle bundle = getArguments();
@@ -58,46 +55,46 @@ public class MessageFragment extends Fragment {
             String getFrom = readList.get(a).component2(); // from
             Date getDate = readList.get(a).component3(); // date
 
-//            SimpleDateFormat df = new SimpleDateFormat("EE M/d/yy");
-//            System.out.println("1 getDate = "+getDate);
-//            System.out.println("1 dated = " +df.format(dated));
-//            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-//            String mTime = mSimpleDateFormat.format(getDate);
 
 
+            SimpleDateFormat df = new SimpleDateFormat("EE M/d/yy");
+            String mTime = df.format(getDate);
+            System.out.println("beforeDate  = "+getDate.toString());
+            System.out.println("after Date= " +mTime);
+            dateString.setText(mTime);
 
 
-            if (getDate != "null") {
-                String getDate_date = getDate.split(" ")[3]; // 시간
-                int getDate_date_time = Integer.parseInt(getDate_date.substring(0, 2));
-                String getDate_date_behind = getDate_date.substring(2, 8);
-
-                // 오전, 오후 변환
-                if (getDate_date_time >= 12 && getDate_date_time <= 24) {
-                    getDate_date_time -= 12;
-                    getDate_date = ", 오후 " + getDate_date_time + getDate_date_behind;
-                } else if (getDate_date_time >= 0) {
-                    getDate_date = ", 오전 " + getDate_date_time + getDate_date_behind;
-                }
-                getDate = getDate.substring(0, 9) + getDate_date;
-            }
-            else {
-                getDate = "시간 정보 없음";
-            }
-//            SimpleDateFormat df = new SimpleDateFormat("EE M/d/yy"); // 금 8/17/18
-//            Date dated = new Date();
-//            //df.format(getDate);
-//           // System.out.println("1 getDate = "+getDate);
-//            System.out.println("1 dated = " +df.format(dated));
-
-
-//            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-                //           String mTime = mSimpleDateFormat.format(getDate);
-                //System.out.println("Getdate = "+getDate); // Thu Aug 16 08:21:11
-                //         System.out.println("mTime = "+mTime);
+//            if (getDate != "null") {
+//                String getDate_date = getDate.split(" ")[3]; // 시간
+//                int getDate_date_time = Integer.parseInt(getDate_date.substring(0, 2));
+//                String getDate_date_behind = getDate_date.substring(2, 8);
+//
+//                // 오전, 오후 변환
+//                if (getDate_date_time >= 12 && getDate_date_time <= 24) {
+//                    getDate_date_time -= 12;
+//                    getDate_date = ", 오후 " + getDate_date_time + getDate_date_behind;
+//                } else if (getDate_date_time >= 0) {
+//                    getDate_date = ", 오전 " + getDate_date_time + getDate_date_behind;
+//                }
+//                getDate = getDate.substring(0, 9) + getDate_date;
+//            }
+//            else {
+//                getDate = "시간 정보 없음";
+//            }
+////            SimpleDateFormat df = new SimpleDateFormat("EE M/d/yy"); // 금 8/17/18
+////            Date dated = new Date();
+////            //df.format(getDate);
+////           // System.out.println("1 getDate = "+getDate);
+////            System.out.println("1 dated = " +df.format(dated));
+//
+//
+////            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
+//                //           String mTime = mSimpleDateFormat.format(getDate);
+//                //System.out.println("Getdate = "+getDate); // Thu Aug 16 08:21:11
+//                //         System.out.println("mTime = "+mTime);
 
                 titleString.setText(getSubject);
-                dateString.setText(getDate);
+//                dateString.setText(getDate);
                 memoString.setText(getFrom);
             }
 
