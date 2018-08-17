@@ -14,7 +14,7 @@ import jm.through.send.JSSEProvider;
 import jm.through.send.MailSender;
 
 /**
- * MailReader = Pop3 하는 곳
+ * MailReader = Pop3
  * */
 public class MailReader extends javax.mail.Authenticator{
     static {
@@ -78,6 +78,8 @@ public class MailReader extends javax.mail.Authenticator{
                 String subject = MimeUtility.decodeText(msg.getSubject()); // 제목
                 String from = MimeUtility.decodeText(String.valueOf(msg.getFrom()[0])); // 발신자 + <계정>
                 String date = String.valueOf(msg.getSentDate()).split("G")[0];
+
+                //Date tempdate = msg.getSentDate();
 
                 // from 세분화 목록
 //                String fromName = from.split("<")[0]; // 발신자

@@ -21,9 +21,11 @@ import jm.through.R.id.*
 import jm.through.read.MailReader.readList
 import kotlinx.android.synthetic.main.check_board_item.view.*
 
+/**
+ * ReadFragment <- ReadAdapter, ReadViewholder
+ * */
+
 class ReadFragment : Fragment(), View.OnClickListener  {
-
-
     lateinit var rAdapter: ReadAdapter //recycler연결시킬 adapte
     lateinit var checkRecycler: RecyclerView
     lateinit var readProgress: ProgressBar
