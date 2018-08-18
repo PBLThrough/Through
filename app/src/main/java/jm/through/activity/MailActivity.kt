@@ -1,6 +1,7 @@
 package jm.through.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -11,12 +12,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import jm.through.read.ReadFragment
-import jm.through.send.SendFragment
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import jm.through.R
+import jm.through.send.SendActivity
 
 
 class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +32,11 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this) //navigationView(서랍)에 클릭리스너 달기
         backPressCloseHandler = BackPressCloseHandler(this)
 
+        send_fab.setOnClickListener{
+            val sendIntent = Intent(this, SendActivity::class.java)
+            startActivity(sendIntent)
+            overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
+        }
     }
 
 
@@ -46,17 +52,12 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //서랍에 들어가는 아이템들 = 메뉴 형태, 인자를 보면 MenuItem인 것을 볼 수 있음.
 
         val id = item.itemId
-        var send = SendFragment() //메일 보내는 fragment
         var read = ReadFragment() //메일 받는 fragment
 
         //menu 폴더 -> main.xml을 열어보면 id값들이 있음. 그 항목들의 id를 받아서
         //클릭 됬는지 알려준다.
 
-        if (id == R.id.nav_camera) {
-            var fm = fragmentManager //fragment교체에 필요한 fragmentManager
-            fm.beginTransaction().replace(R.id.fragment_container, send).commit() //fragment_container를 activity_mail.xml에서 찾아보세용ㅎ_ㅎ
-            toolbar.title = "메일 쓰기" //fragment_container를 SendFragment로 채워주고 commit해서 교체!, 툴바의 titled은 "메일 쓰기"로 바꿔준다.
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_gallery) {
             var fm = fragmentManager
             fm.beginTransaction().replace(R.id.fragment_container, read).commit()
             toolbar.title = "메일 확인"

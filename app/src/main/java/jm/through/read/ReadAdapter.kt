@@ -25,19 +25,23 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         // ReadDate 요소 가져오기
         var title:String=dataList!!.get(position).mailTitle
         var content:String=dataList!!.get(position).mailMemo
-        var dates:String =dataList!!.get(position).mailDate
+        var dates:Date =dataList!!.get(position).mailDate
 //        var check:Boolean=dataList!!.get(position).check
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
         holder!!.mailSender.text = title.split("<")[0] // 발신자
         holder!!.mailSubject.text = content // 내용
 
-        if (dates != "null") {
-            var returnValue = dates.split(" ")[3];
+        val date =dates.toString().split("G".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
+
+
+
+        if (date != "null") {
+            var returnValue = date.split(" ")[3];
             var timeset = Integer.parseInt(returnValue.substring(0,2)); // 오전, 오후로 나눌 시간
             var behinddates = returnValue.substring(3,5);
 
             // 오늘일 경우
-            if (dates.toString().substring(0,9) == currentTime.toString().substring(0,9)){
+            if (date.substring(0,9) == currentTime.toString().substring(0,9)){
                 // 오전, 오후
                 if (timeset >= 12 && timeset <= 24) {
                     timeset -= 12;

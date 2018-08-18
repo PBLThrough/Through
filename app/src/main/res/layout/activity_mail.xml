@@ -26,8 +26,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp">
-        </FrameLayout>
 
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/send_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:backgroundTint="#ffb65d"
+                android:src="@drawable/pencil"
+                app:fabSize="auto"
+                app:useCompatPadding="true" />
+
+        </FrameLayout>
     </LinearLayout>
 
 
