@@ -146,32 +146,32 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-    //onCreateView
-    @TargetApi(Build.VERSION_CODES.M)
-    fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
-       // mChipsInput = view.findViewById(R.id.chips_input) as ChipsInput
-        mContactList = ArrayList()
-
-
-        // chips listener
-        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
-            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
-                Log.e(TAG, "chip added, $newSize")
-            }
-
-            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
-                Log.e(TAG, "chip removed, $newSize")
-            }
-
-            override fun onTextChanged(text: CharSequence) {
-                Log.e(TAG, "text changed: " + text.toString())
-            }
-        })
-
-
-        return view
-    }
+//    //onCreateView
+//    @TargetApi(Build.VERSION_CODES.M)
+//    fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+//        var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
+//       // mChipsInput = view.findViewById(R.id.chips_input) as ChipsInput
+//        mContactList = ArrayList()
+//
+//
+//        // chips listener
+//        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
+//            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
+//                Log.e(TAG, "chip added, $newSize")
+//            }
+//
+//            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
+//                Log.e(TAG, "chip removed, $newSize")
+//            }
+//
+//            override fun onTextChanged(text: CharSequence) {
+//                Log.e(TAG, "text changed: " + text.toString())
+//            }
+//        })
+//
+//
+//        return view
+//    }
 
 
     //file manager select result
@@ -244,8 +244,7 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-    //TODO 공부해야 하는 부분
-    //get file path from file manager
+    //TODO 드라이브 기능
     @Throws(URISyntaxException::class)
     fun getPath(context: Context, uri: Uri): String? {
         var uri = uri
@@ -261,14 +260,20 @@ class SendActivity : AppCompatActivity() {
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
             } else if (isDownloadsDocument(uri)) {
-                Log.v("hi2", "hi")
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                return split[1]
+               Log.v("hi2", "hi")
+                var id = DocumentsContract.getDocumentId(uri);
+                Log.v("downloadId", id.toString())
 
-//                val id = DocumentsContract.getDocumentId(uri)
-//                uri = ContentUris.withAppendedId(
-//                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                //raw 파일 처리
+                if (id.split(":")[0] == "raw"){
+                    Log.v("rawdata", "hihi")
+                    return id.split(":")[1]
+                }else {
+                    Log.v("norawdata","hihi")
+                    var contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), id.toLong())
+                    return getDataColumn(context, contentUri, null, null)
+                }
             } else if (isMediaDocument(uri)) {
                 Log.v("hi3", "hi")
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -300,6 +305,25 @@ class SendActivity : AppCompatActivity() {
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
             Log.v("hi5", "hi")
             return uri.path
+        }
+        return null
+    }
+
+    fun getDataColumn(context: Context, uri: Uri, selection: String?,
+                      selectionArgs: Array<String>?): String? {
+
+        var cursor: Cursor? = null
+        val column = "_data"
+        val projection = arrayOf(column)
+
+        try {
+            cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
+            if (cursor != null && cursor.moveToFirst()) {
+                val index = cursor.getColumnIndexOrThrow(column)
+                return cursor.getString(index)
+            }
+        } finally {
+            cursor?.close()
         }
         return null
     }

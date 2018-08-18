@@ -29,7 +29,6 @@ class AttachAdapter(var dataList: ArrayList<AttachData>): RecyclerView.Adapter<A
         holder!!.fileSize.text = dataList!!.get(position).fileSize.toString() //사이즈
 
 
-
         //확장자 명에 따른 이미지 변경
         var type = dataList!!.get(position).fileType
 
@@ -38,8 +37,10 @@ class AttachAdapter(var dataList: ArrayList<AttachData>): RecyclerView.Adapter<A
         }
 
         holder!!.deleteImage.setOnClickListener {
+            Log.v("deletePosition",position.toString())
             dataList!!.removeAt(position)
             notifyItemRemoved(position)
+            notifyDataSetChanged()
         }
 
     }
