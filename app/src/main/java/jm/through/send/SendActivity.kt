@@ -47,7 +47,7 @@ import java.net.URISyntaxException
 
 class SendActivity : AppCompatActivity() {
     lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapte
-
+    var context: Context = this
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
     var attach_list: ArrayList<AttachData> = ArrayList()
@@ -62,14 +62,14 @@ class SendActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_send)
 
-       // addChips()
+        // addChips()
         addToolbar()
         addRecycler()
     }
 
 
     fun addRecycler() {
-        rAdapter = AttachAdapter(attach_list)
+        rAdapter = AttachAdapter(this, attach_list)
         attach_recycler.adapter = rAdapter
         attach_recycler.layoutManager = LinearLayoutManager(this)
     }
@@ -124,7 +124,6 @@ class SendActivity : AppCompatActivity() {
             android.R.id.home -> finish() //뒤로 가기 누르면 꺼지게
 
             R.id.action_attach -> {
-                Log.i("item id ", item.getItemId().toString() + "")
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.type = "*/*"
                 startActivityForResult(intent, REQ_PICK_CODE)
@@ -132,16 +131,17 @@ class SendActivity : AppCompatActivity() {
             }
 
             R.id.action_send -> {
-                Log.i("item id ", item.getItemId().toString() + "")
-                //Exception 나서 네트워크 연결 시 Thread사용
-                if (goMail()) {
-                    Toast.makeText(this, "success", Toast.LENGTH_SHORT).show()
+                if (edit_receiver.text.toString().trim() == "" ||
+                        edit_title.text.toString().trim() == "") {
+                    Toast.makeText(this, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
+                    goMail()
                 }
+
                 return true
             }
         }
+
         return false
     }
 
@@ -188,9 +188,9 @@ class SendActivity : AppCompatActivity() {
                     Log.v("afterUri", attach_uri)
                 } catch (e: Exception) {
                     Log.v("Fail", e.message)
+                    Toast.makeText(this, "파일을 가져오는데 실패했습니다", Toast.LENGTH_SHORT).show()
                 }
-                rAdapter.notifyDataSetChanged()
-
+                rAdapter.notifyDataSetChanged() //addAttach될 시 list내용이 변경되기 때문에 adapter에 알리기
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -198,49 +198,61 @@ class SendActivity : AppCompatActivity() {
 
     fun addAttach(uri: String) {
         var file: File = File(uri)
+        var totalFileSize:Long = 0
 
         var fileUri = uri
         var fileSize = file.length()
         var fileName = file.name
         var fileType = fileName.split('.')[1]
 
-        attach_list.add(AttachData(fileUri,fileType, fileName, fileSize))
-        Log.v("fileInfo", attach_list.toString())
+        for(attachData in attach_list) {
+            totalFileSize += attachData.fileSize //기존 파일 크기
+        }
+        totalFileSize += fileSize //현재 select해서 가져온 파일 크기
+
+        //gmail 20MB 이상일 시, naver 10MB 이상일 시(상황에 따라 처리 But 속도가 느릴 수 있음.)
+        if (totalFileSize  > 10485760) {
+            Toast.makeText(this, "파일첨부는 10MB를 넘을 수 없습니다", Toast.LENGTH_SHORT).show()
+        } else {
+            attach_list.add(AttachData(fileUri, fileType, fileName, fileSize))
+            Log.v("fileInfo", attach_list.toString())
+            Log.v("totalFileSize", totalFileSize.toString())
+        }
     }
-
-
 
 
     //sending email
     @TargetApi(Build.VERSION_CODES.M)
-    fun goMail(): Boolean {
+    fun goMail() {
         var flag = true
 
         Thread {
             run {
                 try {
+                    Log.v("attachList", attach_list.toString())
+
                     var recipient = edit_receiver.text.toString().trim()
                     var subject = edit_title.text.toString().trim()
                     var body = email_body.text.toString().trim()
 
-
-                    //서버에서 받아와야하는 정보 id, pwd(임의로 넣음)
                     var sender: MailSender = MailSender("dream7739@naver.com",
                             "ghdwjdals7739")
-
-                    //받는사람, 제목, 내용은 변수로 받고 보내는 이는 서버의 user정보
-                    //Mail을 보내는 부분
-                    Log.v("listlist", attach_list.toString())
                     sender.sendMail(subject,
                             "dream7739@naver.com", recipient, body, attach_list)
+
                 } catch (e: Exception) {
-                    Log.e("SendMail", e.message)
+                    Log.e("SendMailLog", e.message)
                     flag = false
                 }
             }
         }.start()
 
-        return flag
+        if (flag){
+            Toast.makeText(this, "메일전송 성공",Toast.LENGTH_SHORT).show()
+        }else {
+            Toast.makeText(this, "메일전송 실패",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
 
@@ -260,16 +272,16 @@ class SendActivity : AppCompatActivity() {
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
             } else if (isDownloadsDocument(uri)) {
-               Log.v("hi2", "hi")
+                Log.v("hi2", "hi")
                 var id = DocumentsContract.getDocumentId(uri);
                 Log.v("downloadId", id.toString())
 
                 //raw 파일 처리
-                if (id.split(":")[0] == "raw"){
+                if (id.split(":")[0] == "raw") {
                     Log.v("rawdata", "hihi")
                     return id.split(":")[1]
-                }else {
-                    Log.v("norawdata","hihi")
+                } else {
+                    Log.v("norawdata", "hihi")
                     var contentUri = ContentUris.withAppendedId(
                             Uri.parse("content://downloads/public_downloads"), id.toLong())
                     return getDataColumn(context, contentUri, null, null)
@@ -395,8 +407,6 @@ class SendActivity : AppCompatActivity() {
         // pass contact list to chips input
         mChipsInput.filterableList = mContactList
     }
-
-
 
 
 }

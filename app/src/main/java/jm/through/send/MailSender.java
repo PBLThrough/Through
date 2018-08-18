@@ -65,6 +65,7 @@ public class MailSender extends javax.mail.Authenticator{
                                       String body, ArrayList<AttachData> attachment_PathList) throws Exception {
 
 
+
         try{
 
             //TODO 다중 수신자 & chips 사용
