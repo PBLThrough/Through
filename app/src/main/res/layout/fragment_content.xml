@@ -8,24 +8,42 @@
 <!-- 메일 상세내용 창 -->
     <TextView
         android:id="@+id/message_content_title"
-        android:layout_width="wrap_content"
+        android:layout_width="305dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="5dp"
         android:text="제목"
-        android:textSize="25dp"
-        android:textStyle="normal"/>
+        android:textSize="23dp"
+        android:textStyle="normal" />
 
     <TextView
         android:id="@+id/message_content_time"
-        android:layout_width="wrap_content"
+        android:layout_width="269dp"
         android:layout_height="wrap_content"
-        android:text="18.08.13 오후 7:15:45"
-        android:textSize="20dp"
         android:layout_margin="5dp"
+        android:text="18.08.13 오후 7:15:45"
         android:textColor="@color/grayColor"
-        />
+
+        android:textSize="17dp" />
+
+    <!--<fragment-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp">-->
+<!--&lt;!&ndash; 여기에 첨부파일을 넣고 싶은데 어떻게 하지&ndash;&gt;-->
+
+    <!--</fragment>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/message_content_item"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginEnd="5dp"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginStart="5dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:text="첨부파일"-->
+        <!--android:textSize="15dp" />-->
 
 <android.support.v7.widget.RecyclerView
     android:id="@+id/content_recycler"
@@ -41,7 +59,7 @@
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
         android:text="내용"
-        android:textSize="18dp" />
+        android:textSize="16dp" />
 
 
 </LinearLayout>

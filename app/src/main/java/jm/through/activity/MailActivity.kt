@@ -15,11 +15,14 @@ import jm.through.read.ReadFragment
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import jm.through.R
 import jm.through.send.SendActivity
 
 
 class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    var backPressCloseHandler = BackPressCloseHandler (this);
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +30,7 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_mail)
         toolbarSetting() //toolbar에 대한 설정
         nav_view.setNavigationItemSelectedListener(this) //navigationView(서랍)에 클릭리스너 달기
+        backPressCloseHandler = BackPressCloseHandler(this)
 
         send_fab.setOnClickListener{
             val sendIntent = Intent(this, SendActivity::class.java)
@@ -104,7 +108,13 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            backPressCloseHandler.onBackPressed()
+
+            Toast.makeText(applicationContext,"메일 뒤로가기",Toast.LENGTH_SHORT);
+//            super.onBackPressed()
+
         }
     }
+
+
 }

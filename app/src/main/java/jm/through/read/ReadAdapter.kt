@@ -27,7 +27,6 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         var content:String=dataList!!.get(position).mailMemo
         var dates:Date =dataList!!.get(position).mailDate
 //        var check:Boolean=dataList!!.get(position).check
-
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
         holder!!.mailSender.text = title.split("<")[0] // 발신자
         holder!!.mailSubject.text = content // 내용
@@ -70,8 +69,6 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         mainView.setOnClickListener(onItemClick)
         return ReadViewHolder(mainView)
     }
-
-
 
     override fun getItemCount(): Int = dataList.size
 

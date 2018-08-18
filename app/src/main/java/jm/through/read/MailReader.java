@@ -80,8 +80,6 @@ public class MailReader extends javax.mail.Authenticator{
                 Date date = msg.getSentDate();
 
 
-                //Date tempdate = msg.getSentDate();
-
                 // from 세분화 목록
 //                String fromName = from.split("<")[0]; // 발신자
 //                String fromAccount = from.substring(s+1,f-1); // 계정

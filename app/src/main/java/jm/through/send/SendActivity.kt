@@ -146,7 +146,36 @@ class SendActivity : AppCompatActivity() {
     }
 
 
+    //onCreateView
+    @TargetApi(Build.VERSION_CODES.M)
+    fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
+       // mChipsInput = view.findViewById(R.id.chips_input) as ChipsInput
+        mContactList = ArrayList()
+
+
+        // chips listener
+        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
+            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
+                Log.e(TAG, "chip added, $newSize")
+            }
+
+            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
+                Log.e(TAG, "chip removed, $newSize")
+            }
+
+            override fun onTextChanged(text: CharSequence) {
+                Log.e(TAG, "text changed: " + text.toString())
+            }
+        })
+
+
+        return view
+    }
+
+
     //file manager select result
+
     @TargetApi(Build.VERSION_CODES.M)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
