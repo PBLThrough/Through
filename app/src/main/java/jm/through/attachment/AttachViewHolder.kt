@@ -7,9 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import jm.through.R
 
-/**
- * ReadViewHolder <- check_board_item
- * */
+
 class AttachViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
 

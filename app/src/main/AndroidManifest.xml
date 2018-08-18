@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -31,6 +30,7 @@
         <activity android:name=".send.SendActivity" />
         <activity android:name=".read.ReadFragment" />
         <activity android:name=".send.PracticeActivity" />
+        <activity android:name=".form.FormActivity"></activity>
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import jm.through.R
+import jm.through.form.FormActivity
 import jm.through.send.SendActivity
 
 
@@ -33,10 +34,11 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         backPressCloseHandler = BackPressCloseHandler(this)
 
         send_fab.setOnClickListener{
-            val sendIntent = Intent(this, SendActivity::class.java)
-            startActivity(sendIntent)
+            val formIntent = Intent(this, FormActivity::class.java)
+            startActivity(formIntent)
             overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
         }
+
     }
 
 
