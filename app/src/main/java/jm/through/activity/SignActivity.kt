@@ -45,6 +45,7 @@ class SignActivity : AppCompatActivity() {
     /**뒤로가기 시 로그인으로*/
     override fun onBackPressed() {
         var intent=Intent(this,MainActivity::class.java)
+        Toast.makeText(applicationContext,"사인 뒤로가기",Toast.LENGTH_SHORT);
         startActivity(intent)
         finish() //종료
     }

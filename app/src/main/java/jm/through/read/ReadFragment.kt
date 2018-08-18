@@ -100,6 +100,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             return null
         }
 
+
         override fun onCancelled(result: Void?) {
             super.onCancelled(result)
         }
