@@ -41,15 +41,14 @@
             android:background="@null"
             android:textSize="15sp" />
 
-        <!--<com.pchmn.materialchips.ChipsInput-->
-            <!--android:id="@+id/chips_input"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_toRightOf="@id/text_receiver"-->
-            <!--app:hint="Enter a name" />-->
+
     </RelativeLayout>
 
-
+        <com.pchmn.materialchips.ChipsInput
+            android:id="@+id/chips_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="Enter a name" />
 
 
     <RelativeLayout
