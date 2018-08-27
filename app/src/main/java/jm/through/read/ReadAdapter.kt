@@ -1,10 +1,12 @@
 package jm.through.read
 
+import android.media.Image
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import jm.through.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,6 +21,7 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
     // 현재 시각
     val currentTime = Date()
     val mSimpleDateFormat = SimpleDateFormat("yy.MM.dd", Locale.KOREA)
+    val hSimpleDateFormat = SimpleDateFormat("aa hh:mm", Locale.KOREA)
     val mTime = mSimpleDateFormat.format(currentTime)
 
     override fun onBindViewHolder(holder: ReadViewHolder?, position: Int) {
@@ -26,40 +29,26 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         var title:String=dataList!!.get(position).mailTitle
         var content:String=dataList!!.get(position).mailMemo
         var dates:Date =dataList!!.get(position).mailDate
+      //  var image:ImageView = dataList!!.get(position).mailImage
+
 //        var check:Boolean=dataList!!.get(position).check
         // ReadViewHolder의 text를 가져온 ReadData 로 채우기
         holder!!.mailSender.text = title.split("<")[0] // 발신자
         holder!!.mailSubject.text = content // 내용
 
-        val date =dates.toString().split("G".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
 
-
-
-        if (date != "null") {
-            var returnValue = date.split(" ")[3];
-            var timeset = Integer.parseInt(returnValue.substring(0,2)); // 오전, 오후로 나눌 시간
-            var behinddates = returnValue.substring(3,5);
-
-            // 오늘일 경우
-            if (date.substring(0,9) == currentTime.toString().substring(0,9)){
-                // 오전, 오후
-                if (timeset >= 12 && timeset <= 24) {
-                    timeset -= 12;
-                    returnValue = "오후 " + timeset +":"+ behinddates;
-                }
-                else if (timeset >= 0){
-                    returnValue = "오전 " + timeset +":"+ behinddates;
-                }
-                holder!!.mailDate.text = returnValue
-            }
-            else {
-                holder!!.mailDate.text = mTime
-            }
-        } else {
-            // date = "null"
-            holder!!.mailDate.text = "정보 없음"
+        // 메일 날짜가 오늘일 때 오전, 오후 표시
+        if (dates.toString() != "null"){
+            if ( mSimpleDateFormat.format(dates) == mTime){
+                holder!!.mailDate.text = hSimpleDateFormat.format(dates);
+           }
+            else
+                holder!!.mailDate.text = mSimpleDateFormat.format(dates);
         }
+        else
+            holder!!.mailDate.text = "정보 없음"
 
+       // holder!!.mail
 //        if(check)
 //        holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
     }
