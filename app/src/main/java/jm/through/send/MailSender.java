@@ -1,5 +1,6 @@
 package jm.through.send;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,11 +26,12 @@ import java.io.OutputStream;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import jm.through.read.AttachData;
 
-public class MailSender extends javax.mail.Authenticator{
+public class MailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.naver.com";
     private String user;
     private String password;
@@ -61,26 +63,40 @@ public class MailSender extends javax.mail.Authenticator{
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String sender, String recipients,
+    public synchronized Boolean sendMail(String subject, String sender, List<String> recipients,
                                       String body, ArrayList<AttachData> attachment_PathList) throws Exception {
 
+        Boolean flag = true;
 
+        try {
 
-        try{
-
-            //TODO 다중 수신자 & chips 사용
-            //TODO 메일 보낼 때 에러나면 fail메시지 처리
+            //TODO chips 사용
 
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new  InternetAddress(sender));
+            message.setFrom(new InternetAddress(sender)); //full주소가 들어가야 함
             message.setSubject(subject);
             message.setSentDate(new Date());
 
+            int numOfRecipient = recipients.size();
 
-            if (recipients.indexOf(',') > 0)
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
-            else
-                message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+            Log.v("sizesize", Integer.toString(numOfRecipient));
+            Log.v("contentcontent", recipients.toString());
+
+            InternetAddress[] toAddr = new InternetAddress[recipients.size()];
+
+
+            //다중 수신자
+            if(numOfRecipient > 1){
+                for (int i = 0; i < recipients.size(); i++) {
+                    toAddr[i] = new InternetAddress(recipients.get(i));
+                }
+            }else {
+                toAddr[0] = new InternetAddress(recipients.get(0));
+            }
+
+            Log.v("convertadress1", toAddr[0].toString());
+
+            message.setRecipients(Message.RecipientType.TO, toAddr);
 
             Multipart multipart = new MimeMultipart();
 
@@ -90,9 +106,9 @@ public class MailSender extends javax.mail.Authenticator{
             multipart.addBodyPart(messageBodyPart); //본문 메세지
 
             //첨부파일
-            if(attachment_PathList.size() != 0) {
+            if (attachment_PathList.size() != 0) {
                 for (AttachData data : attachment_PathList) {
-                    messageBodyPart= new MimeBodyPart();
+                    messageBodyPart = new MimeBodyPart();
                     DataSource source = new FileDataSource(data.getFileUri());
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(MimeUtility.encodeText(source.getName()));
@@ -100,13 +116,17 @@ public class MailSender extends javax.mail.Authenticator{
                 }
             }
 
-            Log.v("messageDate",message.getSentDate().toString());
+            Log.v("messageDate", message.getSentDate().toString());
             message.setContent(multipart);
             Transport.send(message);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            flag = false;
+            Log.v("functionFlag", flag.toString());
+
         }
+        return flag;
     }
 
     public class ByteArrayDataSource implements DataSource {

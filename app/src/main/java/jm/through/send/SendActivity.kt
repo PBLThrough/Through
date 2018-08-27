@@ -1,38 +1,22 @@
 package jm.through.send
 
-import android.Manifest
-import android.app.Fragment
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import jm.through.R
 import kotlinx.android.synthetic.main.fragment_send.*
-import android.R.attr.data
 import android.annotation.TargetApi
-import android.provider.MediaStore.Images.Media.getBitmap
-import android.graphics.Bitmap
-import android.app.Activity.RESULT_OK
 import android.os.Build
 import android.provider.MediaStore
-import android.R.attr.data
-import android.annotation.SuppressLint
 import android.content.*
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
-import android.provider.DocumentsContract
-import jm.through.R.drawable.cursor
-import android.os.Environment.getExternalStorageDirectory
 import android.provider.ContactsContract
-import android.support.annotation.RequiresApi
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.PermissionChecker.checkSelfPermission
+import android.provider.DocumentsContract
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.Toast
 import com.pchmn.materialchips.ChipsInput
@@ -62,7 +46,7 @@ class SendActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_send)
 
-        // addChips()
+        addChips()
         addToolbar()
         addRecycler()
     }
@@ -80,35 +64,38 @@ class SendActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true) //뒤로가기 만들
     }
 
-//    @TargetApi(Build.VERSION_CODES.M)
-//    fun addChips()
-//        //chips 연락처
-//        mContactList = ArrayList()
-//        mChipsInput = findViewById(R.id.chips_input)
-//
-//        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
-//            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
-//                Log.e(TAG, "chip added, $newSize")
-//            }
-//
-//            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
-//                Log.e(TAG, "chip removed, $newSize")
-//            }
-//
-//            override fun onTextChanged(text: CharSequence) {
-//                Log.e(TAG, "text changed: " + text.toString())
-//            }
-//        })
-//
-//        //permission Check (위치 애매)
-//        if (checkSelfPermission(this,
-//                        android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
-//                    1)
-//        } else {
-//            getContactList()
-//        }
-//    }
+    @TargetApi(Build.VERSION_CODES.M)
+    fun addChips(){
+        //chips 연락처
+        mContactList = ArrayList()
+        mChipsInput = findViewById(R.id.chips_input)
+
+        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
+            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
+                Log.e(TAG, "chip added, $newSize")
+            }
+
+            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
+                Log.e(TAG, "chip removed, $newSize")
+            }
+
+            override fun onTextChanged(text: CharSequence) {
+                Log.e(TAG, "text changed: " + text.toString())
+            }
+        })
+
+
+        //permission Check (위치 애매)
+        if (checkSelfPermission(android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
+                    1)
+        } else {
+            getContactList()
+        }
+    }
+
+
+
 
 
     //toolbar menu create
@@ -146,32 +133,6 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-//    //onCreateView
-//    @TargetApi(Build.VERSION_CODES.M)
-//    fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//        var view: View = inflater!!.inflate(R.layout.fragment_send, container, false)
-//       // mChipsInput = view.findViewById(R.id.chips_input) as ChipsInput
-//        mContactList = ArrayList()
-//
-//
-//        // chips listener
-//        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
-//            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
-//                Log.e(TAG, "chip added, $newSize")
-//            }
-//
-//            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
-//                Log.e(TAG, "chip removed, $newSize")
-//            }
-//
-//            override fun onTextChanged(text: CharSequence) {
-//                Log.e(TAG, "text changed: " + text.toString())
-//            }
-//        })
-//
-//
-//        return view
-//    }
 
 
     //file manager select result
@@ -224,7 +185,6 @@ class SendActivity : AppCompatActivity() {
     //sending email
     @TargetApi(Build.VERSION_CODES.M)
     fun goMail() {
-        var flag = true
 
         Thread {
             run {
@@ -232,26 +192,28 @@ class SendActivity : AppCompatActivity() {
                     Log.v("attachList", attach_list.toString())
 
                     var recipient = edit_receiver.text.toString().trim()
+                    val recipientList = recipient.split(",") //콤마로 구분
+
                     var subject = edit_title.text.toString().trim()
                     var body = email_body.text.toString().trim()
 
-                    var sender: MailSender = MailSender("dream7739@naver.com",
-                            "ghdwjdals7739")
-                    sender.sendMail(subject,
-                            "dream7739@naver.com", recipient, body, attach_list)
+                    var sender: MailSender = MailSender("youremail",
+                            "yourpass")
+                    var flag = sender.sendMail(subject,
+                            "youremail", recipientList, body, attach_list)
 
+                    Log.v("flagflag", flag.toString())
+                    if(flag) {
+                        this.runOnUiThread({ Toast.makeText(this, "메일 전송 성공", Toast.LENGTH_SHORT).show() })
+                    }else {
+                        this.runOnUiThread({ Toast.makeText(this, "메일 발송 실패", Toast.LENGTH_SHORT).show() })
+                    }
                 } catch (e: Exception) {
                     Log.e("SendMailLog", e.message)
-                    flag = false
                 }
             }
         }.start()
 
-        if (flag){
-            Toast.makeText(this, "메일전송 성공",Toast.LENGTH_SHORT).show()
-        }else {
-            Toast.makeText(this, "메일전송 실패",Toast.LENGTH_SHORT).show()
-        }
 
     }
 
@@ -366,7 +328,7 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-    //get contactList
+    // get contactList
     @TargetApi(Build.VERSION_CODES.M)
     fun getContactList() {
         Log.v("hello", "hihi")
