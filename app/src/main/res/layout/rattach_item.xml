@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/attach_box"
+    android:layout_margin="5dp"
+    >
+
+
+    <ImageView
+        android:id="@+id/receive_type_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/sign"
+        />
+
+    <TextView
+        android:id="@+id/receive_file_name"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/type_image"
+        android:layout_marginLeft="5dp"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/receive_file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/delete_image"
+        android:layout_marginRight="15dp"
+        android:textSize="15sp"
+        android:text="파일 사이즈" />
+
+
+    <ImageView
+        android:id="@+id/receive_load_image"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/downloadimage"
+        />
+
+</RelativeLayout>

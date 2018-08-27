@@ -22,8 +22,6 @@ import java.text.DecimalFormat
  * */
 class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>): RecyclerView.Adapter<AttachViewHolder>() {
 
-
-
     override fun onBindViewHolder(holder: AttachViewHolder?, position: Int) {
         //file type & x버튼 처리는 나중에
 
@@ -33,7 +31,6 @@ class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>): 
         var size:Long = dataList!!.get(position).fileSize
         var formattedSize = formatFileSize(size)
         holder.fileSize.text = formattedSize
-
 
 
         //확장자 명에 따른 이미지 변경
@@ -52,11 +49,9 @@ class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>): 
 
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AttachViewHolder {
         val attachView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.attach_item,parent,false)
         return AttachViewHolder(attachView)
-
 
     }
 
@@ -66,8 +61,4 @@ class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>): 
         return android.text.format.Formatter.formatFileSize(context, bytes)
         //formatter로 size를 KB, MB, GB로 바꿔줌
     }
-
-
-
-
 }
