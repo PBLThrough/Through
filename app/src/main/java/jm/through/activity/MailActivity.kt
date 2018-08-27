@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,10 +16,12 @@ import jm.through.read.ReadFragment
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageButton
 import android.widget.Toast
 import jm.through.R
 import jm.through.form.FormActivity
 import jm.through.send.SendActivity
+import kotlinx.android.synthetic.main.nav_header_mail.*
 
 
 class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -39,11 +42,14 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
         }
 
+
+
     }
 
 
     //menu 파일 inflate
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
         menuInflater.inflate(R.menu.main, menu)
         return true
     }

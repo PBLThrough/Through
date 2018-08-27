@@ -95,7 +95,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             var reader = MailReader()
 
 
-            reader.readMail("dream7739@naver.com", "ghdwjdals7739")
+            reader.readMail("youremail", "yourpass")
             Log.v("list",readList.toString())
             return null
         }
