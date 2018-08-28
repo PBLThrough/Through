@@ -21,6 +21,7 @@ import android.view.*
 import android.widget.Toast
 import com.pchmn.materialchips.ChipsInput
 import com.pchmn.materialchips.model.ChipInterface
+import jm.through.attachment.AttachViewHolder
 import jm.through.chips.ContactChip
 import jm.through.read.AttachAdapter
 import jm.through.read.AttachData

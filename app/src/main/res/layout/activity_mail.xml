@@ -42,14 +42,35 @@
     </LinearLayout>
 
 
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_mail"
-        app:menu="@menu/activity_main_drawer">
+        android:fitsSystemWindows="true">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                layout="@layout/nav_header_mail"
+                android:layout_gravity="center_vertical">
+            </include>
+
+            <FrameLayout
+                android:id="@+id/menu_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+
+
+        </LinearLayout>
 
 
     </android.support.design.widget.NavigationView>

@@ -1,5 +1,6 @@
 package jm.through.activity
 
+import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -20,64 +21,56 @@ import android.widget.ImageButton
 import android.widget.Toast
 import jm.through.R
 import jm.through.form.FormActivity
+import jm.through.navigation.NavRecycler
 import jm.through.send.SendActivity
 import kotlinx.android.synthetic.main.nav_header_mail.*
+import android.view.animation.AnimationUtils
+import android.view.animation.Animation
+import jm.through.navigation.UserRecycler
 
 
-class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MailActivity : AppCompatActivity() {
 
-    var backPressCloseHandler = BackPressCloseHandler (this);
+    var backPressCloseHandler = BackPressCloseHandler(this);
+    var check = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mail)
+
+
         toolbarSetting() //toolbar에 대한 설정
-        nav_view.setNavigationItemSelectedListener(this) //navigationView(서랍)에 클릭리스너 달기
+        navSetting()
         backPressCloseHandler = BackPressCloseHandler(this)
 
-        send_fab.setOnClickListener{
+        send_fab.setOnClickListener {
             val formIntent = Intent(this, FormActivity::class.java)
             startActivity(formIntent)
             overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
         }
 
 
-
     }
 
+    fun navSetting() {
+        val navFragment = NavRecycler()
+        val userFragment = UserRecycler()
+        val fragmentManager = supportFragmentManager
 
-    //menu 파일 inflate
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        fragmentManager.beginTransaction().replace(R.id.menu_container, navFragment).commit()
 
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-
-    /**서랍 아이템 클릭 시*/
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        //서랍에 들어가는 아이템들 = 메뉴 형태, 인자를 보면 MenuItem인 것을 볼 수 있음.
-
-        val id = item.itemId
-        var read = ReadFragment() //메일 받는 fragment
-
-        //menu 폴더 -> main.xml을 열어보면 id값들이 있음. 그 항목들의 id를 받아서
-        //클릭 됬는지 알려준다.
-
-        if (id == R.id.nav_gallery) {
-            var fm = fragmentManager
-            fm.beginTransaction().replace(R.id.fragment_container, read).commit()
-            toolbar.title = "메일 확인"
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        spin_btn.setOnClickListener {
+            spin_btn.animate().rotation(spin_btn.rotation - 180).start() //현재 좌표에서 180도 회전
+            if (check) {
+                fragmentManager.beginTransaction().replace(R.id.menu_container, userFragment).commit()
+                check = false
+            } else {
+                fragmentManager.beginTransaction().replace(R.id.menu_container, navFragment).commit()
+                check = true
+            }
         }
 
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        drawer.closeDrawer(GravityCompat.START)  //클릭했으면 서랍이 닫히고 화면이 나와야 하니 이 코드가 필요~
-        return true
     }
 
 
@@ -96,6 +89,12 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 super.onDrawerClosed(view)
                 var imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+
+                //드로어의 기본 리스트는 메일확인, 휴지통있는 리스트
+                val navFragment = NavRecycler()
+                val fragmentManager = supportFragmentManager
+                fragmentManager.beginTransaction().replace(R.id.menu_container, navFragment).commit()
+
             }
 
             //드로어가 열릴 때도 키보드를 넣어주어야 함.
@@ -103,6 +102,8 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 super.onDrawerOpened(drawerView)
                 var imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+
+
             }
         }
 
@@ -118,9 +119,16 @@ class MailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             backPressCloseHandler.onBackPressed()
 
-            Toast.makeText(applicationContext,"메일 뒤로가기",Toast.LENGTH_SHORT);
-//            super.onBackPressed()
+            Toast.makeText(applicationContext, "메일 뒤로가기", Toast.LENGTH_SHORT);
 
+        }
+    }
+
+
+    /** 드로어 닫기 */
+     fun closeDrawer() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
     }
 
