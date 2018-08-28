@@ -51,6 +51,7 @@ class MailActivity : AppCompatActivity() {
         }
 
 
+
     }
 
     fun navSetting() {
@@ -70,6 +71,8 @@ class MailActivity : AppCompatActivity() {
                 check = true
             }
         }
+
+
 
     }
 

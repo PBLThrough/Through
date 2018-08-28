@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import jm.through.R
 import jm.through.activity.MailActivity
@@ -35,6 +36,12 @@ class UserRecycler : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater!!.inflate(R.layout.nav_user_fragment, container, false)
+        val userAddBtn = v.findViewById(R.id.user_add_btn) as ImageButton
+
+        userAddBtn.setOnClickListener {
+        //계정 추가 창으로 이동 & 드로어 닫기    
+        }
+
         val recycler = v.findViewById(R.id.user_recycler) as RecyclerView
         val uAdapter = UserAdapter(userList)
 

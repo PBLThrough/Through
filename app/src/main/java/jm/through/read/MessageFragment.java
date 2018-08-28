@@ -39,7 +39,7 @@ import static jm.through.read.FolderFetchImap.readList;
 /**
  * 메일 상세정보 확인창 작업중
  * */
-public class MessageFragment extends Fragment {
+public class MessageFragment extends android.support.v4.app.Fragment {
     // 초기화해야하는 리스트를 초기화하는 곳
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
