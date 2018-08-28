@@ -57,6 +57,7 @@
             android:orientation="vertical">
 
             <include
+                android:id="@+id/nav_header"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 layout="@layout/nav_header_mail"

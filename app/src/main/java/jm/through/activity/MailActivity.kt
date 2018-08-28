@@ -132,5 +132,11 @@ class MailActivity : AppCompatActivity() {
         }
     }
 
+    /**선택한 이메일 헤더에 반영*/
+    fun selectEmail(email:String){
+        val str = email.split("@") //0이 아이디, 1이 플랫폼 주소
+        email_main_text.text = str[0]
+        email_sub_text.text = "@"+str[1]
+    }
 
 }
