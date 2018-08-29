@@ -24,6 +24,9 @@ import jm.through.read.FolderFetchImap.readList
 //import jm.through.read.MailReader.readList
 import kotlinx.android.synthetic.main.check_board_item.view.*
 import java.io.File
+import android.support.v4.widget.SwipeRefreshLayout
+
+
 
 /**
  * ReadFragment <- ReadAdapter, ReadViewholder
@@ -33,6 +36,8 @@ class ReadFragment : Fragment(), View.OnClickListener  {
     lateinit var rAdapter: ReadAdapter //recycler연결시킬 adapte
     lateinit var checkRecycler: RecyclerView
     lateinit var readProgress: ProgressBar
+    private var swipeContainer: SwipeRefreshLayout? = null
+
     @RequiresApi(Build.VERSION_CODES.M)
 
     var rattach_list: ArrayList<RattachData> = ArrayList()
@@ -46,13 +51,14 @@ class ReadFragment : Fragment(), View.OnClickListener  {
     // 초기화해야하는 리스트를 초기화함
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     // 레이아웃을 inflate 하는 곳.
     // view 객체를 얻을 수 있고 TextView, Button 등 초기화 가능
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val checkView: View = inflater!!.inflate(R.layout.fragment_check, container, false)
-        checkRecycler = checkView.findViewById(R.id.recycler) as RecyclerView
+        checkRecycler = checkView.findViewById(recycler) as RecyclerView
         readProgress = checkView.findViewById(read_progress) as ProgressBar
 
         return checkView
@@ -100,7 +106,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             //var reader = MailReader()
 
             // 업데이트 할 땐 아이디와 비밀번호 바꾸기 ^^!!
-            reader.readImapMail("cisspmit@naver.com","@!gorden")
+            reader.readImapMail("cisspmit@naver.com","@!gg1021")
             //reader.readMail("cisspmit@naver.com", "@!gorden")
             Log.v("list",readList.toString())
 

@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.widget.LinearLayout
 import jm.through.R
 import jm.through.R.id.toolbar
@@ -35,7 +36,6 @@ class ReadActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
     }
-
 
     fun addRattach(url:String){
         var downFile: File = File(url)

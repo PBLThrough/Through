@@ -1,6 +1,8 @@
 package jm.through.read;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +41,19 @@ import static jm.through.read.FolderFetchImap.readList;
 /**
  * 메일 상세정보 확인창 작업중
  * */
+
+
 public class MessageFragment extends Fragment {
+
+
+
+//    private void animateToFragment(Fragment newFragment, String tag) {
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        ft.replace(R.id.fragment_container, newFragment, tag);
+//        ft.addToBackStack(null);
+//        ft.commit();
+//    }
+
     // 초기화해야하는 리스트를 초기화하는 곳
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,12 +76,14 @@ public class MessageFragment extends Fragment {
         if (getArguments() != null) {
             Bundle bundle = getArguments();
             int a = bundle.getInt("position");
+            MailContentBuilder mailContentBuilder = new MailContentBuilder();
 
             System.out.println("bundle is =" +bundle);
 
             String getSubject = readList.get(a).component1().split("<")[0]; // subject
-            String getFrom = readList.get(a).component2(); // from
+            String getMemo = readList.get(a).component2(); // memo
             Date getDate = readList.get(a).component3(); // date
+            Object getcontent = readList.get(a).component5();//content
            // ImageView getimage= readList.get(a).component4();
             //System.out.println("subject printing... "+ getSubject.toString());
 
@@ -149,10 +165,10 @@ public class MessageFragment extends Fragment {
 //            }
 //            System.out.println("\n=====================================================\n");
 
-
             dateString.setText(mTime);
             titleString.setText(getSubject);
-            memoString.setText(getFrom);
+
+            memoString.setText(getMemo + getcontent); // + getcontent
          //   imageView.setImageURI();
             }
 
@@ -160,9 +176,12 @@ public class MessageFragment extends Fragment {
     }
 
     public void onBackPressed(){
-       if(getFragmentManager().getBackStackEntryCount() > 0){
-           getFragmentManager().popBackStack();
+        FragmentManager fm = getFragmentManager();
+       if(fm.getBackStackEntryCount() > 0){
+           fm.popBackStack();
+//           super.onBackPressed();
        }
     }
+
 }
 
