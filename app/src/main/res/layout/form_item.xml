@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+
+    <ImageView
+        android:id="@+id/form_image"
+        android:layout_width="wrap_content"
+        android:layout_height="160dp"
+        android:src="@drawable/formcharacter"/>
+
+    <TextView
+        android:id="@+id/form_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="성적 문의 폼"
+        android:layout_gravity="center_horizontal"
+        android:textSize="16sp"/>
+</LinearLayout>

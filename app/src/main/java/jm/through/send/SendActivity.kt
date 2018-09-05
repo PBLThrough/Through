@@ -21,10 +21,9 @@ import android.view.*
 import android.widget.Toast
 import com.pchmn.materialchips.ChipsInput
 import com.pchmn.materialchips.model.ChipInterface
-import jm.through.attachment.AttachViewHolder
+import jm.through.attachment.AttachAdapter
+import jm.through.attachment.AttachData
 import jm.through.chips.ContactChip
-import jm.through.read.AttachAdapter
-import jm.through.read.AttachData
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import java.io.File
 import java.net.URISyntaxException
