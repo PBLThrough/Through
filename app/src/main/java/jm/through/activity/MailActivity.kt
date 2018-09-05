@@ -46,9 +46,8 @@ class MailActivity : AppCompatActivity() {
         backPressCloseHandler = BackPressCloseHandler(this)
 
         send_fab.setOnClickListener {
-            val formIntent = Intent(this, FormActivity::class.java)
-            startActivity(formIntent)
-            overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
+            val intent = Intent(this, SendActivity::class.java)
+            startActivity(intent)
         }
 
 

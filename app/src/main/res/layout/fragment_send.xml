@@ -11,86 +11,108 @@
     <include
         layout="@layout/app_bar_mail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/text_receiver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:text="받는 사람"
-            android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/edit_receiver"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/text_receiver"
-            android:background="@null"
-            android:textSize="15sp" />
+            android:layout_margin="5dp">
+
+            <TextView
+                android:id="@+id/text_receiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="받는 사람"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edit_receiver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/text_receiver"
+                android:background="@null"
+                android:textSize="15sp" />
+        </RelativeLayout>
 
 
-    </RelativeLayout>
-
-        <com.pchmn.materialchips.ChipsInput
-            android:id="@+id/chips_input"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:hint="Enter a name" />
+            android:layout_margin="5dp">
+
+            <TextView
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="제목 "
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edit_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/text_title"
+                android:background="@null"
+                android:textSize="15sp" />
+        </RelativeLayout>
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <TextView
-            android:id="@+id/text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:text="제목 "
-            android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/edit_title"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/attach_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/text_title"
-            android:background="@null"
-            android:textSize="15sp" />
-    </RelativeLayout>
+            android:layout_margin="5dp">
+        </android.support.v7.widget.RecyclerView>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/attach_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-    </android.support.v7.widget.RecyclerView>
-    
-
-        <EditText
-            android:id="@+id/email_body"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#F6F6F6"
-            android:padding="5dp"
-            android:gravity="start"
-            android:scrollbars="vertical" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/email_body"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F6F6F6"
+                android:gravity="start"
+                android:padding="5dp"
+                android:scrollbars="vertical" />
+
+            <RelativeLayout
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/send_option">
+
+
+                <ImageButton
+                    android:id="@+id/form_btn"
+                    android:layout_centerVertical="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/form_icon"/>
+
+                <ImageButton
+                    android:id="@+id/attach_btn"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/attach_icon"/>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
 </LinearLayout>
