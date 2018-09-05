@@ -26,6 +26,7 @@ import jm.through.send.SendActivity
 import kotlinx.android.synthetic.main.nav_header_mail.*
 import android.view.animation.AnimationUtils
 import android.view.animation.Animation
+import android.widget.Spinner
 import jm.through.navigation.UserRecycler
 
 
