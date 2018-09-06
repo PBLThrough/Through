@@ -8,13 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import jm.through.R
 import jm.through.attachment.AttachViewHolder
-import java.text.SimpleDateFormat
 import java.util.*
-import javax.mail.internet.MimeUtility
-import android.text.InputFilter
-import android.widget.ImageView
-import jm.through.send.SendActivity
-import java.text.DecimalFormat
 
 
 /**

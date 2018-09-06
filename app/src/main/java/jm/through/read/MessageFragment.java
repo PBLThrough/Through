@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +59,57 @@ public class MessageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//
+//        final TextView titleString = (TextView)v.findViewById(R.id.message_content_title);
+//        final TextView memoString = (TextView)v.findViewById(R.id.message_content_memo);
+//        final TextView dateString = (TextView)v.findViewById(R.id.message_content_time);
+//
+//        //final TextView itemString = (TextView)v.findViewById(R.id.)
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm");
+//
+//        if (getArguments() != null) {
+//            Bundle bundle = getArguments();
+//            int a = bundle.getInt("position");
+//            MailContentBuilder mailContentBuilder = new MailContentBuilder();
+//
+//            System.out.println("bundle is =" +bundle);
+//
+//            String getSubject = readList.get(a).component1().split("<")[0]; // subject
+//            String getMemo = readList.get(a).component2(); // memo
+//            Date getDate = readList.get(a).component3(); // date
+////            Object getcontent = readList.get(a).component5();//content
+//            // ImageView getimage= readList.get(a).component4();
+//            //System.out.println("subject printing... "+ getSubject.toString());
+//
+//            String mTime = df.format(getDate);
+//
+//            dateString.setText(mTime);
+//            titleString.setText(getSubject);
+//
+//            memoString.setText(getMemo); // + getcontent
+//            //   imageView.setImageURI();
+//        }
+
+
+//        FragmentTransaction ft = FragmentManager.beginTransaction();
+//
+//        String backStateName = pFragment.getClass().getName();
+//        int backStackEntryCount = mFragmentManager.getBackStackEntryCount();
+//
+//        if(backStackEntryCount > 0){ //프래그먼트가 1개이상 존재할 경우
+//            FragmentManager.BackStackEntry backStackEntry = mFragmentManager.getBackStackEntryAt(backStackEntryCount-1);
+//            String beforeBackStackName = backStackEntry.getName();
+//            if(!backStateName.equals(beforeBackStackName)){ //이전 백스택과 현재 백스텍이 동일하다면 백스택을 추가하지않고, 동일하지 않다면 추가한다. (중복 스택생성 방지)
+//                ft.replace(R.id.content_frame, pFragment);
+//                ft.addToBackStack(backStateName);
+//            }
+//        }else{ //최초 프래그먼트 세팅시
+//            ft.replace(R.id.content_frame, pFragment);
+//            ft.addToBackStack(backStateName);
+//        }
+//        ft.commit();
+
     }
 
     // 레이아웃을 inflate 하고 각 리소스를 초기화하는 곳
@@ -65,6 +117,9 @@ public class MessageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_content,container,false);
+        ReadFragment readfragment = new ReadFragment();
+       // getFragmentManager().beginTransaction().replace(R.id.fragment_container,readfragment);
+
 
         final TextView titleString = (TextView)v.findViewById(R.id.message_content_title);
         final TextView memoString = (TextView)v.findViewById(R.id.message_content_memo);
@@ -83,17 +138,17 @@ public class MessageFragment extends Fragment {
             String getSubject = readList.get(a).component1().split("<")[0]; // subject
             String getMemo = readList.get(a).component2(); // memo
             Date getDate = readList.get(a).component3(); // date
-            Object getcontent = readList.get(a).component5();//content
+//            Object getcontent = readList.get(a).component5();//content
            // ImageView getimage= readList.get(a).component4();
             //System.out.println("subject printing... "+ getSubject.toString());
 
             String mTime = df.format(getDate);
 
-//            // 추가 함
+            // 추가 함
 //
 //            DataHandler dataHandler = bundle.getDataHandler();
 //            String contentType = dataHandler.getContentType();
-//
+
 //            if(contentType.indexOf("multipart/mixed") != -1){
 //                Multipart multipart = (Multipart)msg.getContent();// javax.mail.internet.MimeMultipart@8d463af
 //                try{
@@ -163,24 +218,16 @@ public class MessageFragment extends Fragment {
 //                Log.v("여기야!! reading html...",br.toString());
 //                br.close();
 //            }
-//            System.out.println("\n=====================================================\n");
+            System.out.println("\n=====================================================\n");
 
             dateString.setText(mTime);
             titleString.setText(getSubject);
 
-            memoString.setText(getMemo + getcontent); // + getcontent
+            memoString.setText(getMemo); // + getcontent
          //   imageView.setImageURI();
             }
 
         return v;
-    }
-
-    public void onBackPressed(){
-        FragmentManager fm = getFragmentManager();
-       if(fm.getBackStackEntryCount() > 0){
-           fm.popBackStack();
-//           super.onBackPressed();
-       }
     }
 
 }

@@ -1,8 +1,6 @@
 package jm.through.send;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -30,6 +28,7 @@ import java.util.List;
 import java.util.Properties;
 
 import jm.through.read.AttachData;
+import jm.through.read.NavData;
 
 public class MailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.naver.com";

@@ -1,12 +1,12 @@
 package jm.through.read
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -25,7 +25,9 @@ import jm.through.read.FolderFetchImap.readList
 import kotlinx.android.synthetic.main.check_board_item.view.*
 import java.io.File
 import android.support.v4.widget.SwipeRefreshLayout
-
+import android.R.attr.tag
+import android.R.attr.fragment
+import android.support.v4.app.FragmentManager
 
 
 /**
@@ -71,7 +73,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
 
         var bundle = Bundle();
-            bundle.putInt("position",idx);
+            bundle.putInt("position",idx)
 
         var message = MessageFragment() as Fragment//메일 보내는 fragment
         var fm = fragmentManager //fragment교체에 필요한 fragmentManager
@@ -108,6 +110,7 @@ class ReadFragment : Fragment(), View.OnClickListener  {
             // 업데이트 할 땐 아이디와 비밀번호 바꾸기 ^^!!
             reader.readImapMail("cisspmit@naver.com","@!gg1021")
             //reader.readMail("cisspmit@naver.com", "@!gorden")
+
             Log.v("list",readList.toString())
 
             return null

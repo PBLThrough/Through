@@ -84,7 +84,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
                 String from = MimeUtility.decodeText(String.valueOf(msg.getFrom()[0]));
                 Date date = msg.getSentDate();
                 int size = msg.getSize();
-                Object content = msg.getContent();
+                //Object content = msg.getContent();
 
                 System.out.println("Subject: " + subject);
 //                System.out.println("From: " + from);
@@ -95,7 +95,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
                 //System.out.println("Body: \n"+ msg.getContent());
                 System.out.println(msg.getContentType());
 
-                readList.add(new ReadData(from, subject, date, content, false));
+                readList.add(new ReadData(from, subject, date,/* content,*/ false));
             }
             if (folder != null && folder.isOpen()) { folder.close(true); }
             if (store != null) { store.close(); }
