@@ -104,8 +104,9 @@ class MainActivity : AppCompatActivity() {
 //            super.onBackPressed()
 //        }
         Log.v("MainActivity : ","onBackPressed Called")
-        Toast.makeText(applicationContext,"메인 뒤로가기",Toast.LENGTH_SHORT);
-        super.onBackPressed();
+        Toast.makeText(applicationContext,"종료",Toast.LENGTH_SHORT)
+        finish()
+
 //
 //
 //        @Override

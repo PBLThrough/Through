@@ -14,15 +14,11 @@ import java.util.*
 /**
  * ReadAdapter <- ReadData
  * */
-class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>): RecyclerView.Adapter<AttachViewHolder>() {
-
-    override fun onBindViewHolder(holder: AttachViewHolder?, position: Int) {
-        //file type & x버튼 처리는 나중에
-
-
+class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>) : RecyclerView.Adapter<AttachViewHolder>() {
+    override fun onBindViewHolder(holder: AttachViewHolder, position: Int) {
         holder!!.fileName.text = dataList!!.get(position).fileName // 이름
 
-        var size:Long = dataList!!.get(position).fileSize
+        var size: Long = dataList!!.get(position).fileSize
         var formattedSize = formatFileSize(size)
         holder.fileSize.text = formattedSize
 
@@ -35,23 +31,21 @@ class AttachAdapter(var context: Context, var dataList: ArrayList<AttachData>): 
         }
 
         holder!!.deleteImage.setOnClickListener {
-            Log.v("deletePosition",position.toString())
+            Log.v("deletePosition", position.toString())
             dataList!!.removeAt(position)
             notifyItemRemoved(position)
             notifyDataSetChanged() //dataset이 변경된 걸 알려줌
         }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AttachViewHolder {
-        val attachView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.attach_item,parent,false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttachViewHolder {
+        val attachView: View = LayoutInflater.from(parent!!.context).inflate(R.layout.attach_item, parent, false)
         return AttachViewHolder(attachView)
-
     }
 
     override fun getItemCount(): Int = dataList.size
 
-    fun  formatFileSize(bytes: Long) : String{
+    fun formatFileSize(bytes: Long): String {
         return android.text.format.Formatter.formatFileSize(context, bytes)
         //formatter로 size를 KB, MB, GB로 바꿔줌
     }

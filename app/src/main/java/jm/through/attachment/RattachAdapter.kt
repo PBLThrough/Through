@@ -15,8 +15,7 @@ import java.util.*
  * ReadAdapter <- ReadData
  * */
 class RattachAdapter(var context: Context, var dataList: ArrayList<RattachData>): RecyclerView.Adapter<RattachViewHolder>() {
-
-    override fun onBindViewHolder(holder: RattachViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RattachViewHolder, position: Int) {
         //file type & x버튼 처리는 나중에
 
 
@@ -43,7 +42,7 @@ class RattachAdapter(var context: Context, var dataList: ArrayList<RattachData>)
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RattachViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RattachViewHolder {
         val RattachView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.rattach_item,parent,false)
         return RattachViewHolder(RattachView)
 

@@ -14,13 +14,13 @@ import java.util.*
 class FormAdapter(var dataList: ArrayList<FormData>): RecyclerView.Adapter<FormViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
 
-    override fun onBindViewHolder(holder: FormViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
         holder!!.formImage.setImageResource(dataList.get(position).formImg)
         holder!!.formName.text = dataList.get(position).formName
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FormViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
         val formView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.form_item,parent,false)
         formView.setOnClickListener(onItemClick)
         return FormViewHolder(formView)

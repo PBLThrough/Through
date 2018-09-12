@@ -8,8 +8,7 @@ import android.widget.TextView
 import jm.through.R
 
 
-class NavViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-
+class NavViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
 
     var navImg: ImageView =itemView!!.findViewById(R.id.menu_icon) as ImageView
     var navName:TextView=itemView!!.findViewById(R.id.menu_text) as TextView

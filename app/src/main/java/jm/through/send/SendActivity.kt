@@ -8,23 +8,17 @@ import android.annotation.TargetApi
 import android.os.Build
 import android.provider.MediaStore
 import android.content.*
-import android.content.ContentValues.TAG
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
-import android.provider.ContactsContract
 import android.provider.DocumentsContract
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
-import com.pchmn.materialchips.ChipsInput
-import com.pchmn.materialchips.model.ChipInterface
 import jm.through.attachment.AttachAdapter
 import jm.through.attachment.AttachData
-import jm.through.chips.ContactChip
 import jm.through.form.FormActivity
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import java.io.File
@@ -32,7 +26,7 @@ import java.net.URISyntaxException
 
 
 class SendActivity : AppCompatActivity() {
-    lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapte
+    lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapter
     var context: Context = this
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
@@ -48,7 +42,7 @@ class SendActivity : AppCompatActivity() {
         addRecycler()
 
         //폼 버튼 눌렀을 시
-        form_btn.setOnClickListener{
+        form_btn.setOnClickListener {
             val intent = Intent(this, FormActivity::class.java)
             startActivity(intent)
             finish()
@@ -56,14 +50,14 @@ class SendActivity : AppCompatActivity() {
         }
 
         //인텐트 있으면
-        if(intent!= null) {
+        if (intent != null) {
             var detail = intent.getStringExtra("formDetail")
             email_body.setText(detail)
             email_body.requestFocus() //포커스 주기
         }
 
-
     }
+
 
 
     fun addRecycler() {
@@ -77,39 +71,6 @@ class SendActivity : AppCompatActivity() {
         toolbar.title = "메일 쓰기"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true) //뒤로가기 만들
     }
-
-//    @TargetApi(Build.VERSION_CODES.M)
-//    fun addChips(){
-//        //chips 연락처
-//        mContactList = ArrayList()
-//        mChipsInput = findViewById(R.id.chips_input)
-//
-//        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
-//            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
-//                Log.e(TAG, "chip added, $newSize")
-//            }
-//
-//            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
-//                Log.e(TAG, "chip removed, $newSize")
-//            }
-//
-//            override fun onTextChanged(text: CharSequence) {
-//                Log.e(TAG, "text changed: " + text.toString())
-//            }
-//        })
-//
-//
-//        //permission Check (위치 애매)
-//        if (checkSelfPermission(android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
-//                    1)
-//        } else {
-//            getContactList()
-//        }
-//    }
-
-
-
 
 
     //toolbar menu create
@@ -147,8 +108,6 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-
-
     //file manager select result
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -173,20 +132,20 @@ class SendActivity : AppCompatActivity() {
 
     fun addAttach(uri: String) {
         var file: File = File(uri)
-        var totalFileSize:Long = 0
+        var totalFileSize: Long = 0
 
         var fileUri = uri
         var fileSize = file.length()
         var fileName = file.name
         var fileType = fileName.split('.')[1]
 
-        for(attachData in attach_list) {
+        for (attachData in attach_list) {
             totalFileSize += attachData.fileSize //기존 파일 크기
         }
         totalFileSize += fileSize //현재 select해서 가져온 파일 크기
 
         //gmail 20MB 이상일 시, naver 10MB 이상일 시(상황에 따라 처리 But 속도가 느릴 수 있음.)
-        if (totalFileSize  > 10485760) {
+        if (totalFileSize > 10485760) {
             Toast.makeText(this, "파일첨부는 10MB를 넘을 수 없습니다", Toast.LENGTH_SHORT).show()
         } else {
             attach_list.add(AttachData(fileUri, fileType, fileName, fileSize))
@@ -217,9 +176,9 @@ class SendActivity : AppCompatActivity() {
                             "youremail", recipientList, body, attach_list)
 
                     Log.v("flagflag", flag.toString())
-                    if(flag) {
+                    if (flag) {
                         this.runOnUiThread({ Toast.makeText(this, "메일 전송 성공", Toast.LENGTH_SHORT).show() })
-                    }else {
+                    } else {
                         this.runOnUiThread({ Toast.makeText(this, "메일 발송 실패", Toast.LENGTH_SHORT).show() })
                     }
                 } catch (e: Exception) {
@@ -342,48 +301,9 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-//    // get contactList
-//    @TargetApi(Build.VERSION_CODES.M)
-//    fun getContactList() {
-//        Log.v("hello", "hihi")
-//        val phones = this.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-//
-//        // loop over all contacts
-//        if (phones != null) {
-//            while (phones!!.moveToNext()) {
-//                // get contact info
-//                var phoneNumber: String? = null
-//                val id = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts._ID))
-//                val name = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-//                val avatarUriString = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
-//                var avatarUri: Uri? = null
-//                if (avatarUriString != null)
-//                    avatarUri = Uri.parse(avatarUriString)
-//
-//                // get phone number
-//                if (Integer.parseInt(phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-//                    val pCur = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-//                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf<String>(id), null)
-//
-//                    while (pCur != null && pCur!!.moveToNext()) {
-//                        phoneNumber = pCur!!.getString(pCur!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-//                    }
-//
-//                    pCur!!.close()
-//
-//                }
-//
-//                val contactChip = ContactChip(id, avatarUri, name, phoneNumber)
-//                // add contact to the list
-//                mContactList.add(contactChip)
-//            }
-//            phones!!.close()
-//        }
-//
-//        // pass contact list to chips input
-//        mChipsInput.filterableList = mContactList
-//    }
+
 
 
 }
+
 

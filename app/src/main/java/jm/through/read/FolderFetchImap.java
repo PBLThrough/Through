@@ -20,7 +20,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
 
     }
 
-    static ArrayList<ReadData> readList = new ArrayList<>();
+   public static ArrayList<ReadData> readList = new ArrayList<>();
     //String[] args
     public ArrayList<ReadData> readImapMail(String username, String password) {
         final String id = username;

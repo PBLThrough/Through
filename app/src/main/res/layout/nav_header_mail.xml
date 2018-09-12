@@ -1,50 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/email_main_img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:src="@drawable/platformimg" />
-
-
-    <RelativeLayout
+    <!--header-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/header_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/email_main_img">
-
-        <TextView
-            android:id="@+id/email_main_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="dream7739"
-            android:textColor="#000000"
-            android:textSize="22dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/email_sub_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/email_main_text"
-            android:text="gmail.com"
-            android:textSize="20dp" />
-
-        <ImageButton
-            android:id="@+id/spin_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            style="?android:attr/spinnerStyle"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
 
-</RelativeLayout>
+    <!--email menu-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/nav_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
