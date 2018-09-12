@@ -1,21 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/whiteColor">
 
-    <!--header-->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/header_recycler"
+    <!--헤더 전체 레이아웃-->
+    <RelativeLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        android:layout_height="150dp">
 
+        <ImageView
+            android:id="@+id/email_main_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/formcharacter" />
+
+
+        <RelativeLayout
+            android:id="@+id/account_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/email_main_img">
+
+            <TextView
+                android:id="@+id/email_main_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dream7739"
+                android:textColor="#000000"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/email_sub_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/email_main_text"
+                android:text="gmail.com"
+                android:textSize="20dp" />
+
+            <ImageButton
+                android:id="@+id/spin_btn"
+                style="?android:attr/spinnerStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!--hide & show, account_recycler-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/user_recycler"
+        android:layout_below="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 
     <!--email menu-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/nav_recycler"
+        android:layout_below="@+id/header_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+
+
+</RelativeLayout>

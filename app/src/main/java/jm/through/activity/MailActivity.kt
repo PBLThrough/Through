@@ -1,5 +1,6 @@
 package jm.through.activity
 
+import android.animation.ObjectAnimator
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
@@ -19,22 +20,20 @@ import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
 import jm.through.R
 import jm.through.attachment.RattachData
-import jm.through.read.FolderFetchImap
+import jm.through.navigation.UserData
+import jm.through.read.*
 import jm.through.read.FolderFetchImap.readList
-import jm.through.read.NavAdapter
-import jm.through.read.NavData
-import jm.through.read.ReadAdapter
 import jm.through.send.SendActivity
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.nav_header_mail.*
 import java.io.File
 
 
- class MailActivity : AppCompatActivity(), View.OnClickListener {
-    var check = true
+class MailActivity : AppCompatActivity(), View.OnClickListener {
+    var click = true
     val context = this
 
-    lateinit var rAdapter:ReadAdapter
+    lateinit var rAdapter: ReadAdapter
     var rattach_list: ArrayList<RattachData> = ArrayList()
 
 
@@ -53,12 +52,34 @@ import java.io.File
             startActivity(intent)
         }
 
+        //헤더 뷰 클릭하면 버튼 회전 & 리사이클러뷰 변경
+        header_layout.setOnClickListener {
+            //버튼 1번 클릭시 180도 회전하면서 recyclerview 교체, 클릭은 false로 변경
+            ObjectAnimator.ofFloat(spin_btn, "rotation", if (click) 180f else 0f).start()
+
+            if (click) {
+                user_recycler.visibility = View.VISIBLE
+                nav_recycler.visibility = View.INVISIBLE
+            } else {
+                user_recycler.visibility = View.INVISIBLE
+                nav_recycler.visibility = View.VISIBLE
+            }
+            click = !click
+
+
+        }
+
     }
 
 
     override fun onClick(v: View?) {
         val idx: Int = recycler.getChildAdapterPosition(v!!)
-        Log.v("idxidx",idx.toString())
+        val messageIntent = Intent(this, MessageActivity::class.java)
+        messageIntent.putExtra("position", idx)
+        startActivity(messageIntent)
+        //finish()안하면 activity쌓일거임 근데 그러면 activity돌아갈때마다 프로그레스바 돌면서 메일 가져올텐데
+        //상태를 저장해놓는 부분을 생각해야 할 듯
+
 
 //        var bundle = Bundle()
 //        bundle.putInt("position", idx)
@@ -84,17 +105,25 @@ import java.io.File
         val navList = ArrayList<NavData>()
 
         if (navList.size == 0) {
-            navList.add(NavData(R.drawable.profile, "메일 확인", 55, R.drawable.sign))
-            navList.add(NavData(R.drawable.profile, "받은 메일함", 99, R.drawable.sign))
-            navList.add(NavData(R.drawable.profile, "보낸 메일함", 33, R.drawable.sign))
-            navList.add(NavData(R.drawable.profile, "휴지통", 30, R.drawable.sign))
+            navList.add(NavData(R.drawable.read, "받은 메일함", 99, R.drawable.write))
+            navList.add(NavData(R.drawable.write, "보낸 메일함", 33, R.drawable.write))
         }
 
         val nAdapter = NavAdapter(navList)
         nav_recycler.adapter = nAdapter
-        nAdapter.setOnItemClickListener(this@MailActivity)
         nav_recycler.layoutManager = LinearLayoutManager(this)
 
+
+        val userList = ArrayList<UserData>()
+        if (userList.size == 0) {
+            userList.add(UserData(R.drawable.read, "dream7739@naver.com", 30))
+            userList.add(UserData(R.drawable.write, "dream7739@gmail.com", 33))
+        }
+
+        val uAdapter = UserAdapter(userList)
+        user_recycler.adapter = uAdapter
+        //  nAdapter.setOnItemClickListener(this@MailActivity)
+        user_recycler.layoutManager = LinearLayoutManager(this)
     }
 
 
@@ -141,7 +170,7 @@ import java.io.File
 
     inner class ReadTask : AsyncTask<Void, Void, Void>() {
 
-         override fun onProgressUpdate(vararg values: Void?) {
+        override fun onProgressUpdate(vararg values: Void?) {
             super.onProgressUpdate(*values)
         }
 
@@ -161,27 +190,27 @@ import java.io.File
 
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = FolderFetchImap()
-            reader.readImapMail("dream7739", "!hjmh9811387")
+            reader.readImapMail("youremail", "yourpass")
             Log.v("list", readList.toString())
             return null
         }
 
         fun receiveAttach(uri: String) {
             var file: File = File(uri)
-            var totalFileSize:Long = 0
+            var totalFileSize: Long = 0
 
             var fileUri = uri
             var fileSize = file.length()
             var fileName = file.name
             var fileType = fileName.split('.')[1]
 
-            for(attachData in rattach_list) {
+            for (attachData in rattach_list) {
                 totalFileSize += attachData.receive_fileSize //기존 파일 크기
             }
             totalFileSize += fileSize //현재 select해서 가져온 파일 크기
 
             //gmail 20MB 이상일 시, naver 10MB 이상일 시(상황에 따라 처리 But 속도가 느릴 수 있음.)
-            if (totalFileSize  > 10485760) {
+            if (totalFileSize > 10485760) {
                 System.out.println("파일첨부 10MB 넘어감")
                 //Toast.makeText(this, "파일첨부는 10MB를 넘을 수 없습니다", Toast.LENGTH_SHORT).show()
             } else {
@@ -190,6 +219,7 @@ import java.io.File
                 Log.v("totalFileSize", totalFileSize.toString())
             }
         }
+
         override fun onCancelled(result: Void?) {
             super.onCancelled(result)
         }
@@ -204,12 +234,6 @@ import java.io.File
     }
 
 }
-
-
-
-
-
-
 
 
 //    /**선택한 이메일 헤더에 반영*/

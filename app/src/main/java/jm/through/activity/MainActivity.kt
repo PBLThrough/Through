@@ -18,7 +18,6 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import jm.through.R
-import jm.through.read.MessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.security.Permission
 

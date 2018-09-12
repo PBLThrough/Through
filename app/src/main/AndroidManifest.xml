@@ -27,8 +27,8 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignActivity" />
         <activity android:name=".activity.MailActivity" />
+        <activity android:name=".read.MessageActivity"/>
         <activity android:name=".send.SendActivity" />
-        <activity android:name=".read.ReadFragment" />
         <activity android:name=".send.PracticeActivity" />
         <activity android:name=".form.FormActivity"
             android:windowSoftInputMode="adjustResize"></activity>
