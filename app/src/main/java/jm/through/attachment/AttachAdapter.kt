@@ -1,4 +1,4 @@
-package jm.through.read
+package jm.through.attachment
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

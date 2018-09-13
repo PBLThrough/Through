@@ -32,7 +32,7 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         // ReadDate 요소 가져오기
         var title:String=dataList!!.get(position).mailTitle
         var memo:String=dataList!!.get(position).mailMemo
-        var dates:Date =dataList!!.get(position).mailDate
+        var dates:Date? =dataList!!.get(position).mailDate
         //var contents:Object = dataList!!.get(position).mailContent
       //  var image:ImageView = dataList!!.get(position).mailImage
 

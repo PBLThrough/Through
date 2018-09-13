@@ -33,12 +33,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:backgroundTint="#ffb65d"
+                android:backgroundTint="@color/mainColor"
                 android:src="@drawable/pencil"
-                app:fabSize="auto"
+                app:borderWidth="0dp"
+                app:fabSize="normal"
                 app:useCompatPadding="true" />
-
         </FrameLayout>
+
     </LinearLayout>
 
 

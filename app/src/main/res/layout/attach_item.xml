@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@drawable/attach_box"
-    android:layout_margin="5dp"
+    android:layout_margin="3dp"
     >
 
 
@@ -40,8 +40,8 @@
 
     <ImageView
         android:id="@+id/delete_image"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"

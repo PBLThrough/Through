@@ -27,8 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import jm.through.read.AttachData;
-import jm.through.read.NavData;
+import jm.through.attachment.AttachData;
 
 public class MailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.naver.com";

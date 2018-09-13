@@ -71,7 +71,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println(messages.length);
 
             int states = 20; // 새로고침 할 때 + 30개 해주기
-            for (int i= messages.length-1; i >messages.length - states +1;i--)
+            for (int i= messages.length-1; i > messages.length - states ;i--)
             {
 
                 System.out.println("*****************************************************************************");
@@ -87,12 +87,13 @@ public class FolderFetchImap extends javax.mail.Authenticator{
                 //Object content = msg.getContent();
 
                 System.out.println("Subject: " + subject);
+                System.out.println("from :" + from);
 //                System.out.println("From: " + from);
 //                System.out.println("To: "+msg.getAllRecipients()[0]);
-//                System.out.println("Date: "+ date);
-//                System.out.println("Size: "+msg.getSize());
+                System.out.println("Date: "+ date);
+//                System.out.println("Size: "+ msg.getSize());
 //                System.out.println(msg.getFlags());
-                //System.out.println("Body: \n"+ msg.getContent());
+                System.out.println("Body: \n"+ msg.getContent());
                 System.out.println(msg.getContentType());
 
                 readList.add(new ReadData(from, subject, date,/* content,*/ false));

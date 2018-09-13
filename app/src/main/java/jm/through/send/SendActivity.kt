@@ -15,16 +15,17 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.DocumentsContract
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
 import com.pchmn.materialchips.ChipsInput
 import com.pchmn.materialchips.model.ChipInterface
-import jm.through.attachment.AttachViewHolder
+import jm.through.attachment.AttachAdapter
+import jm.through.attachment.AttachData
 import jm.through.chips.ContactChip
-import jm.through.read.AttachAdapter
-import jm.through.read.AttachData
+import jm.through.form.FormActivity
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import java.io.File
 import java.net.URISyntaxException
@@ -37,19 +38,31 @@ class SendActivity : AppCompatActivity() {
     var attach_uri: String? = null
     var attach_list: ArrayList<AttachData> = ArrayList()
 
-    //Chips
-    lateinit var mChipsInput: ChipsInput
-    private lateinit var mContactList: ArrayList<ContactChip>
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_send)
-
-        addChips()
         addToolbar()
         addRecycler()
+
+        //폼 버튼 눌렀을 시
+        form_btn.setOnClickListener{
+            val intent = Intent(this, FormActivity::class.java)
+            startActivity(intent)
+            finish()
+            overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
+        }
+
+        //인텐트 있으면
+        if(intent!= null) {
+            var detail = intent.getStringExtra("formDetail")
+            email_body.setText(detail)
+            email_body.requestFocus() //포커스 주기
+        }
+
+
     }
 
 
@@ -65,35 +78,35 @@ class SendActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true) //뒤로가기 만들
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    fun addChips(){
-        //chips 연락처
-        mContactList = ArrayList()
-        mChipsInput = findViewById(R.id.chips_input)
-
-        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
-            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
-                Log.e(TAG, "chip added, $newSize")
-            }
-
-            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
-                Log.e(TAG, "chip removed, $newSize")
-            }
-
-            override fun onTextChanged(text: CharSequence) {
-                Log.e(TAG, "text changed: " + text.toString())
-            }
-        })
-
-
-        //permission Check (위치 애매)
-        if (checkSelfPermission(android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
-                    1)
-        } else {
-            getContactList()
-        }
-    }
+//    @TargetApi(Build.VERSION_CODES.M)
+//    fun addChips(){
+//        //chips 연락처
+//        mContactList = ArrayList()
+//        mChipsInput = findViewById(R.id.chips_input)
+//
+//        mChipsInput.addChipsListener(object : ChipsInput.ChipsListener {
+//            override fun onChipAdded(chip: ChipInterface, newSize: Int) {
+//                Log.e(TAG, "chip added, $newSize")
+//            }
+//
+//            override fun onChipRemoved(chip: ChipInterface, newSize: Int) {
+//                Log.e(TAG, "chip removed, $newSize")
+//            }
+//
+//            override fun onTextChanged(text: CharSequence) {
+//                Log.e(TAG, "text changed: " + text.toString())
+//            }
+//        })
+//
+//
+//        //permission Check (위치 애매)
+//        if (checkSelfPermission(android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS),
+//                    1)
+//        } else {
+//            getContactList()
+//        }
+//    }
 
 
 
@@ -198,10 +211,10 @@ class SendActivity : AppCompatActivity() {
                     var subject = edit_title.text.toString().trim()
                     var body = email_body.text.toString().trim()
 
-                    var sender: MailSender = MailSender("youremail",
-                            "yourpass")
+                    var sender: MailSender = MailSender("yourmail",
+                            "yourpassword")
                     var flag = sender.sendMail(subject,
-                            "youremail", recipientList, body, attach_list)
+                            "yourmail", recipientList, body, attach_list)
 
                     Log.v("flagflag", flag.toString())
                     if(flag) {
@@ -329,47 +342,47 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-    // get contactList
-    @TargetApi(Build.VERSION_CODES.M)
-    fun getContactList() {
-        Log.v("hello", "hihi")
-        val phones = this.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-
-        // loop over all contacts
-        if (phones != null) {
-            while (phones!!.moveToNext()) {
-                // get contact info
-                var phoneNumber: String? = null
-                val id = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts._ID))
-                val name = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val avatarUriString = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
-                var avatarUri: Uri? = null
-                if (avatarUriString != null)
-                    avatarUri = Uri.parse(avatarUriString)
-
-                // get phone number
-                if (Integer.parseInt(phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    val pCur = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf<String>(id), null)
-
-                    while (pCur != null && pCur!!.moveToNext()) {
-                        phoneNumber = pCur!!.getString(pCur!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                    }
-
-                    pCur!!.close()
-
-                }
-
-                val contactChip = ContactChip(id, avatarUri, name, phoneNumber)
-                // add contact to the list
-                mContactList.add(contactChip)
-            }
-            phones!!.close()
-        }
-
-        // pass contact list to chips input
-        mChipsInput.filterableList = mContactList
-    }
+//    // get contactList
+//    @TargetApi(Build.VERSION_CODES.M)
+//    fun getContactList() {
+//        Log.v("hello", "hihi")
+//        val phones = this.contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+//
+//        // loop over all contacts
+//        if (phones != null) {
+//            while (phones!!.moveToNext()) {
+//                // get contact info
+//                var phoneNumber: String? = null
+//                val id = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts._ID))
+//                val name = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+//                val avatarUriString = phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
+//                var avatarUri: Uri? = null
+//                if (avatarUriString != null)
+//                    avatarUri = Uri.parse(avatarUriString)
+//
+//                // get phone number
+//                if (Integer.parseInt(phones!!.getString(phones!!.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+//                    val pCur = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+//                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", arrayOf<String>(id), null)
+//
+//                    while (pCur != null && pCur!!.moveToNext()) {
+//                        phoneNumber = pCur!!.getString(pCur!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+//                    }
+//
+//                    pCur!!.close()
+//
+//                }
+//
+//                val contactChip = ContactChip(id, avatarUri, name, phoneNumber)
+//                // add contact to the list
+//                mContactList.add(contactChip)
+//            }
+//            phones!!.close()
+//        }
+//
+//        // pass contact list to chips input
+//        mChipsInput.filterableList = mContactList
+//    }
 
 
 }

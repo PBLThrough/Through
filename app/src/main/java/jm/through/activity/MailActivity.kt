@@ -26,6 +26,7 @@ import jm.through.send.SendActivity
 import kotlinx.android.synthetic.main.nav_header_mail.*
 import android.view.animation.AnimationUtils
 import android.view.animation.Animation
+import android.widget.Spinner
 import jm.through.navigation.UserRecycler
 
 
@@ -45,9 +46,8 @@ class MailActivity : AppCompatActivity() {
 
 
         send_fab.setOnClickListener {
-            val formIntent = Intent(this, FormActivity::class.java)
-            startActivity(formIntent)
-            overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
+            val intent = Intent(this, SendActivity::class.java)
+            startActivity(intent)
         }
 
 
