@@ -64,8 +64,6 @@ class ReadActivity : AppCompatActivity(), View.OnClickListener {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
 
         //MessageFragment 에 전달할 bundle
-        var bundle = Bundle();
-        bundle.putInt("position",idx)
 
         //MessageActivity 에 전달할 intent
         var m_intent = Intent();

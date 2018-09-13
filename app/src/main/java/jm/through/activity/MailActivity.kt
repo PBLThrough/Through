@@ -67,9 +67,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         val idx: Int = recycler.getChildAdapterPosition(v!!)
-        val messageIntent = Intent(this, MessageActivity::class.java)
+        val messageIntent = Intent(this.context, MessageActivity::class.java)
         messageIntent.putExtra("position", idx)
         startActivity(messageIntent)
+        Log.v("position, idx = ",idx.toString());
         Log.v("Loading.. ","MailActivity!");
         //finish()안하면 activity쌓일거임 근데 그러면 activity돌아갈때마다 프로그레스바 돌면서 메일 가져올텐데
         //상태를 저장해놓는 부분을 생각해야 할 듯

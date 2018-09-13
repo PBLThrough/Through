@@ -17,35 +17,36 @@ import java.text.SimpleDateFormat
  */
 
 class MessageActivity : AppCompatActivity(){
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
+        Log.v("Loading.. ","MessageActivity!");
 
-        val t = findViewById<Toolbar>(R.id.message_bar)
-        setSupportActionBar(t)
-        supportActionBar!!.setTitle("MessageActivity 툴바!!")
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        // 여기서 에러남
+//        val t = findViewById<Toolbar>(R.id.message_bar)
+//        setSupportActionBar(t)
+//        supportActionBar!!.setTitle("MessageActivity 툴바!!")
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        Log.v("messageActivity - ","toolbar ");
         val titleString = findViewById(R.id.message_content_title) as TextView // 제목
         val memoString = findViewById(R.id.message_content_memo) as TextView // 내용(Only text)
         val dateString = findViewById(R.id.message_content_time) as TextView // 시각
-        val mWebView = findViewById(R.id.message_content_web) as WebView // 내용 content
+//        val mWebView = findViewById(R.id.message_content_web) as WebView // 내용 content
 
         //final TextView itemString = (TextView)v.findViewById(R.id.)
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
 
+        Log.v("messageActivity -","getIntent()");
         if (getIntent() != null) {
             val intent = getIntent();
             val a = intent.getIntExtra("position",0);
 
             Log.v("intent "," is "+a);
-            Log.v("Loading.. ","MessageActivity!");
             val getSubject = readList[a].mailTitle.split("<".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] // subject
             val getFrom = readList[a].mailMemo // from
             val getDate = readList[a].mailDate // date
-            val getWeb = readList[a].mailMemo
+ //           val getWeb = readList[a].mailMemo
             // ImageView getimage= readList.get(a).component4();
             //System.out.println("subject printing... "+ getSubject.toString());
 
