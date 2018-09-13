@@ -1,11 +1,8 @@
 package jm.through.read
 
-import android.annotation.TargetApi
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -18,20 +15,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import jm.through.R
-import jm.through.R.id.toolbar
-import jm.through.activity.MainActivity
+import jm.through.activity.MailActivity
 import jm.through.attachment.RattachAdapter
 import jm.through.attachment.RattachData
-import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.fragment_content.*
-import kotlinx.android.synthetic.main.rattach_item.*
 import java.io.File
-import java.net.URISyntaxException
 
-class ReadActivity : AppCompatActivity() {
+class ReadActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var  receiveAdapter: RattachAdapter
     var context: Context =this
     var rattach_url : String? =null
@@ -45,7 +37,7 @@ class ReadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_content)
-
+        Log.v("Loading.. ","ReadActivity!");
         var readTask = ReadTask()
         readTask.execute()
 
@@ -68,7 +60,7 @@ class ReadActivity : AppCompatActivity() {
 
     // 셀 하나를 클릭했을 때 위치를 넘겨주는 곳
     @RequiresApi(Build.VERSION_CODES.M)
-     fun onClick(v: View?) {
+    override fun onClick(v: View) {
         val idx: Int = checkRecycler.getChildAdapterPosition(v)
 
         //MessageFragment 에 전달할 bundle
@@ -84,8 +76,7 @@ class ReadActivity : AppCompatActivity() {
         //var fm = fragmentManager //fragment교체에 필요한 fragmentManager
 
         // intent( 현재 액티비티, 전환할 액티비티)
-        val intent= Intent(ReadActivity.this,MessageActivity.class);
-
+        val intent= Intent(this, MessageActivity::class.java);
         startActivity(intent);
         //message.arguments = bundle;
         //fm.beginTransaction().replace(R.id.fragment_container, message).commit()
@@ -112,19 +103,19 @@ class ReadActivity : AppCompatActivity() {
             super.onProgressUpdate(*values)
         }
 
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            readProgress.visibility = View.INVISIBLE
-            try {
-                rAdapter = ReadAdapter(FolderFetchImap.readList)
-                rAdapter.setOnItemClickListener(this@ReadActivity)
-                checkRecycler.adapter = rAdapter
-                checkRecycler.layoutManager = LinearLayoutManager(activity)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.v("fail", "")
-            }
-        }
+//        override fun onPostExecute(result: Void?) {
+//            super.onPostExecute(result)
+//            readProgress.visibility = View.INVISIBLE
+//            try {
+//                rAdapter = ReadAdapter(FolderFetchImap.readList)
+//                rAdapter.setOnItemClickListener(context as MailActivity)
+//                checkRecycler.adapter = rAdapter
+//                checkRecycler.layoutManager = LinearLayoutManager(this@ReadActivity)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                Log.v("fail", "")
+//            }
+//        }
 
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = FolderFetchImap()
@@ -132,7 +123,7 @@ class ReadActivity : AppCompatActivity() {
 
             // 업데이트 할 땐 아이디와 비밀번호 바꾸기 ^^!!
             reader.readImapMail("cisspmit@naver.com","@!gg1021")
-            //reader.readMail("cisspmit@naver.com", "@!gorden")
+
 
             Log.v("list", FolderFetchImap.readList.toString())
 

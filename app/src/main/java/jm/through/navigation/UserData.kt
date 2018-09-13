@@ -1,4 +1,4 @@
-package jm.through.read
+package jm.through.navigation
 
 
 data class UserData (

@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!--toolbar include-->
         <include
             android:id="@+id/tool_bar"
             layout="@layout/app_bar_mail"
@@ -21,24 +22,34 @@
             android:layout_height="wrap_content" />
 
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp">
 
 
+            <!--메일 확인 recyclerView-->
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/fragment_check">
+            </include>
+
+
+            <!--메일 쓰기 floating-->
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/send_fab"
                 android:layout_width="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
                 android:backgroundTint="@color/mainColor"
                 android:src="@drawable/pencil"
                 app:borderWidth="0dp"
                 app:fabSize="normal"
                 app:useCompatPadding="true" />
-        </FrameLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -50,31 +61,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
             <include
                 android:id="@+id/nav_header"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="match_parent"
                 layout="@layout/nav_header_mail"
                 android:layout_gravity="center_vertical">
             </include>
-
-            <FrameLayout
-                android:id="@+id/menu_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </FrameLayout>
-
-
-        </LinearLayout>
-
-
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

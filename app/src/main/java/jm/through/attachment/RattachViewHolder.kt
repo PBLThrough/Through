@@ -8,7 +8,7 @@ import android.widget.TextView
 import jm.through.R
 
 
-class RattachViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+class RattachViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
 
     var receive_typeImage: ImageView =itemView!!.findViewById(R.id.receive_type_image) as ImageView
     var receive_fileName:TextView=itemView!!.findViewById(R.id.receive_file_name) as TextView

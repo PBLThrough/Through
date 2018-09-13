@@ -14,38 +14,6 @@ import jm.through.send.SendActivity
 import kotlinx.android.synthetic.main.activity_form.*
 
 class FormActivity : AppCompatActivity(), View.OnClickListener {
-
-    //폼 클릭시 이벤트 처리
-    override fun onClick(v: View?) {
-        val recycler = v!!.parent //item을 갖고 있는 recycler는 item의 부모뷰
-
-        when(recycler){
-            school_recycler -> {
-                val position = school_recycler.getChildAdapterPosition(v)
-                var intent = Intent(this, SendActivity::class.java)
-                intent.putExtra("formDetail", school_list.get(position).formDetail)
-                startActivity(intent)
-                finish()
-            }
-            company_recycler -> {
-                val position = school_recycler.getChildAdapterPosition(v)
-                var intent = Intent(this, SendActivity::class.java)
-                intent.putExtra("formDetail", company_list.get(position).formDetail)
-                startActivity(intent)
-                finish()
-            }
-            custom_recycler -> {
-                val position = school_recycler.getChildAdapterPosition(v)
-                var intent = Intent(this, SendActivity::class.java)
-                intent.putExtra("formDetail", custom_list.get(position).formDetail)
-                startActivity(intent)
-                finish()
-            }
-
-
-        }
-    }
-
     lateinit var sAdapter: FormAdapter //recycler연결시킬 adapter
     lateinit var cAdapter: FormAdapter //recycler연결시킬 adapter
     lateinit var uAdapter:FormAdapter
@@ -53,11 +21,39 @@ class FormActivity : AppCompatActivity(), View.OnClickListener {
     var company_list: ArrayList<FormData> = ArrayList()
     var custom_list: ArrayList<FormData> = ArrayList()
 
+
+    //폼 클릭시 이벤트 처리
+    override fun onClick(v: View?) {
+        val recycler = v!!.parent //item을 갖고 있는 recycler는 item의 부모뷰
+        val intent = Intent(applicationContext, SendActivity::class.java)
+
+        when(recycler){
+            school_recycler -> {
+                val position = school_recycler.getChildAdapterPosition(v)
+                intent.putExtra("formDetail", school_list.get(position).formDetail)
+
+            }
+            company_recycler -> {
+                val position = company_recycler.getChildAdapterPosition(v)
+                intent.putExtra("formDetail", company_list.get(position).formDetail)
+
+            }
+            custom_recycler -> {
+                val position = custom_recycler.getChildAdapterPosition(v)
+                intent.putExtra("formDetail", custom_list.get(position).formDetail)
+            }
+        }
+
+        startActivity(intent)
+        finish()
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
         attachRecycler()
-
     }
 
     private fun attachRecycler() {
@@ -75,7 +71,7 @@ class FormActivity : AppCompatActivity(), View.OnClickListener {
 
         custom_list.add(FormData(R.drawable.form1, "결제메일","커스텀1"))
         custom_list.add(FormData(R.drawable.form1, "게임메일","커스텀2"))
-        custom_list.add(FormData(R.drawable.form1, "쇼핑메일","커스텀2"))
+        custom_list.add(FormData(R.drawable.form1, "쇼핑메일","커스텀3"))
 
 
         //학교 폼
@@ -101,6 +97,10 @@ class FormActivity : AppCompatActivity(), View.OnClickListener {
         uAdapter.setOnItemClickListener(this)
         custom_recycler.adapter = uAdapter
         custom_recycler.layoutManager = manager3
+    }
 
+    override fun onBackPressed() {
+        startActivity(Intent(this, SendActivity::class.java))
+        finish()
     }
 }

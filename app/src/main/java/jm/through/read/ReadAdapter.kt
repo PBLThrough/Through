@@ -1,26 +1,20 @@
 package jm.through.read
 
-import android.media.Image
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import jm.through.R
+import jm.through.activity.MailActivity
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.mail.internet.MimeUtility
-import android.text.method.TextKeyListener.clear
-
-
 
 
 /**
  * ReadAdapter <- ReadData
  * */
 class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadViewHolder>() {
+
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
     // 현재 시각
     val currentTime = Date()
@@ -28,7 +22,7 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
     val hSimpleDateFormat = SimpleDateFormat("aa hh:mm", Locale.KOREA)
     val mTime = mSimpleDateFormat.format(currentTime)
 
-    override fun onBindViewHolder(holder: ReadViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ReadViewHolder, position: Int) {
         // ReadDate 요소 가져오기
         var title:String=dataList!!.get(position).mailTitle
         var memo:String=dataList!!.get(position).mailMemo
@@ -74,8 +68,7 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
 //        notifyDataSetChanged()
 //    }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReadViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadViewHolder {
         val mainView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.check_board_item,parent,false)
         mainView.setOnClickListener(onItemClick)
 
@@ -84,7 +77,7 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
 
     override fun getItemCount(): Int = dataList.size
 
-    fun setOnItemClickListener(l: View.OnClickListener) {
+    fun setOnItemClickListener(l: MailActivity) {
         onItemClick = l
     }
 }

@@ -10,6 +10,8 @@
         layout="@layout/app_bar_mail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+        <!--layout="@layout/app_bar_message">-->
+
 
 <!-- 메일 상세내용 창 -->
     <TextView
@@ -38,24 +40,23 @@
 
     <!--</fragment>-->
 
-    <!--<TextView-->
-        <!--android:id="@+id/message_content_item"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_marginBottom="5dp"-->
-        <!--android:layout_marginEnd="5dp"-->
-        <!--android:layout_marginLeft="5dp"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:layout_marginStart="5dp"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:text="첨부파일"-->
-        <!--android:textSize="15dp" />-->
+    <TextView
+        android:id="@+id/message_content_item"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="첨부파일"
+        android:textSize="15dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/content_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
     </android.support.v7.widget.RecyclerView>
 
     <WebView
@@ -65,15 +66,15 @@
     </WebView>
 
     <!---->
-    <!--<TextView-->
-        <!--android:id="@+id/message_content_memo"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginLeft="7dp"-->
-        <!--android:layout_marginRight="7dp"-->
-        <!--android:text="내용"-->
-        <!--android:textSize="16dp" />-->
+    <TextView
+        android:id="@+id/message_content_memo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="내용"
+        android:textSize="16dp" />
 
     <!--<ImageView-->
         <!--android:id="@+id/message_content_image"-->

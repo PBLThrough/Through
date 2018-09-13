@@ -1,4 +1,6 @@
 package jm.through.read;
+import android.util.Log;
+
 import java.io.*;
 import java.security.Security;
 import java.util.*;
@@ -20,7 +22,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
 
     }
 
-    static ArrayList<ReadData> readList = new ArrayList<>();
+   public static ArrayList<ReadData> readList = new ArrayList<>();
     //String[] args
     public ArrayList<ReadData> readImapMail(String username, String password) {
         final String id = username;
@@ -93,7 +95,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
                 System.out.println("Date: "+ date);
 //                System.out.println("Size: "+ msg.getSize());
 //                System.out.println(msg.getFlags());
-                System.out.println("Body: \n"+ msg.getContent());
+              //  System.out.println("Body: \n"+ msg.getContent());
                 System.out.println(msg.getContentType());
 
                 readList.add(new ReadData(from, subject, date,/* content,*/ false));
