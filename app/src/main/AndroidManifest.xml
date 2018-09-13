@@ -27,10 +27,14 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignActivity" />
         <activity android:name=".activity.MailActivity" />
-        <activity android:name=".read.MessageActivity"/>
+        <activity android:name=".read.MessageActivity" />
         <activity android:name=".send.SendActivity" />
         <activity android:name=".send.PracticeActivity" />
-        <activity android:name=".form.FormActivity"
+        <activity
+            android:name=".form.FormActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".account.AccountActivity" />
+        <activity android:name=".account.AddAccountActivity"
             android:windowSoftInputMode="adjustResize"></activity>
     </application>
 

@@ -55,23 +55,50 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <!--hide & show, account_recycler-->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/user_recycler"
-        android:layout_below="@+id/header_layout"
+    <RelativeLayout
+        android:id="@+id/recycler_layout"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_layout">
+        <!--hide & show, account_recycler-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"></android.support.v7.widget.RecyclerView>
+
+        <!--email menu-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/nav_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/add_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recycler_layout"
         android:visibility="invisible"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="10dp">
 
-    <!--email menu-->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/nav_recycler"
-        android:layout_below="@+id/header_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        <ImageButton
+            android:id="@+id/add_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:clickable="false"
+            android:background="@drawable/formcharacter" />
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/add_btn"
+            android:text="계정 추가" />
+    </RelativeLayout>
 
 </RelativeLayout>

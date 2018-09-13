@@ -14,13 +14,16 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.RelativeLayout
 import android.widget.Toast
 import jm.through.R
+import jm.through.account.AccountActivity
 import jm.through.attachment.RattachData
 import jm.through.navigation.UserData
 import jm.through.read.*
 import jm.through.read.FolderFetchImap.readList
 import jm.through.send.SendActivity
+import kotlinx.android.synthetic.main.activity_add_account.*
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.nav_header_mail.*
 import java.io.File
@@ -55,13 +58,29 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
             if (click) {
                 user_recycler.visibility = View.VISIBLE
+                add_layout.visibility = View.VISIBLE
                 nav_recycler.visibility = View.INVISIBLE
             } else {
                 user_recycler.visibility = View.INVISIBLE
+                add_layout.visibility = View.INVISIBLE
                 nav_recycler.visibility = View.VISIBLE
             }
             click = !click
         }
+
+        val v = findViewById(R.id.add_layout) as RelativeLayout
+
+        v.setOnClickListener{
+            val intent = Intent(this, AccountActivity::class.java)
+            startActivity(intent)
+        }
+//        //계정 추가 레이아웃 눌렀을 시
+//        add_image.setOnClickListener{
+//            val intent = Intent(this, AccountActivity::class.java)
+//            startActivity(intent)
+//        }
+
+
     }
 
 
@@ -187,7 +206,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = FolderFetchImap()
-            reader.readImapMail("cisspmit@naver.com", "@!gg1021")
+            reader.readImapMail("youremail", "yourpass")
             Log.v("list", readList.toString())
             return null
         }
