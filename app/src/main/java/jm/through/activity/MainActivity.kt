@@ -4,21 +4,16 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import jm.through.R
-import jm.through.read.MessageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.security.Permission
 
@@ -33,12 +28,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.v("Loading.. ","MainActivity!");
 
         //sharedpreference 기능
         val sp: SharedPreferences? = getSharedPreferences("sp", Context.MODE_PRIVATE)
         var sp_id: String = ""
         var sp_pwd: String = ""
-
 
         //이미 회원가입이 되어있을 시
         if (sp != null) {
@@ -104,10 +99,15 @@ class MainActivity : AppCompatActivity() {
 //            super.onBackPressed()
 //        }
         Log.v("MainActivity : ","onBackPressed Called")
+
         Toast.makeText(applicationContext,"메인 뒤로가기",Toast.LENGTH_SHORT);
         super.onBackPressed();
+
+        Toast.makeText(applicationContext,"종료",Toast.LENGTH_SHORT)
+        finish()
+
 //
-//
+
 //        @Override
 //        public void onBackPressed() {
 //            if ( pressedTime == 0 ) {

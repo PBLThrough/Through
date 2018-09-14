@@ -30,11 +30,13 @@
 
             <EditText
                 android:id="@+id/edit_receiver"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/text_receiver"
+                android:layout_centerVertical="true"
                 android:background="@null"
-                android:textSize="15sp" />
+                android:layout_toRightOf="@+id/text_receiver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </EditText>
+
         </RelativeLayout>
 
 

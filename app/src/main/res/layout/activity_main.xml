@@ -6,16 +6,17 @@
     android:layout_height="match_parent"
     android:background="@color/whiteColor"
     android:orientation="vertical"
+    android:theme="@style/EditTheme"
     tools:context="jm.through.activity.MailActivity">
 
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/login" />
+        android:background="@drawable/formcharacter" />
 
 
     <RelativeLayout

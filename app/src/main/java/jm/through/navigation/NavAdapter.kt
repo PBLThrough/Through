@@ -17,7 +17,7 @@ import java.util.*
 class NavAdapter(var dataList: ArrayList<NavData>): RecyclerView.Adapter<NavViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
 
-    override fun onBindViewHolder(holder: NavViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: NavViewHolder, position: Int) {
 
         holder!!.navName.text = dataList!!.get(position).navName // 이름
         holder!!.navClean.setImageResource(dataList!!.get(position).navClean) //휴지통
@@ -27,7 +27,7 @@ class NavAdapter(var dataList: ArrayList<NavData>): RecyclerView.Adapter<NavView
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): NavViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NavViewHolder {
         val navView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.nav_list_item,parent,false)
         navView.setOnClickListener(onItemClick)
         return NavViewHolder(navView)
