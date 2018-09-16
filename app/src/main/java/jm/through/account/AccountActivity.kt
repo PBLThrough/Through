@@ -15,15 +15,15 @@ import kotlinx.android.synthetic.main.activity_add_account.*
 
 class AccountActivity : AppCompatActivity(), View.OnClickListener {
 
-    var account_list = ArrayList<AccountData>()
+    var account_list = ArrayList<PlatformData>()
     lateinit var aAdapter:AccountAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
-        account_list.add(AccountData(R.drawable.naver,"naver"))
-        account_list.add(AccountData(R.drawable.google,"gmail"))
-        account_list.add(AccountData(R.drawable.daum,"daum"))
+        account_list.add(PlatformData(R.drawable.naver,"naver"))
+        account_list.add(PlatformData(R.drawable.google,"gmail"))
+        account_list.add(PlatformData(R.drawable.daum,"daum"))
 
         aAdapter = AccountAdapter(account_list)
         account_recycler.adapter = aAdapter

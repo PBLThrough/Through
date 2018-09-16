@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import jm.through.R
 import jm.through.activity.MailActivity
 
-class AccountAdapter(var dataList: ArrayList<AccountData>) : RecyclerView.Adapter<AccountViewHolder>() {
+class AccountAdapter(var dataList: ArrayList<PlatformData>) : RecyclerView.Adapter<AccountViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountViewHolder {

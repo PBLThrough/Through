@@ -32,9 +32,8 @@
                 android:id="@+id/email_main_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="dream7739"
                 android:textColor="#000000"
-                android:textSize="22dp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -42,8 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/email_main_text"
-                android:text="gmail.com"
-                android:textSize="20dp" />
+                android:textSize="15sp" />
 
             <ImageButton
                 android:id="@+id/spin_btn"
