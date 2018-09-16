@@ -7,6 +7,13 @@
     android:theme="@style/EditTheme"
     tools:context=".account.AddAccountActivity">
 
+    <ProgressBar
+        android:id="@+id/authen_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
 
     <!--계정추가 나타내는 이미지로 대체-->
     <ImageView
@@ -37,6 +44,7 @@
 
     <EditText
         android:id="@+id/pass_edit"
+        android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/email_edit"
