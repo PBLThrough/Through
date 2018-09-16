@@ -206,7 +206,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = FolderFetchImap()
-            reader.readImapMail("cisspmit@naver.com", "@!gg1021")
+            reader.readImapMail("yourmail", "yourpass")
             Log.v("list", readList.toString())
             return null
         }
