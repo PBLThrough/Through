@@ -121,8 +121,6 @@ class ReadActivity : AppCompatActivity(), View.OnClickListener {
 
             // 업데이트 할 땐 아이디와 비밀번호 바꾸기 ^^!!
             reader.readImapMail("cisspmit@naver.com","@!gg1021")
-
-
             Log.v("list", FolderFetchImap.readList.toString())
 
             return null
