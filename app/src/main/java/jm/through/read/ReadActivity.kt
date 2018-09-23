@@ -22,6 +22,10 @@ import jm.through.attachment.RattachAdapter
 import jm.through.attachment.RattachData
 import kotlinx.android.synthetic.main.fragment_content.*
 import java.io.File
+import java.io.IOException
+import javax.mail.MessagingException
+import javax.mail.Multipart
+import javax.mail.Part
 
 class ReadActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var  receiveAdapter: RattachAdapter
@@ -33,6 +37,49 @@ class ReadActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var checkRecycler: RecyclerView
     lateinit var readProgress: ProgressBar
     private var swipeContainer: SwipeRefreshLayout? = null
+
+
+    private var textIsHtml = false
+
+    @Throws(MessagingException::class, IOException::class)
+    private fun getText(p: Part): String? {
+        if (p.isMimeType("text/*")) {
+            val s = p.getContent() as String
+            textIsHtml = p.isMimeType("text/html")
+            return s
+        }
+
+        if (p.isMimeType("multipart/alternative")) {
+            // prefer html text over plain text
+            val mp = p.getContent() as Multipart
+            var text: String? = null
+            for (i in 0 until mp.count) {
+                val bp = mp.getBodyPart(i)
+                if (bp.isMimeType("text/plain")) {
+                    if (text == null)
+                        text = getText(bp)
+                    continue
+                } else if (bp.isMimeType("text/html")) {
+                    val s = getText(bp)
+                    if (s != null)
+                        return s
+                } else {
+                    return getText(bp)
+                }
+            }
+            return text
+        } else if (p.isMimeType("multipart/*")) {
+            val mp = p.getContent() as Multipart
+            for (i in 0 until mp.count) {
+                //t = processBody(mp.getBodyPart(i), operacao);
+                val s = getText(mp.getBodyPart(i))
+                if (s != null)
+                    return s
+            }
+        }
+
+        return null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,14 +116,10 @@ class ReadActivity : AppCompatActivity(), View.OnClickListener {
         var m_intent = Intent();
         m_intent.putExtra("position",idx);
 
-        //var message = MessageFragment() as Fragment//메일 보내는 fragment
-        var message = MessageActivity() as Activity;
-        //var fm = fragmentManager //fragment교체에 필요한 fragmentManager
-
         // intent( 현재 액티비티, 전환할 액티비티)
         val intent= Intent(this, MessageActivity::class.java);
         startActivity(intent);
-        //message.arguments = bundle;
+
         //fm.beginTransaction().replace(R.id.fragment_container, message).commit()
     }
 
@@ -120,7 +163,7 @@ class ReadActivity : AppCompatActivity(), View.OnClickListener {
             //var reader = MailReader()
 
             // 업데이트 할 땐 아이디와 비밀번호 바꾸기 ^^!!
-            reader.readImapMail("yourmail","yourpass")
+            reader.readImapMail("cisspmit@naver.com","@!gg1022")
             Log.v("list", FolderFetchImap.readList.toString())
 
             return null
@@ -175,8 +218,5 @@ class ReadActivity : AppCompatActivity(), View.OnClickListener {
 //        // 3. 파일 저장
 //
 //    }
-
-
-
 
 }

@@ -24,136 +24,11 @@ import jm.through.send.JSSEProvider;
  * IMAP 하는 곳
  * */
 public class FolderFetchImap extends javax.mail.Authenticator{
-    private static final Pattern COMPILED_PATTERN_SRC_URL_SINGLE = Pattern.compile("src='([^']*)'",  Pattern.CASE_INSENSITIVE);
-    private static final Pattern COMPILED_PATTERN_SRC_URL_DOUBLE = Pattern.compile("src=\"([^\"]*)\"",  Pattern.CASE_INSENSITIVE);
-
 
     static {
         Security.addProvider(new JSSEProvider());
 
     }
-
-    public Multipart build(String messageText, String messageHtml, List<URL> messageHtmlInline, List<URL> attachments) throws MessagingException {
-        final Multipart mpMixed = new MimeMultipart("mixed");
-        {
-            // alternative
-            final Multipart mpMixedAlternative = newChild(mpMixed, "alternative");
-            {
-                // Note: MUST RENDER HTML LAST otherwise iPad mail client only renders the last image and no email
-                addTextVersion(mpMixedAlternative,messageText);
-                addHtmlVersion(mpMixedAlternative,messageHtml, messageHtmlInline);
-            }
-            // attachments
-            addAttachments(mpMixed,attachments);
-        }
-
-        //msg.setText(message, "utf-8");
-        //msg.setContent(message,"text/html; charset=utf-8");
-        return mpMixed;
-    }
-
-    private void addAttachments(Multipart parent, List<URL> attachments) throws MessagingException {
-        if (attachments != null)
-        {
-            for (URL attachment : attachments)
-            {
-                final MimeBodyPart mbpAttachment = new MimeBodyPart();
-                DataSource htmlPartImgDs = new URLDataSource(attachment);
-                mbpAttachment.setDataHandler(new DataHandler(htmlPartImgDs));
-                String fileName = attachment.getFile();
-                fileName = getFileName(fileName);
-                mbpAttachment.setDisposition(BodyPart.ATTACHMENT);
-                mbpAttachment.setFileName(fileName);
-                parent.addBodyPart(mbpAttachment);
-            }
-        }
-    }
-
-    private Multipart newChild(Multipart parent, String alternative) throws MessagingException {
-        MimeMultipart child =  new MimeMultipart(alternative);
-        final MimeBodyPart mbp = new MimeBodyPart();
-        parent.addBodyPart(mbp);
-        mbp.setContent(child);
-        return child;
-    }
-
-    private void addTextVersion(Multipart mpRelatedAlternative, String messageText) throws MessagingException {
-        final MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setContent(messageText, "text/plain");
-        mpRelatedAlternative.addBodyPart(textPart);
-    }
-
-    private void addHtmlVersion(Multipart parent, String messageHtml, List<URL> embeded) throws MessagingException {
-        // HTML version
-        final Multipart mpRelated = newChild(parent,"related");
-
-        // Html
-        final MimeBodyPart htmlPart = new MimeBodyPart();
-        HashMap<String,String> cids = new HashMap<String, String>();
-        htmlPart.setContent(replaceUrlWithCids(messageHtml,cids), "text/html");
-        mpRelated.addBodyPart(htmlPart);
-
-        // Inline images
-        addImagesInline(mpRelated, embeded, cids);
-    }
-
-    private void addImagesInline(Multipart parent, List<URL> embeded, HashMap<String,String> cids) throws MessagingException {
-        if (embeded != null)
-        {
-            for (URL img : embeded)
-            {
-                final MimeBodyPart htmlPartImg = new MimeBodyPart();
-                DataSource htmlPartImgDs = new URLDataSource(img);
-                htmlPartImg.setDataHandler(new DataHandler(htmlPartImgDs));
-                String fileName = img.getFile();
-                fileName = getFileName(fileName);
-                String newFileName = cids.get(fileName);
-                boolean imageNotReferencedInHtml = newFileName == null;
-                if (imageNotReferencedInHtml) continue;
-                // Gmail requires the cid have <> around it
-                htmlPartImg.setHeader("Content-ID", "<"+newFileName+">");
-                htmlPartImg.setDisposition(BodyPart.INLINE);
-                parent.addBodyPart(htmlPartImg);
-            }
-        }
-    }
-
-    public String replaceUrlWithCids(String html, HashMap<String,String> cids)
-    {
-        html = replaceUrlWithCids(html, COMPILED_PATTERN_SRC_URL_SINGLE, "src='cid:@cid'", cids);
-        html = replaceUrlWithCids(html, COMPILED_PATTERN_SRC_URL_DOUBLE, "src=\"cid:@cid\"", cids);
-        return html;
-    }
-
-    private String replaceUrlWithCids(String html, Pattern pattern, String replacement, HashMap<String,String> cids) {
-        Matcher matcherCssUrl = pattern.matcher(html);
-        StringBuffer sb = new StringBuffer();
-        while (matcherCssUrl.find())
-        {
-            String fileName = matcherCssUrl.group(1);
-            // Disregarding file path, so don't clash your filenames!
-            fileName = getFileName(fileName);
-            // A cid must start with @ and be globally unique
-            String cid = "@" + UUID.randomUUID().toString() + "_" + fileName;
-            if (cids.containsKey(fileName))
-                cid = cids.get(fileName);
-            else
-                cids.put(fileName,cid);
-            matcherCssUrl.appendReplacement(sb,replacement.replace("@cid",cid));
-        }
-        matcherCssUrl.appendTail(sb);
-        html = sb.toString();
-        return html;
-    }
-
-    private String getFileName(String fileName) {
-        if (fileName.contains("/"))
-            fileName = fileName.substring(fileName.lastIndexOf("/")+1);
-        return fileName;
-    }
-
-
-
 
     public static ArrayList<ReadData> readList = new ArrayList<>();
     //String[] args
@@ -162,6 +37,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
         final String pass = password;
         final String host = "imap.naver.com"; // port = 993
         final String port = "993";
+
 
 
         try
@@ -205,10 +81,9 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
             System.out.println(messages.length);
 
-            int states = 20; // 새로고침 할 때 + 30개 해주기
-            for (int i= messages.length-1; i > messages.length - states ;i--)
+            int states = 5; // 새로고침 할 때 + 30개 해주기
+            for (int i= messages.length-1; i > messages.length - states -1 ;i--)
             {
-
                 System.out.println("*****************************************************************************");
                 System.out.println("MESSAGE " + (i + 1) + ":");
                 Message msg =  messages[i];
@@ -223,16 +98,16 @@ public class FolderFetchImap extends javax.mail.Authenticator{
                 Object content = msg.getContent();
 
                 System.out.println("Subject: " + subject);
-                System.out.println("from :" + from);
+//                System.out.println("from :" + from);
 //                System.out.println("From: " + from);
 //                System.out.println("To: "+msg.getAllRecipients()[0]);
-                System.out.println("Date: "+ date);
+//                System.out.println("Date: "+ date);
 //                System.out.println("Size: "+ msg.getSize());
 //                System.out.println(msg.getFlags());
-              //  System.out.println("Body: \n"+ msg.getContent());
+                //System.out.println("Body: \n"+ msg.getContent());
                 System.out.println("\n"+messages[i] + "의 타입은 "+ msg.getContentType());
 
-                readList.add(new ReadData(from, subject, date, contenttype,content, false));
+                readList.add(new ReadData(from, subject, date, contenttype, content, false));
             }
             if (folder != null && folder.isOpen()) { folder.close(true); }
             if (store != null) { store.close(); }
