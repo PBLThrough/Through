@@ -6,12 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import jm.through.AccountData
-import jm.through.DetailData
+import jm.through.account.DetailData
 import jm.through.R
 import jm.through.navigation.UserViewHolder
 import java.util.*
-import java.util.Map
-import kotlin.collections.HashMap
 
 
 /**

@@ -5,9 +5,14 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:scrollbars="vertical"
     tools:openDrawer="start">
+
+    <!--드로어 레이아웃은 왼 -> 오로 열기 위한 레이아웃
+    toolbar = include -> 내용 기술 -> 메뉴영역(Navigation)
+    순으로 xml을 작성한다.
+    fitsSystemWindow 자동으로 패딩 설정-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,19 +36,18 @@
 
             <!--메일 확인 recyclerView-->
             <include
+                layout="@layout/fragment_check"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                layout="@layout/fragment_check">
-            </include>
+                android:layout_height="match_parent"></include>
 
 
             <!--메일 쓰기 floating-->
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/send_fab"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_height="wrap_content"
                 android:backgroundTint="@color/mainColor"
                 android:src="@drawable/pencil"
                 app:borderWidth="0dp"
@@ -54,20 +58,18 @@
     </LinearLayout>
 
 
-
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-            <include
-                android:id="@+id/nav_header"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                layout="@layout/nav_header_mail"
-                android:layout_gravity="center_vertical">
-            </include>
+        android:layout_gravity="start">
+
+        <include
+            android:id="@+id/nav_header"
+            layout="@layout/nav_header_mail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"></include>
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

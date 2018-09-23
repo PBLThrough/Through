@@ -8,8 +8,10 @@
     <!--헤더 전체 레이아웃-->
     <RelativeLayout
         android:id="@+id/header_layout"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/email_main_img"
@@ -32,6 +34,7 @@
                 android:id="@+id/email_main_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="계정을 추가해주세요"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -71,13 +74,15 @@
             android:id="@+id/user_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"></android.support.v7.widget.RecyclerView>
+            android:visibility="invisible"
+            android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
 
         <!--email menu-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/nav_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
 

@@ -1,6 +1,5 @@
 package jm.through.activity
 
-import android.accounts.Account
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
@@ -17,29 +16,40 @@ import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.Toast
+import com.sun.mail.imap.IMAPFolder
 import jm.through.AccountData
 import jm.through.AccountData.accountList
-import jm.through.AccountData.selectedMail
-import jm.through.AccountData.selectedPass
-import jm.through.DetailData
+import jm.through.AccountData.selectedData
 import jm.through.R
 import jm.through.account.AccountActivity
+import jm.through.account.AddAccountActivity
 import jm.through.attachment.RattachData
 import jm.through.read.*
-import jm.through.read.FolderFetchImap.readList
 import jm.through.send.SendActivity
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.nav_header_mail.*
 import java.io.File
+import java.util.*
+import javax.mail.*
+import javax.mail.internet.MimeUtility
+import kotlin.collections.ArrayList
 
 
 class MailActivity : AppCompatActivity(), View.OnClickListener {
+
     var click = true
     val context = this
-
     lateinit var uAdapter: UserAdapter
     lateinit var rAdapter: ReadAdapter
     var rattach_list: ArrayList<RattachData> = ArrayList()
+    var readId = ""
+    var readPass = ""
+
+    companion object Task {
+        var readTask = MailActivity().ReadTask()
+        var readList = ArrayList<ReadData>()
+
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,15 +58,15 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
         toolbarSetting() //toolbar에 대한 설정
         navSetting() //navigation에 대한 설정
-        readSetting() //read recycler에 대한 설정
 
 
-        if (AccountData.accountList.isEmpty()) {
-            email_main_text.text = "계정을 추가해주세요"
-            //쓰레기값, 나중에 대표메일 설정하면 바꿀것.
-            AccountData.selectedPass= "!hjmh9811387"
-            AccountData.selectedMail = "dream7739@naver.com"
+        //헤더 뷰 클릭하면 버튼 회전 & 리사이클러뷰 변경
+        header_layout.setOnClickListener {
+            //버튼 1번 클릭시 180도 회전하면서 recyclerview 교체, 클릭은 false로 변경
+            animateMenu()
+
         }
+
 
         //플로팅 버튼 누르면 메일 쓰기 화면으로
         send_fab.setOnClickListener {
@@ -64,27 +74,9 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
-        //헤더 뷰 클릭하면 버튼 회전 & 리사이클러뷰 변경
-        header_layout.setOnClickListener {
-            //버튼 1번 클릭시 180도 회전하면서 recyclerview 교체, 클릭은 false로 변경
-            ObjectAnimator.ofFloat(spin_btn, "rotation", if (click) 180f else 0f).start()
 
-            click = !click
-
-            if (click) {
-                user_recycler.visibility = View.VISIBLE
-                add_layout.visibility = View.VISIBLE
-                nav_recycler.visibility = View.GONE
-            } else {
-                user_recycler.visibility = View.GONE
-                add_layout.visibility = View.GONE
-                nav_recycler.visibility = View.VISIBLE
-            }
-        }
-
-
-        //계정 추가레이아웃 클릭 시
-        val v = findViewById(R.id.add_layout) as RelativeLayout
+        //계정 추가레이아웃 클릭 시 계정 추가 화면으로
+        val v = findViewById<RelativeLayout>(R.id.add_layout)
         v.setOnClickListener {
             val intent = Intent(this, AccountActivity::class.java)
             startActivity(intent)
@@ -95,10 +87,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        Log.v("viewtype", v.toString())
-        Log.v("parentView", v!!.parent.toString())
-
-        when (v!!.parent) {
+        when (v?.parent) {
             recycler -> {
                 val idx: Int = recycler.getChildAdapterPosition(v!!)
                 val messageIntent = Intent(this.context, MessageActivity::class.java)
@@ -110,18 +99,15 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
             user_recycler -> {
                 val idx = user_recycler.getChildAdapterPosition(v!!)
-                val detail = AccountData.accountList.get(idx)
-                selectedMail = detail.id
-                selectedPass = detail.pass
+                val data = AccountData.accountList.get(idx)
+                selectedData = data
+                readId = selectedData!!.id
+                readPass = selectedData!!.pass
 
-                //아이디만 입력시 @naver.com붙여줌
-                if(!selectedMail!!.contains("@")){
-                    selectedMail+="@"+ detail.platform+".com"
-                }
-
-                var str = selectedMail!!.split("@")
+                var str = readId.split("@")
                 email_main_text.text = str[0]
                 email_sub_text.text = "@" + str[1]
+                animateMenu()
             }
 
             nav_recycler -> {
@@ -129,9 +115,13 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                 when (idx) {
                     //받은 메일
                     0 -> {
-                            var task = ReadTask()
-                            task.execute()
+                        if (readTask.status == AsyncTask.Status.RUNNING) {
+                            readTask.cancel(true)
                         }
+                        readTask = ReadTask()
+                        readTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                        drawer_layout.closeDrawer(GravityCompat.START)
+                    }
 
                     //보낸메일
                     1 -> {
@@ -159,9 +149,46 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
+    fun animateMenu() {
+        ObjectAnimator.ofFloat(spin_btn, "rotation", if (click) 180f else 0f).start()
+
+        if (click) {
+            user_recycler.visibility = View.VISIBLE
+            add_layout.visibility = View.VISIBLE
+            nav_recycler.visibility = View.GONE
+        } else {
+            user_recycler.visibility = View.GONE
+            add_layout.visibility = View.GONE
+            nav_recycler.visibility = View.VISIBLE
+        }
+        click = !click
+    }
+
     fun readSetting() {
-        var firstTask = ReadTask()
-        firstTask.execute()
+
+        if (accountList.isEmpty()) {
+            //이메일 계정 등록 안되어있으면 sub_text GONE
+            email_sub_text.visibility = View.GONE
+        } else {
+            //계정 등록 되있으면 VISIBLE
+            email_sub_text.visibility = View.VISIBLE
+
+            //계정리스트가 null이 아니지만 선택된 data가 없을 때, 리스트 마지막 값으로 read
+            if (selectedData == null) {
+                selectedData = accountList.last()
+                readId = selectedData!!.id
+                readPass = selectedData!!.pass
+                email_main_text.text = readId.split("@")[0]
+                email_sub_text.text = "@"+readId.split("@")[1]
+                readTask = ReadTask()
+                readTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+            }
+
+
+
+        }
+
+
     }
 
     fun navSetting() {
@@ -170,8 +197,8 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         val navList = ArrayList<NavData>()
 
         if (navList.size == 0) {
-            navList.add(NavData(R.drawable.read, "받은 메일함", 99, R.drawable.write))
-            navList.add(NavData(R.drawable.write, "보낸 메일함", 33, R.drawable.write))
+            navList.add(NavData(R.drawable.read, "받은 메일함", 99, R.drawable.write, null))
+            navList.add(NavData(R.drawable.write, "보낸 메일함", 33, R.drawable.write, null))
         }
         val nAdapter = NavAdapter(navList)
         nav_recycler.adapter = nAdapter
@@ -222,8 +249,8 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             //backPressCloseHandler.onBackPressed()
             //  fm.popBackStack()
-            System.out.println("작동");
-            Toast.makeText(applicationContext, "메일 뒤로가기", Toast.LENGTH_SHORT);
+            System.out.println("작동")
+            Toast.makeText(applicationContext, "메일 뒤로가기", Toast.LENGTH_SHORT)
             //super.onBackPressed();
 
             finish()
@@ -233,15 +260,12 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     inner class ReadTask : AsyncTask<Void, Void, Void>() {
 
-        override fun onProgressUpdate(vararg values: Void?) {
-            super.onProgressUpdate(*values)
-        }
-
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
             read_progress.visibility = View.INVISIBLE
             try {
                 rAdapter = ReadAdapter(readList)
+                rAdapter.notifyDataSetChanged()
                 rAdapter.setOnItemClickListener(context)
                 recycler.adapter = rAdapter
                 recycler.layoutManager = LinearLayoutManager(context)
@@ -252,11 +276,80 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
-            var reader = FolderFetchImap()
-            reader.readImapMail(AccountData.selectedMail, AccountData.selectedPass)
-            Log.v("list", readList.toString())
+            val host = "imap." + readId.split("@".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+            Log.v("hosthost", host)
+            Log.v("idid", readId)
+            Log.v("pass", readPass)
+            val port = "993"
+
+            try {
+                val props = Properties()
+                //Properties props = System.getProperties();
+                props.setProperty("mail.store.protocol", "imap")
+                props["mail.imap.host"] = host
+                props["mail.imap.port"] = port//port
+                // SSL setting
+                props.setProperty("mail.imap.socketFactory.class",
+                        "javax.net.ssl.SSLSocketFactory")
+                props.setProperty("mail.imap.socketFactory.fallback", "false")
+                props.setProperty("mail.imap.socketFactory.port",
+                        port)
+
+                val auth = object : javax.mail.Authenticator() {
+                    override fun getPasswordAuthentication(): PasswordAuthentication {
+                        return PasswordAuthentication(readId, readPass)
+                    }
+                }
+
+                val session = Session.getDefaultInstance(props, auth)
+
+                val store = session.getStore("imap")
+                store!!.connect(host, readId, readPass)
+                //IMAPFolder
+                val folder = store.getFolder("INBOX") as IMAPFolder // This doesn't work for other email account
+                folder.open(Folder.READ_WRITE)
+                //folder = (IMAPFolder) store.getFolder("inbox"); This works for both email account
+
+
+                //if(!folder.isOpen()) folder.open(Folder.READ_WRITE);
+                val count = folder.messageCount
+
+                val messages = folder.messages
+
+
+                val states = 20 // 새로고침 할 때 + 30개 해주기
+                for (i in messages.size - 1 downTo messages.size - states + 1) {
+
+                    if (isCancelled) {
+                        Log.v("hihihihi888", "cancel")
+                        break
+                    }
+                    val msg = messages[i]
+                    //System.out.println(msg.getMessageNumber());
+                    //System.out.println(folder.getUID(msg)
+                    val subject = MimeUtility.decodeText(msg.subject)
+                    val from = MimeUtility.decodeText(msg.from[0].toString())
+                    val date = msg.sentDate
+                    val contenttype = msg.contentType
+                    val size = msg.size
+                    val content: Object = msg.content as Object
+
+                    readList.add(ReadData(from, subject, date, contenttype, content, false))
+                }
+                if (folder != null && folder.isOpen) {
+                    folder.close(true)
+                }
+                store?.close()
+            } catch (e: NoSuchProviderException) {
+                e.printStackTrace()
+            } catch (e: MessagingException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                e.message
+            }
             return null
         }
+
 
         fun receiveAttach(uri: String) {
             var file: File = File(uri)
@@ -283,17 +376,14 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        override fun onCancelled(result: Void?) {
-            super.onCancelled(result)
-        }
-
-        override fun onCancelled() {
-            super.onCancelled()
-        }
-
         override fun onPreExecute() {
             super.onPreExecute()
+            readList.clear()
+            if (read_progress.visibility == View.INVISIBLE) {
+                read_progress.visibility = View.VISIBLE
+            }
         }
+
     }
 
     //onStop상태에서 돌아올 때, onRestart->onStart-> onResume
@@ -316,7 +406,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         super.onResume()
         Log.v("onResume", "resume")
         Log.v("accountList", AccountData.accountList.toString())
-        uAdapter.notifyDataSetChanged()
+
+
+        readSetting() //read recycler에 대한 설정
+
     }
 
     override fun onPause() {
@@ -326,8 +419,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onStop() {
         super.onStop()
+        drawer_layout.closeDrawer(GravityCompat.START)
         Log.v("onStop", "resume")
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

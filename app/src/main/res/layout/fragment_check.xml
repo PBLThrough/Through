@@ -36,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/read_progress"
+        android:visibility="invisible"
         android:layout_centerInParent="true"
         android:indeterminateTint="@color/mainColor"
         />
