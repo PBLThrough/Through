@@ -48,7 +48,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     companion object Task {
         var readTask = MailActivity().ReadTask()
         var readList = ArrayList<ReadData>()
-
     }
 
 
@@ -64,7 +63,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         header_layout.setOnClickListener {
             //버튼 1번 클릭시 180도 회전하면서 recyclerview 교체, 클릭은 false로 변경
             animateMenu()
-
         }
 
 

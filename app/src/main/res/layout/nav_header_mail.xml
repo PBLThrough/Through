@@ -36,8 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="계정을 추가해주세요"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="18sp"  />
 
             <TextView
                 android:id="@+id/email_sub_text"
@@ -96,18 +95,19 @@
 
         <ImageButton
             android:id="@+id/add_btn"
-            android:layout_width="30dp"
+            android:layout_width="35dp"
             android:layout_height="30dp"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:clickable="false"
-            android:background="@drawable/formcharacter" />
+            android:background="@drawable/add2" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:textSize="18sp"
             android:layout_toRightOf="@+id/add_btn"
             android:text="계정 추가" />
     </RelativeLayout>

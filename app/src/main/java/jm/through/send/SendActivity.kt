@@ -49,6 +49,13 @@ class SendActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.from, R.anim.stay) //애니메이션
         }
 
+        //첨부 파일 버튼 눌렀을 시
+        attach_btn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "*/*"
+            startActivityForResult(intent, REQ_PICK_CODE)
+        }
+
         //인텐트 있으면
         if (intent != null) {
             var detail = intent.getStringExtra("formDetail")
@@ -84,13 +91,6 @@ class SendActivity : AppCompatActivity() {
         when (item!!.itemId) {
 
             android.R.id.home -> finish() //뒤로 가기 누르면 꺼지게
-
-            R.id.action_attach -> {
-                val intent = Intent(Intent.ACTION_GET_CONTENT)
-                intent.type = "*/*"
-                startActivityForResult(intent, REQ_PICK_CODE)
-                return true
-            }
 
             R.id.action_send -> {
                 if (edit_receiver.text.toString().trim() == "" ||
