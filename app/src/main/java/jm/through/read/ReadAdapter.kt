@@ -49,24 +49,12 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         else
             holder!!.mailDate.text = "정보 없음"
 
-       // holder!!.mail
-//        if(check)
-//        holder!!.checkImg.setBackgroundResource(R.drawable.make_checkbox_on)
     }
 
     /**
-     * 새로고침 작업중
+     * 새로고침
      */
-//    fun clear() {
-//        .clear()
-//        notifyDataSetChanged()
-//    }
-//
-//    // Add a list of items -- change to type used
-//    fun addAll(list: List<AttachData>) {
-//        items.addAll(list)
-//        notifyDataSetChanged()
-//    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadViewHolder {
         val mainView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.check_board_item,parent,false)

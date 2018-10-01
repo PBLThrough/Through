@@ -1,23 +1,10 @@
 package jm.through.read;
-import android.util.Log;
 
-import java.io.*;
-import java.net.URL;
 import java.security.Security;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.URLDataSource;
 import javax.mail.*;
-import javax.mail.Flags.Flag;
 import javax.mail.internet.*;
-
 import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPMessage;
-
 import jm.through.send.JSSEProvider;
 
 /**
@@ -37,7 +24,6 @@ public class FolderFetchImap extends javax.mail.Authenticator{
         final String pass = password;
         final String host = "imap.naver.com"; // port = 993
         final String port = "993";
-
 
 
         try
@@ -71,7 +57,6 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             //folder = (IMAPFolder) store.getFolder("inbox"); This works for both email account
 
 
-
             //if(!folder.isOpen()) folder.open(Folder.READ_WRITE);
             int count = folder.getMessageCount();
 
@@ -81,7 +66,10 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
             System.out.println(messages.length);
 
-            int states = 5; // 새로고침 할 때 + 30개 해주기
+            System.out.println("FolderFetchItem on!!");
+
+
+            int states = 1; // 새로고침 할 때 + 30개 해주기
             for (int i= messages.length-1; i > messages.length - states -1 ;i--)
             {
                 System.out.println("*****************************************************************************");

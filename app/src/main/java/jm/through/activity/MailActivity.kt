@@ -1,5 +1,6 @@
 package jm.through.activity
 
+import android.accounts.Account
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
@@ -16,14 +17,17 @@ import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.Toast
+import jm.through.AccountData
+import jm.through.AccountData.accountList
+import jm.through.AccountData.selectedMail
+import jm.through.AccountData.selectedPass
+import jm.through.DetailData
 import jm.through.R
 import jm.through.account.AccountActivity
 import jm.through.attachment.RattachData
-import jm.through.navigation.UserData
 import jm.through.read.*
 import jm.through.read.FolderFetchImap.readList
 import jm.through.send.SendActivity
-import kotlinx.android.synthetic.main.activity_add_account.*
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.nav_header_mail.*
 import java.io.File
@@ -33,6 +37,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     var click = true
     val context = this
 
+    lateinit var uAdapter: UserAdapter
     lateinit var rAdapter: ReadAdapter
     var rattach_list: ArrayList<RattachData> = ArrayList()
 
@@ -45,6 +50,15 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         navSetting() //navigation에 대한 설정
         readSetting() //read recycler에 대한 설정
 
+        System.out.println("Mail Activity on!!");
+
+        if (AccountData.accountList.isEmpty()) {
+            email_main_text.text = "계정을 추가해주세요"
+            //쓰레기값, 나중에 대표메일 설정하면 바꿀것.
+            AccountData.selectedPass= "!hjmh9811387"
+            AccountData.selectedMail = "dream7739@naver.com"
+        }
+
         //플로팅 버튼 누르면 메일 쓰기 화면으로
         send_fab.setOnClickListener {
             val intent = Intent(this, SendActivity::class.java)
@@ -56,41 +70,78 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             //버튼 1번 클릭시 180도 회전하면서 recyclerview 교체, 클릭은 false로 변경
             ObjectAnimator.ofFloat(spin_btn, "rotation", if (click) 180f else 0f).start()
 
+            click = !click
+
             if (click) {
                 user_recycler.visibility = View.VISIBLE
                 add_layout.visibility = View.VISIBLE
-                nav_recycler.visibility = View.INVISIBLE
+                nav_recycler.visibility = View.GONE
             } else {
-                user_recycler.visibility = View.INVISIBLE
-                add_layout.visibility = View.INVISIBLE
+                user_recycler.visibility = View.GONE
+                add_layout.visibility = View.GONE
                 nav_recycler.visibility = View.VISIBLE
             }
-            click = !click
         }
 
-        val v = findViewById(R.id.add_layout) as RelativeLayout
 
-        v.setOnClickListener{
+        //계정 추가레이아웃 클릭 시
+        val v = findViewById(R.id.add_layout) as RelativeLayout
+        v.setOnClickListener {
             val intent = Intent(this, AccountActivity::class.java)
             startActivity(intent)
         }
-//        //계정 추가 레이아웃 눌렀을 시
-//        add_image.setOnClickListener{
-//            val intent = Intent(this, AccountActivity::class.java)
-//            startActivity(intent)
-//        }
 
 
     }
 
 
     override fun onClick(v: View?) {
-        val idx: Int = recycler.getChildAdapterPosition(v!!)
-        val messageIntent = Intent(this.context, MessageActivity::class.java)
-        messageIntent.putExtra("position", idx)
-        startActivity(messageIntent)
-        Log.v("position, idx = ",idx.toString());
-        Log.v("Loading.. ","MailActivity!");
+        Log.v("viewtype", v.toString())
+        Log.v("parentView", v!!.parent.toString())
+
+        when (v!!.parent) {
+            recycler -> {
+                val idx: Int = recycler.getChildAdapterPosition(v!!)
+                val messageIntent = Intent(this.context, MessageActivity::class.java)
+                messageIntent.putExtra("position", idx)
+                startActivity(messageIntent)
+                Log.v("position, idx = ", idx.toString())
+                Log.v("Loading.. ", "MailActivity!")
+            }
+
+            user_recycler -> {
+                val idx = user_recycler.getChildAdapterPosition(v!!)
+                val detail = AccountData.accountList.get(idx)
+                selectedMail = detail.id
+                selectedPass = detail.pass
+
+                //아이디만 입력시 @naver.com붙여줌
+                if(!selectedMail!!.contains("@")){
+                    selectedMail+="@"+ detail.platform+".com"
+                }
+
+                var str = selectedMail!!.split("@")
+                email_main_text.text = str[0]
+                email_sub_text.text = "@" + str[1]
+            }
+
+            nav_recycler -> {
+                val idx = nav_recycler.getChildAdapterPosition(v!!)
+                when (idx) {
+                    //받은 메일
+                    0 -> {
+                            var task = ReadTask()
+                            task.execute()
+                        }
+
+                    //보낸메일
+                    1 -> {
+                    }
+                }
+            }
+        }
+
+
         //finish()안하면 activity쌓일거임 근데 그러면 activity돌아갈때마다 프로그레스바 돌면서 메일 가져올텐데
         //상태를 저장해놓는 부분을 생각해야 할 듯
 
@@ -110,32 +161,29 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
 
     fun readSetting() {
-        var readTask = ReadTask()
-        readTask.execute()
+        var firstTask = ReadTask()
+        firstTask.execute()
     }
 
     fun navSetting() {
         //드로어 첫 화면
+
         val navList = ArrayList<NavData>()
 
         if (navList.size == 0) {
             navList.add(NavData(R.drawable.read, "받은 메일함", 99, R.drawable.write))
             navList.add(NavData(R.drawable.write, "보낸 메일함", 33, R.drawable.write))
         }
-
         val nAdapter = NavAdapter(navList)
         nav_recycler.adapter = nAdapter
+        nAdapter.setOnItemClickListener(this@MailActivity)
         nav_recycler.layoutManager = LinearLayoutManager(this)
 
-        val userList = ArrayList<UserData>()
-        if (userList.size == 0) {
-            userList.add(UserData(R.drawable.read, "dream7739@naver.com", 30))
-            userList.add(UserData(R.drawable.write, "dream7739@gmail.com", 33))
-        }
-        val uAdapter = UserAdapter(userList)
+        uAdapter = UserAdapter(accountList)
         user_recycler.adapter = uAdapter
-        //  nAdapter.setOnItemClickListener(this@MailActivity)
+        uAdapter.setOnItemClickListener(this@MailActivity)
         user_recycler.layoutManager = LinearLayoutManager(this)
+
     }
 
     fun toolbarSetting() {
@@ -174,7 +222,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             //backPressCloseHandler.onBackPressed()
-          //  fm.popBackStack()
+            //  fm.popBackStack()
             System.out.println("작동");
             Toast.makeText(applicationContext, "메일 뒤로가기", Toast.LENGTH_SHORT);
             //super.onBackPressed();
@@ -206,7 +254,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
         override fun doInBackground(vararg params: Void?): Void? {
             var reader = FolderFetchImap()
+
             reader.readImapMail("cisspmit@naver.com", "@!gg1022")
+            //reader.readImapMail(AccountData.selectedMail, AccountData.selectedPass)
+
             Log.v("list", readList.toString())
             return null
         }
@@ -249,14 +300,47 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    //onStop상태에서 돌아올 때, onRestart->onStart-> onResume
+    override fun onRestart() {
+        super.onRestart()
+        Log.v("onRestart", "resume")
+    }
+
+
+    //사용자에게 보여지기 직전
+    override fun onStart() {
+        super.onStart()
+        Log.v("onStart", "resume")
+
+    }
+
+
+    //사용자와 상호작용하기 직전 (pause -> resume)
+    override fun onResume() {
+        super.onResume()
+        Log.v("onResume", "resume")
+        Log.v("accountList", AccountData.accountList.toString())
+        uAdapter.notifyDataSetChanged()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.v("onPause", "resume")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.v("onStop", "resume")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.v("onDestroy", "resume")
+
+    }
+
 }
 
 
-//    /**선택한 이메일 헤더에 반영*/
-//    fun selectEmail(email:String){
-//        val str = email.split("@") //0이 아이디, 1이 플랫폼 주소
-//        email_main_text.text = str[0]
-//        email_sub_text.text = "@"+str[1]
-//    }
 
 

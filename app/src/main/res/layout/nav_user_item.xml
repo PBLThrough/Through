@@ -4,12 +4,6 @@
     android:layout_height="50dp"
     android:background="@color/whiteColor">
 
-    <ImageView
-        android:id="@+id/user_img"
-        android:layout_marginLeft="15dp"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/user_email"
@@ -20,8 +14,7 @@
         android:layout_centerVertical="true"
         android:ellipsize="end"
         android:singleLine="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/user_img"/>
+        android:layout_marginLeft="15dp"/>
 
     <TextView
         android:id="@+id/user_email_count"

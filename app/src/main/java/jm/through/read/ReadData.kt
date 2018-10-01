@@ -1,6 +1,5 @@
 package jm.through.read
 
-import android.widget.ImageView
 import java.util.*
 
 data class ReadData (
