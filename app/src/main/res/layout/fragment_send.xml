@@ -26,7 +26,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:text="받는 사람"
-                android:textSize="15sp" />
+                android:textSize="17sp" />
 
             <EditText
                 android:id="@+id/edit_receiver"
@@ -52,7 +52,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:text="제목 "
-                android:textSize="15sp" />
+                android:textSize="17sp" />
 
             <EditText
                 android:id="@+id/edit_title"
@@ -88,30 +88,31 @@
                 android:scrollbars="vertical" />
 
             <RelativeLayout
-                android:layout_width="150dp"
-                android:layout_height="60dp"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/send_option">
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/round_box">
 
 
                 <ImageButton
                     android:id="@+id/form_btn"
                     android:layout_centerVertical="true"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="30dp"
-                    android:background="@drawable/form_icon"/>
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/form2"/>
 
                 <ImageButton
                     android:id="@+id/attach_btn"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="20dp"
                     android:layout_centerVertical="true"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/attach_icon"/>
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/attach2"/>
             </RelativeLayout>
 
 

@@ -59,7 +59,6 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadViewHolder {
         val mainView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.check_board_item,parent,false)
         mainView.setOnClickListener(onItemClick)
-
         return ReadViewHolder(mainView)
     }
 

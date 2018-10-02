@@ -2,12 +2,13 @@ package jm.through.read
 
 import android.os.Bundle
 import jm.through.R
-import jm.through.read.FolderFetchImap.readList
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.webkit.WebView
 import android.widget.TextView
 import java.io.IOException
+import jm.through.activity.MailActivity
+import jm.through.read.FolderFetchImap.readList
 import java.text.SimpleDateFormat
 import javax.mail.MessagingException
 import javax.mail.Multipart
@@ -17,13 +18,12 @@ import javax.mail.Multipart
 메일 상세보기 창
  */
 
-class MessageActivity : AppCompatActivity(){
 
+class MessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
-        Log.v("Loading.. ","MessageActivity!");
-
+        Log.v("Loading.. ", "MessageActivity!");
 
         /*
         boundary = 본문의 서로 다른 부분을 구분하기 위한 구분자로 쓰임
@@ -36,7 +36,7 @@ class MessageActivity : AppCompatActivity(){
 //        supportActionBar!!.setTitle("MessageActivity 툴바!!")
 //        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        Log.v("messageActivity - ","toolbar ");
+        Log.v("messageActivity - ", "toolbar ");
         val titleString = findViewById(R.id.message_content_title) as TextView // 제목
         val memoString = findViewById(R.id.message_content_memo) as TextView // 내용(Only text)
         val dateString = findViewById(R.id.message_content_time) as TextView // 시각
@@ -47,29 +47,27 @@ class MessageActivity : AppCompatActivity(){
 
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
 
-        Log.v("messageActivity -","getIntent()");
+        Log.v("messageActivity -", "getIntent()");
         if (getIntent() != null) {
             val intent = getIntent();
-            val a = intent.getIntExtra("position",0);
-
-            //readList.add(new ReadData(from, subject, date, contenttype,/* content,*/ false);
-            Log.v("intent "," is "+a);
+            val a = intent.getIntExtra("position", 0);
+            Log.v("intent ", " is " + a);
             val getSubject = readList[a].mailTitle.split("<".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] // subject
             val getFrom = readList[a].mailMemo // from
             val getDate = readList[a].mailDate // date
             val getContents = readList[a].mailContent
             val getContenttype = readList[a].mailContenttype
 
-            val mp = readList[a].mailContent as Multipart // test
-            System.out.println("mail's contenttype : "+mp);
+
+            //val mp = readList[a].mailContent as Multipart // test
             val mTime = df.format(getDate)
 
             dateString.text = mTime
             titleString.text = getSubject
             memoString.text = getFrom
 
+            System.out.println("mail's contenttype : " + getContenttype);
 
-            mWebView.loadData(getContents.toString(),getContenttype,"UTF-8");
 
             @Throws(MessagingException::class)
             fun getMessageContent(message:Object): String {
@@ -103,9 +101,20 @@ class MessageActivity : AppCompatActivity(){
                 mWebView.loadData(temp,getContenttype,"UTF-8")
 
             }
-
+            if(getContenttype.contains("text")) {
+                mWebView.loadData(getContents.toString(), getContenttype, "UTF-8");
+            }
+            else{
+                System.out.println("webView is not working");
+            }
         }
 
+    }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
 }
