@@ -74,7 +74,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println("FolderFetchItem on!!");
 
 
-            int states = 20; // 새로고침 할 때 + 30개 해주기
+            int states = 10; // 새로고침 할 때 + 30개 해주기
             for (int i= messages.length-1; i > messages.length - states -1 ;i--)
             {
                 System.out.println("*****************************************************************************");
