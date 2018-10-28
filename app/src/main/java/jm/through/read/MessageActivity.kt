@@ -12,6 +12,9 @@ import jm.through.read.FolderFetchImap.readList
 import java.text.SimpleDateFormat
 import javax.mail.MessagingException
 import javax.mail.Multipart
+import javax.mail.internet.MimeMultipart
+import javax.mail.BodyPart
+import javax.mail.internet.ContentType
 
 
 /*
@@ -69,44 +72,80 @@ class MessageActivity : AppCompatActivity() {
             System.out.println("mail's contenttype : " + getContenttype);
 
 
-            @Throws(MessagingException::class)
-            fun getMessageContent(message:Object): String {
-                try {
-                    val content = readList[a].mailContent
-                    if (content is Multipart) {
-                        val messageContent = StringBuffer()
-                        val multipart = content as Multipart
-                        for (i in 0 until multipart.count) {
-                            var part = multipart.getBodyPart(i)
-                            if (part.isMimeType("text/*")) {
-                                System.out.println("multipart's "+i+" decoding..");
-                                messageContent.append(part.content.toString())
-                            }
-                        }
-                        return messageContent.toString()
+            @Throws(MessagingException::class, IOException::class)
+            fun getTextFromMimeMultipart(mimeMultipart:MimeMultipart):String{
+                val count = mimeMultipart.count
+                if (count == 0)
+                    throw MessagingException("Multipart with no body parts not supported.")
+                val multipartAlt = ContentType(mimeMultipart.contentType).match("multipart/alternative")
+
+                fun getTextFromBodyPart(bodyPart: BodyPart):String{
+
+                    var result = ""
+                    if (bodyPart.isMimeType("text/plain")) {
+                        result = bodyPart.content as String
+//                } else if (bodyPart.isMimeType("text/html")) {
+//                    val html = bodyPart.content as String
+//                    result = org.jsoup.Jsoup.parse(html).text()
+                    } else if (bodyPart.content is MimeMultipart) {
+                        result = getTextFromMimeMultipart(bodyPart.content as MimeMultipart)
                     }
-                    return content.toString()
-                } catch (e: IOException) {
-                    e.printStackTrace()
+                    return result
                 }
 
-                return ""
+                if (multipartAlt)
+                // alternatives appear in an order of increasing
+                // faithfulness to the original content. Customize as req'd.
+                    return getTextFromBodyPart(mimeMultipart.getBodyPart(count - 1))
+                var result = ""
+                for (i in 0 until count) {
+                    val bodyPart = mimeMultipart.getBodyPart(i)
+                    result += getTextFromBodyPart(bodyPart)
+                }
+                return result
             }
 
-
-            if (getContenttype.contains("multipart")) {
-                var temp = getMessageContent(getContents)
-
-                System.out.println("decoding's over! ");
-                mWebView.loadData(temp,getContenttype,"UTF-8")
-
+            @Throws(MessagingException::class, IOException::class)
+            fun getTestFromMessage(message:Object) : String{
+                var result = ""
+                if (getContenttype.contains("text")) {
+                    result = message.toString()
+                    Log.v("multipart debug","text decoding")
+                } else if (getContenttype.contains("multipart/*")) {
+                    val mimeMultipart = message as MimeMultipart
+                    result = getTextFromMimeMultipart(mimeMultipart)
+                    Log.v("multipart debug","multipart decoding");
+                }
+                return result
             }
-            if(getContenttype.contains("text")) {
-                mWebView.loadData(getContents.toString(), getContenttype, "UTF-8");
-            }
-            else{
-                System.out.println("webView is not working");
-            }
+
+            var temp = getTestFromMessage(getContents)
+            mWebView.loadData(temp,getContenttype,"UTF-8")
+
+//            @Throws(MessagingException::class)
+//            fun getMessageContent(message:Object): String {
+//                try {
+//                    val content = readList[a].mailContent
+//                    if (content is Multipart) {
+//                        val messageContent = StringBuffer()
+//                        val multipart = content as Multipart
+//                        for (i in 0 until multipart.count) {
+//                            var part = multipart.getBodyPart(i)
+//                            if (part.isMimeType("text/*")) {
+//                                System.out.println("multipart's "+i+" decoding..");
+//                                messageContent.append(part.content.toString())
+//                            }
+//                        }
+//                        return messageContent.toString()
+//                    }
+//                    return content.toString()
+//                } catch (e: IOException) {
+//                    e.printStackTrace()
+//                }
+//
+//                return ""
+//            }
+
         }
 
     }
