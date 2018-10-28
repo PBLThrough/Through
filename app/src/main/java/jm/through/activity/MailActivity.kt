@@ -86,7 +86,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
 
         //계정 추가레이아웃 클릭 시 계정 추가 화면으로
-        val v = findViewById<RelativeLayout>(R.id.add_layout)
+        val v = findViewById(R.id.add_layout)
         v.setOnClickListener {
             val intent = Intent(this, AccountActivity::class.java)
             startActivity(intent)
@@ -99,7 +99,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         recycler.adapter = receiveAdapter
         recycler.layoutManager = LinearLayoutManager(this)
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
     }
 

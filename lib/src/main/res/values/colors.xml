@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--보통 시 칩 컬러-->
+    <color name="colorChipViewBackground">#ECF1F7</color>
+
+    <!--잘못됬을 시 칩 컬러-->
+    <color name="colorWrongChip">#F6C7C8</color>
+
+   <!--클릭 시 칩 컬러-->
+    <color name="colorSelectedChip">#3D4753</color>
+
+    <color name="chips_opened_bg">#009688</color>
+    <color name="colorCloseChip">#ababab</color>
+    <color name="white_transparency">#b9ffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="colorAccent">?attr/colorAccent</color>
+    <color name="boxColor">#EFEFEF</color>
+
+</resources>

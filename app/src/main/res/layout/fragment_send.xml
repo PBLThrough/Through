@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp">
 
+
             <TextView
                 android:id="@+id/text_receiver"
                 android:layout_width="wrap_content"
@@ -28,14 +29,18 @@
                 android:text="받는 사람"
                 android:textSize="17sp" />
 
-            <EditText
+            <com.pchmn.materialchips.ChipsInput
                 android:id="@+id/edit_receiver"
                 android:layout_centerVertical="true"
-                android:background="@null"
                 android:layout_toRightOf="@+id/text_receiver"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </EditText>
+                android:layout_height="wrap_content"
+                app:chip_hasAvatarIcon="false"
+                app:chip_detailed_backgroundColor="#ffffff"
+                app:chip_detailed_textColor="#000000"
+                app:chip_deletable="false">
+            </com.pchmn.materialchips.ChipsInput>
+
 
         </RelativeLayout>
 
