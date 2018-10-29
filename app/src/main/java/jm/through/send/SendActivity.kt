@@ -15,12 +15,15 @@ import android.provider.DocumentsContract
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.Toast
+import com.pchmn.materialchips.adapter.ChipsAdapter.mChipList
 import jm.through.attachment.AttachAdapter
 import jm.through.attachment.AttachData
 import jm.through.form.FormActivity
 import kotlinx.android.synthetic.main.app_bar_mail.*
+import kotlinx.android.synthetic.main.recipient_item.*
 import java.io.File
 import java.net.URISyntaxException
 
@@ -31,7 +34,6 @@ class SendActivity : AppCompatActivity() {
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
     var attach_list: ArrayList<AttachData> = ArrayList()
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TargetApi(Build.VERSION_CODES.M)
@@ -54,9 +56,11 @@ class SendActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
             startActivityForResult(intent, REQ_PICK_CODE)
+
         }
 
         //인텐트 있으면
+
         if (intent != null) {
             var detail = intent.getStringExtra("formDetail")
             email_body.setText(detail)
@@ -66,7 +70,6 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-
     fun addRecycler() {
         rAdapter = AttachAdapter(this, attach_list)
         attach_recycler.adapter = rAdapter
@@ -74,9 +77,9 @@ class SendActivity : AppCompatActivity() {
     }
 
     fun addToolbar() {
-        setSupportActionBar(toolbar)
         toolbar.title = "메일 쓰기"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true) //뒤로가기 만들
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
 
@@ -93,7 +96,7 @@ class SendActivity : AppCompatActivity() {
             android.R.id.home -> finish() //뒤로 가기 누르면 꺼지게
 
             R.id.action_send -> {
-                if (edit_receiver.text.toString().trim() == "" ||
+                if (mChipList.isEmpty() ||
                         edit_title.text.toString().trim() == "") {
                     Toast.makeText(this, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show()
                 } else {
@@ -162,18 +165,21 @@ class SendActivity : AppCompatActivity() {
         Thread {
             run {
                 try {
-                    Log.v("attachList", attach_list.toString())
+                    Log.v("start sending", attach_list.toString())
 
-                    var recipient = edit_receiver.text.toString().trim()
-                    val recipientList = recipient.split(",") //콤마로 구분
+                    var recipientList = ArrayList<String>()
+
+                    for (chip in mChipList) {
+                        recipientList.add(chip.label)
+                    }
 
                     var subject = edit_title.text.toString().trim()
                     var body = email_body.text.toString().trim()
 
-                    var sender: MailSender = MailSender("yourmail",
-                            "yourpassword")
+                    var sender: MailSender = MailSender("dream7739@naver.com",
+                            "jmzzang7739")
                     var flag = sender.sendMail(subject,
-                            "yourmail", recipientList, body, attach_list)
+                            "dream7739@naver.com", recipientList, body, attach_list)
 
                     Log.v("flagflag", flag.toString())
                     if (flag) {
@@ -191,7 +197,6 @@ class SendActivity : AppCompatActivity() {
     }
 
 
-    //TODO 드라이브 기능
     @Throws(URISyntaxException::class)
     fun getPath(context: Context, uri: Uri): String? {
         var uri = uri
@@ -299,9 +304,6 @@ class SendActivity : AppCompatActivity() {
     fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
     }
-
-
-
 
 
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="350dp"
+    android:layout_height="100dp"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- content -->
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_chip_view_opened"
+        android:elevation="6dp"
+        android:clickable="true">
+
+
+
+        <!-- info -->
+        <LinearLayout
+            android:id="@+id/info_layout"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/delete_button"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+            <!-- name -->
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textSize="17sp"
+                android:text="Contact name sdfdsfdsfdgs"/>
+
+            <!-- info -->
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="15sp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="paul@gmail.comdfdgdgsdggdgdgdgdsgdgdgdg"/>
+
+        </LinearLayout>
+
+        <!-- delete button -->
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/cross"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

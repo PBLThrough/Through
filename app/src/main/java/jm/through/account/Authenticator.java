@@ -42,7 +42,7 @@ public class Authenticator {
                 }
             };
 
-            Session session = Session.getDefaultInstance(props, auth);
+            Session session = Session.getInstance(props, auth);
             Store store = session.getStore("imap");
             store.connect(hostName, userId, userPass);
             IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX"); // This doesn't work for other email account
