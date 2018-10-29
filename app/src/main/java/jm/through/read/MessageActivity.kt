@@ -82,11 +82,9 @@ class MessageActivity : AppCompatActivity() {
                 fun getTextFromBodyPart(bodyPart: BodyPart):String{
 
                     var result = ""
-                    if (bodyPart.isMimeType("text/plain")) {
+                    if (bodyPart.isMimeType("text/*")) {
                         result = bodyPart.content as String
-//                } else if (bodyPart.isMimeType("text/html")) {
-//                    val html = bodyPart.content as String
-//                    result = org.jsoup.Jsoup.parse(html).text()
+//
                     } else if (bodyPart.content is MimeMultipart) {
                         result = getTextFromMimeMultipart(bodyPart.content as MimeMultipart)
                     }
@@ -94,8 +92,6 @@ class MessageActivity : AppCompatActivity() {
                 }
 
                 if (multipartAlt)
-                // alternatives appear in an order of increasing
-                // faithfulness to the original content. Customize as req'd.
                     return getTextFromBodyPart(mimeMultipart.getBodyPart(count - 1))
                 var result = ""
                 for (i in 0 until count) {
@@ -145,7 +141,6 @@ class MessageActivity : AppCompatActivity() {
 //
 //                return ""
 //            }
-
         }
 
     }
