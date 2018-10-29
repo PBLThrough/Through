@@ -1,18 +1,14 @@
 package jm.through.account
 
-import android.accounts.Account
 import android.content.Intent
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Toast
 import jm.through.AccountData.accountList
-
 import jm.through.R
 import jm.through.account.Authenticator.count
-import jm.through.activity.MailActivity
 import kotlinx.android.synthetic.main.activity_add_account.*
 
 class AddAccountActivity : AppCompatActivity() {
@@ -20,7 +16,6 @@ class AddAccountActivity : AppCompatActivity() {
     var pass: String = ""
     var host: String = ""
     var check: Boolean = false
-    var authenTask = Authentication()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +31,18 @@ class AddAccountActivity : AppCompatActivity() {
             "gmail" -> {
                 add_image.setImageResource(R.drawable.googlesmall)
             }
-            "daum" -> {
+            "hanmail" -> {
                 add_image.setImageResource(R.drawable.daumsmall)
+            }
+            "nate" -> {
+                add_image.setImageResource(R.drawable.natesmall)
+            }
+            "yahoo" -> {
+                add_image.setImageResource(R.drawable.yahoomail)
+            }
+            "etc" -> {
+                //교체
+                add_image.setImageResource(R.drawable.send)
             }
 
         }
