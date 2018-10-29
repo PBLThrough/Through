@@ -177,9 +177,9 @@ class SendActivity : AppCompatActivity() {
                     var body = email_body.text.toString().trim()
 
                     var sender: MailSender = MailSender("dream7739@naver.com",
-                            "ghdwjdals7739")
+                            "jmzzang7739")
                     var flag = sender.sendMail(subject,
-                            "ghdwjdals7739", recipientList, body, attach_list)
+                            "dream7739@naver.com", recipientList, body, attach_list)
 
                     Log.v("flagflag", flag.toString())
                     if (flag) {
