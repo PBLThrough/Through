@@ -69,7 +69,15 @@
             layout="@layout/nav_header_mail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"></include>
+            android:layout_gravity="center_vertical">
+        </include>
+
+        <ImageButton
+            android:id="@+id/settingBtn"
+            android:background="@drawable/sign"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="right|bottom"/>
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

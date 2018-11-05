@@ -68,8 +68,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         toolbarSetting() //toolbar에 대한 설정
         navSetting() //navigation에 대한 설정
 
-        System.out.println("Mail Activity on!!");
-
 
         //헤더 뷰 클릭하면 버튼 회전 & 리사이클러뷰 변경
         header_layout.setOnClickListener {
@@ -92,6 +90,11 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
+        //환경 설정 버튼 클릭 시
+        settingBtn.setOnClickListener{
+        }
+
+
         var readTask = ReadTask()
         readTask.execute()
 
@@ -99,7 +102,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         recycler.adapter = receiveAdapter
         recycler.layoutManager = LinearLayoutManager(this)
 
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
     }
 
@@ -155,21 +157,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
 
-        //finish()안하면 activity쌓일거임 근데 그러면 activity돌아갈때마다 프로그레스바 돌면서 메일 가져올텐데
-        //상태를 저장해놓는 부분을 생각해야 할 듯
-
-
-//        var bundle = Bundle()
-//        bundle.putInt("position", idx)
-//
-//        var message = MessageFragment() as android.support.v4.app.Fragment//메일 보내는 fragment
-//        var fm = fragmentManager //fragment교체에 필요한 fragmentManager
-//
-//        message.arguments = bundle
-//
-//        if (fm != null) {
-//            fm.beginTransaction().replace(R.id.fragment_container, message).commit()
-//        }
     }
 
 

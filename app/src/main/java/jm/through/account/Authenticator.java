@@ -18,7 +18,7 @@ public class Authenticator {
     boolean authen(String host, String id, String pass) {
         final String userId = id;
         final String userPass = pass;
-        final String hostName = "imap."+host+".com";
+        final String hostName = "imap."+host;
         final String port = "993"; //imap port
 
 
