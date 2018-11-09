@@ -1,20 +1,24 @@
 package jm.through.read
 
+import android.content.Context
 import android.os.Bundle
-import jm.through.R
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.TextView
-import java.io.IOException
-import jm.through.activity.MailActivity
+import android.widget.Toast
+import jm.through.R
 import jm.through.read.FolderFetchImap.readList
+import java.io.IOException
 import java.text.SimpleDateFormat
+import javax.mail.BodyPart
 import javax.mail.MessagingException
 import javax.mail.Multipart
-import javax.mail.internet.MimeMultipart
-import javax.mail.BodyPart
 import javax.mail.internet.ContentType
+import javax.mail.internet.MimeMessage
+import javax.mail.internet.MimeMultipart
+import javax.mail.internet.MimeUtility
 
 
 /*
@@ -47,6 +51,7 @@ class MessageActivity : AppCompatActivity() {
 
         val webSettings = mWebView.getSettings()
         webSettings.setJavaScriptEnabled(true)
+        webSettings.defaultTextEncodingName = "UTF-8"
 
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
 
@@ -80,25 +85,34 @@ class MessageActivity : AppCompatActivity() {
                 val multipartAlt = ContentType(mimeMultipart.contentType).match("multipart/alternative")
 
                 fun getTextFromBodyPart(bodyPart: BodyPart):String{
-
                     var result = ""
-                    if (bodyPart.isMimeType("text/*")) {
-                        result = bodyPart.content as String
-//
-                    } else if (bodyPart.content is MimeMultipart) {
-                        result = getTextFromMimeMultipart(bodyPart.content as MimeMultipart)
+
+                    try {
+                        if (bodyPart.isMimeType("text/plain") || bodyPart.isMimeType("text/html")) {
+                            result = bodyPart.content as String
+                        }
+//                        else if (bodyPart.isMimeType("text/html")) {
+//                            result = bodyPart.content as String}
+                        else if (bodyPart.content is MimeMultipart){
+                            result = getTextFromMimeMultipart(bodyPart.content as MimeMultipart)
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
                     }
-                    return result
+                    return MimeUtility.decodeText(result)
                 }
 
+                // Multipart ERROR
                 if (multipartAlt)
                     return getTextFromBodyPart(mimeMultipart.getBodyPart(count - 1))
                 var result = ""
                 for (i in 0 until count) {
                     val bodyPart = mimeMultipart.getBodyPart(i)
+                    // 실행 안됨
+                    Log.v("running"+i.toString()," 번째 도는 중..")
                     result += getTextFromBodyPart(bodyPart)
                 }
-                return result
+                return MimeUtility.decodeText(result)
             }
 
             @Throws(MessagingException::class, IOException::class)
@@ -107,42 +121,67 @@ class MessageActivity : AppCompatActivity() {
                 if (getContenttype.contains("text")) {
                     result = message.toString()
                     Log.v("multipart debug","text decoding")
-                } else if (getContenttype.contains("multipart/*")) {
+
+                    //TODO Comment by jiran
+                    /** contains는 문구가 포함됬는지를 확인하는 api임.
+                    contents-type이 multipart/alternative일 때 아래 분기문이 스킵되면서 컨텐츠를 획득하지 않음.
+
+                    + 질문 있습니다!! multipart로 구문을 찾는데 multipart/alternative 인 경우 분기문이 어떤 이유로
+                    스킵되는 건가요..?
+                     */
+                } else if (getContenttype.contains("multipart", true)) {
                     val mimeMultipart = message as MimeMultipart
                     result = getTextFromMimeMultipart(mimeMultipart)
                     Log.v("multipart debug","multipart decoding");
                 }
-                return result
+
+                return MimeUtility.decodeText(result)
             }
 
-            var temp = getTestFromMessage(getContents)
-            mWebView.loadData(temp,getContenttype,"UTF-8")
+            /**
+             * HTML URL 할 것
+             * 순서 1. 주소 클릭 시 바로 이동하지 않고 이동할 주소 띄우기
+             *      방법 1. a href 앞에 새로운 a href를 넣어 이동할 주소를 묻는 걸 띄워보기
+             * 순서 2. Yes 시 이동 O, No 시 이동 X
+             * 순서 3. 주소 클릭 시 바로 이동하지 않고 이동할 주소 오픈 그래프로 띄우기
+             *
+             * 아래 = 웹페이지 용 마우스를 링크에 가져다대면 상태표시줄에 링크 표
+             * <a href="http://aaa.com" onclick="window.open(this.href, '', ''); return false;">
+             *
+             * 테스트 해볼 것
+             * 아래 = href에서 발생한 액션을 실행시키지 않는 = 슈도프로토
+             * <a href="#" onclick="return false;">test</a>
+             *
+             * <a onclick="myFunc();">Hello</a>
+             *
+             * $(document).ready(function(){ $('a').css('cursor','pointer');});
+             *
+             * href 를 찾아 onClick속성을 추가시켜 커스텀 함수로(링크를 보여주는 곳) 이동시켜야함
+             * onclick="callFunction(); return false;
+             */
 
-//            @Throws(MessagingException::class)
-//            fun getMessageContent(message:Object): String {
-//                try {
-//                    val content = readList[a].mailContent
-//                    if (content is Multipart) {
-//                        val messageContent = StringBuffer()
-//                        val multipart = content as Multipart
-//                        for (i in 0 until multipart.count) {
-//                            var part = multipart.getBodyPart(i)
-//                            if (part.isMimeType("text/*")) {
-//                                System.out.println("multipart's "+i+" decoding..");
-//                                messageContent.append(part.content.toString())
-//                            }
-//                        }
-//                        return messageContent.toString()
-//                    }
-//                    return content.toString()
-//                } catch (e: IOException) {
-//                    e.printStackTrace()
-//                }
-//
-//                return ""
-//            }
+            fun JavaScriptParser(mContext: Context) {
+                @JavascriptInterface
+                fun showToast(toast: String) {
+                    Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+          //  mWebView.addJavascriptInterface(JavaScriptPasser(this), "Android")
+
+            //TODO Comment by jiran
+            /* 메일 파싱 부분은 Network이기 때문에 별도의 WorkingThread로 변경
+            (별도 스레드로 추출하지 않으면, NetworkOnMainThreadException 발생.) */
+            Thread(Runnable {
+                var temp = getTestFromMessage(getContents)
+
+//                val count = StringUtils.countOccurrences(temp, "<a href")
+                //TODO Comment by jiran
+                /* UI 컴포넌트의 API는 메인스레드(UI)에서만 요청할 수 있음
+                (GUI 프로그래밍은 동기화 문제 방지를 위해 모두 같은 개념을 가짐.) */
+                runOnUiThread({ mWebView.loadData(temp, "text/html", "UTF-8"); })
+            }).start()
         }
-
     }
 
 
@@ -152,3 +191,4 @@ class MessageActivity : AppCompatActivity() {
     }
 
 }
+
