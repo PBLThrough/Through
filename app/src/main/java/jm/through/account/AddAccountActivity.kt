@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.pchmn.EmailValidator
 import jm.through.AccountData.accountList
 import jm.through.R
 import jm.through.account.Authenticator.count
@@ -24,6 +25,7 @@ class AddAccountActivity : AppCompatActivity() {
 
         host = intent.getStringExtra("platformName")
 
+        //host에 따라 다른 image 띄우기
         when (host) {
             "naver" -> {
                 add_image.setImageResource(R.drawable.naversmall)
@@ -31,7 +33,7 @@ class AddAccountActivity : AppCompatActivity() {
             "gmail" -> {
                 add_image.setImageResource(R.drawable.googlesmall)
             }
-            "hanmail" -> {
+            "daum" -> {
                 add_image.setImageResource(R.drawable.daumsmall)
             }
             "nate" -> {
@@ -47,18 +49,32 @@ class AddAccountActivity : AppCompatActivity() {
 
         }
 
+
+        //인증 버튼 눌렀을 시
         authen_btn.setOnClickListener {
             id = email_edit.text.toString()
             pass = pass_edit.text.toString()
 
+            //비어있는지 체크
             if (id == "" || pass == "") {
                 Toast.makeText(this, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show()
+            } else if (!validate(id)) {
+                Toast.makeText(this, "올바른 이메일 패턴이 아닙니다", Toast.LENGTH_SHORT).show()
             } else {
+                //dream7739@naver.com일시, host는 naver.com
+                //.net인 경우도 있어서 통으로 저장
+                host = id.split("@")[1]
                 var task = Authentication()
                 task.execute()
             }
         }
 
+
+    }
+
+    private fun validate(id: String): Boolean {
+        val ev = EmailValidator()
+        return ev.validateEmail(id)
     }
 
 
@@ -77,28 +93,24 @@ class AddAccountActivity : AppCompatActivity() {
             super.onPostExecute(result)
             authen_progress.visibility = View.INVISIBLE
 
+            //계정 인증에 성공했을 시 -> 저장
             if (check) {
 
-                //id가 @를 포함하고 있지 않을 시 이메일 포맷으로 변경
-                if (!id.contains("@")) {
-                    id = "$id@$host.com"
-                }
-
-                val newAccount = DetailData(host, id, pass, count) //새로운 게정 정보
+                //새로운 게정 정보
+                val newAccount = DetailData(host, id, pass, count)
 
                 //중복처리
                 if (accountList.contains(newAccount)) {
                     val dialog = AddDialogFragment()
 
                     var bundle = Bundle()
-                    bundle.putParcelable("newData",newAccount)
+                    bundle.putParcelable("newData", newAccount)
                     dialog.arguments = bundle
                     dialog.show(supportFragmentManager, "중복 다이얼로그")
                 } else {
                     accountList.add(newAccount)
                     finish()
                 }
-
 
             } else {
                 Toast.makeText(this@AddAccountActivity, "계정 인증 실패", Toast.LENGTH_SHORT).show()
@@ -108,6 +120,8 @@ class AddAccountActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
+
+            //인증 실행
             var authenticator = Authenticator()
             check = authenticator.authen(host, id, pass)
             return null
@@ -115,6 +129,7 @@ class AddAccountActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        //뒤로가기 버튼 눌렀을 시
         val intent = Intent(applicationContext, AccountActivity::class.java)
         startActivity(intent)
         finish()

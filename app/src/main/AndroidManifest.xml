@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jm.through">
-    <uses-permission android:name="android.permission.BLUETOOTH"
-        android:label="BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:label="BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -31,13 +32,13 @@
         <activity android:name=".activity.SignActivity" />
         <activity android:name=".activity.MailActivity" />
         <activity android:name=".read.MessageActivity" />
-        <activity android:name=".send.SendActivity"/>
-
-        <activity
-            android:name=".form.FormActivity" />
+        <activity android:name=".send.SendActivity" />
+        <activity android:name=".form.FormActivity" />
         <activity android:name=".account.AccountActivity" />
-        <activity android:name=".account.AddAccountActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".account.AddAccountActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activity.SettingActivity"></activity>
     </application>
 
 </manifest>

@@ -20,7 +20,7 @@ class AccountActivity : AppCompatActivity(), View.OnClickListener {
         if (account_list.isEmpty()) {
             account_list.add(PlatformData(R.drawable.naver, "naver"))
             account_list.add(PlatformData(R.drawable.google, "gmail"))
-            account_list.add(PlatformData(R.drawable.daum, "hanmail"))
+            account_list.add(PlatformData(R.drawable.daum, "daum"))
             account_list.add(PlatformData(R.drawable.natemail, "nate"))
             account_list.add(PlatformData(R.drawable.yahoomail, "yahoo"))
             account_list.add(PlatformData(R.drawable.send, "etc"))
