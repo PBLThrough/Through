@@ -1,6 +1,8 @@
 
 package jm.through.read;
 
+import android.util.Log;
+
 import java.net.URL;
 import java.security.Security;
 import java.util.*;
@@ -19,19 +21,27 @@ import jm.through.send.JSSEProvider;
  * IMAP 하는 곳
  * */
 public class FolderFetchImap extends javax.mail.Authenticator{
+    public static ArrayList<ReadData> readList = new ArrayList<>();
+    public static String index;
 
     static {
         Security.addProvider(new JSSEProvider());
 
     }
 
-    public static ArrayList<ReadData> readList = new ArrayList<>();
+    public void setIndex(String index){
+        this.index = index;
+    }
+
     //String[] args
     public ArrayList<ReadData> readImapMail(String username, String password) {
+        readList.clear();
         final String id = username;
         final String pass = password;
-        final String host = "imap.naver.com"; // port = 993
+        final String host = "imap." + username.split("@")[1]; // port = 993
         final String port = "993";
+        String savedIndex = index;
+
 
 
         try
@@ -74,9 +84,13 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println("FolderFetchItem on!!");
 
 
-            int states = 10; // 새로고침 할 때 + 30개 해주기
+            int states = 30; // 새로고침 할 때 + 30개 해주기
             for (int i= messages.length-1; i > messages.length - states -1 ;i--)
             {
+                Log.v("index",savedIndex.toString() + index.toString());
+                Log.v("indexhost",host);
+                if(!savedIndex.equals(index)) break;
+
                 System.out.println("*****************************************************************************");
                 System.out.println("MESSAGE " + (i + 1) + ":");
                 Message msg =  messages[i];

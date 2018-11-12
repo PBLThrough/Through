@@ -31,6 +31,7 @@ import jm.through.attachment.AttachData;
 
 public class MailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.naver.com";
+    //TODO 계정 연동 시 host 변경 되게
     private String user;
     private String password;
     private Session session;
@@ -68,8 +69,6 @@ public class MailSender extends javax.mail.Authenticator {
         Boolean flag = true;
 
         try {
-
-            //TODO chips 사용
 
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(sender)); //full주소가 들어가야 함

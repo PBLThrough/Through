@@ -176,12 +176,11 @@ class SendActivity : AppCompatActivity() {
                     var subject = edit_title.text.toString().trim()
                     var body = email_body.text.toString().trim()
 
-                    var sender: MailSender = MailSender("dream7739@naver.com",
-                            "jmzzang7739")
+                    var sender = MailSender("^^^^",
+                            "^^^^")
                     var flag = sender.sendMail(subject,
-                            "dream7739@naver.com", recipientList, body, attach_list)
+                            "^^^^", recipientList, body, attach_list)
 
-                    Log.v("flagflag", flag.toString())
                     if (flag) {
                         this.runOnUiThread({ Toast.makeText(this, "메일 전송 성공", Toast.LENGTH_SHORT).show() })
                     } else {
