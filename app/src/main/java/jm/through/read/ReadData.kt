@@ -1,6 +1,7 @@
 package jm.through.read
 
 import java.util.*
+import javax.mail.Message
 
 data class ReadData (
         var mailTitle:String,
@@ -8,7 +9,7 @@ data class ReadData (
         var mailDate: Date?,
         var mailContenttype: String,
        // var mailSize: Int,
-        var mailContent: Object,
+        var mailContent: Object, //Message,
        // var mailImage:ImageView,
         var check:Boolean
 )
