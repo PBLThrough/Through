@@ -1,7 +1,7 @@
 
 package jm.through.read;
 
-<<<<<<< HEAD
+
 import android.util.Log;
 
 import java.net.URL;
@@ -14,9 +14,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.URLDataSource;
 import javax.mail.*;
-import javax.mail.internet.*;
-=======
->>>>>>> 418bee6b8911a0ddd87fe514be4955dbdd10475a
+
 import com.sun.mail.imap.IMAPFolder;
 
 import java.security.Security;
@@ -104,11 +102,8 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println("FolderFetchItem on!!");
 
 
-<<<<<<< HEAD
             int states = 30; // 새로고침 할 때 + 30개 해주기
-=======
-            int states = 20; // 새로고침 할 때 + 30개 해주기
->>>>>>> 418bee6b8911a0ddd87fe514be4955dbdd10475a
+
             for (int i= messages.length-1; i > messages.length - states -1 ;i--)
             {
                 Log.v("index",savedIndex.toString() + index.toString());

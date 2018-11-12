@@ -109,10 +109,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun readEmail() {
 
-        //프로그레스 바 숨기기
-        if (read_progress.visibility == View.INVISIBLE) {
             read_progress.visibility = View.VISIBLE
-        }
 
         //스레드 & 핸들러, mHandler.post이후에 UI작업
         val mHandler = Handler()
@@ -125,7 +122,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             reader.readImapMail(readId, readPass)
 
             mHandler.post {
-                read_progress.visibility = View.INVISIBLE
                 try {
                     Log.v("listlist", readList.toString())
                     rAdapter = ReadAdapter(readList)
@@ -133,6 +129,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                     rAdapter.setOnItemClickListener(context)
                     recycler.adapter = rAdapter
                     recycler.layoutManager = LinearLayoutManager(context)
+                    read_progress.visibility = View.INVISIBLE
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Log.v("fail", "")
