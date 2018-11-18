@@ -98,10 +98,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         // 계정 정보 없으면 계정 추가 화면으로, 계정 정보 있으면 메일 읽기
-        if(AccountData.accountList.isEmpty()){
-            val intent = Intent(this,AccountActivity::class.java)
+        if (AccountData.accountList.isEmpty()) {
+            val intent = Intent(this, AccountActivity::class.java)
             startActivity(intent)
-        }else{
+        } else {
             readEmail()
         }
 
@@ -109,7 +109,9 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun readEmail() {
 
+        if (read_progress.visibility == View.INVISIBLE) {
             read_progress.visibility = View.VISIBLE
+        }
 
         //스레드 & 핸들러, mHandler.post이후에 UI작업
         val mHandler = Handler()
@@ -117,7 +119,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
             var reader = FolderFetchImap()
             reader.setIndex(readId)
-            Log.v("정보",readId + readPass)
+            Log.v("정보", readId + readPass)
 
             reader.readImapMail(readId, readPass)
 
@@ -174,7 +176,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                 when (idx) {
                     //메일 읽어오기
                     0 -> {
-                        Log.v("hihihi","눌렷음")
+                        Log.v("hihihi", "눌렷음")
                         readEmail()
                     }
 

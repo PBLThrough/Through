@@ -1,5 +1,6 @@
 package jm.through.send
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import jm.through.R
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
+import android.widget.ImageButton
 import android.widget.Toast
 import com.pchmn.materialchips.adapter.ChipsAdapter.mChipList
 import jm.through.attachment.AttachAdapter
@@ -24,6 +26,7 @@ import jm.through.attachment.AttachData
 import jm.through.form.FormActivity
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import kotlinx.android.synthetic.main.recipient_item.*
+import kotlinx.android.synthetic.main.send_bar.*
 import java.io.File
 import java.net.URISyntaxException
 
@@ -33,7 +36,10 @@ class SendActivity : AppCompatActivity() {
     var context: Context = this
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
+    var click = true
     var attach_list: ArrayList<AttachData> = ArrayList()
+    val sendbarFragment = SendBarFragment()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TargetApi(Build.VERSION_CODES.M)
@@ -77,10 +83,35 @@ class SendActivity : AppCompatActivity() {
     }
 
     fun addToolbar() {
-        toolbar.title = "메일 쓰기"
-        setSupportActionBar(toolbar)
+        val sendBar = findViewById(R.id.sendbar) as Toolbar
+        val spinBtn = sendBar.findViewById(R.id.send_spin_btn) as ImageButton
+        setSupportActionBar(sendBar)
+
+        spinBtn.setOnClickListener {
+            ObjectAnimator.ofFloat(spinBtn, "rotation", if (click) 180f else 0f).start()
+
+
+            if (click) {
+                val fm = supportFragmentManager
+                val tr = fm.beginTransaction()
+                tr.add(R.id.send_frame, sendbarFragment).commit()
+                send_frame.bringToFront()
+                Log.v("open","open")
+            } else {
+                val fm = supportFragmentManager
+                val tr = fm.beginTransaction()
+                tr.remove(sendbarFragment).commit()
+            }
+            click = !click
+
+        }
+
+
+        supportActionBar!!.setDisplayShowTitleEnabled(false) //기본 타이틀 보여줄지 말지 설정
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
+
+
 
 
     //toolbar menu create

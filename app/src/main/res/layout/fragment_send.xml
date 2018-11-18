@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:theme="@style/EditTheme"
     tools:context=".send.SendActivity">
 
     <include
-        layout="@layout/app_bar_mail"
+        android:id="@+id/bar"
+        layout="@layout/send_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 
+    <FrameLayout
+        android:id="@+id/send_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bar"></FrameLayout>
+
+
     <LinearLayout
+        android:id="@+id/first_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/bar"
         android:layout_margin="5dp">
 
         <TextView
@@ -32,9 +41,9 @@
             android:id="@+id/edit_receiver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/text_receiver"
+            android:layout_weight="1"
             app:chip_deletable="false"
             app:chip_detailed_backgroundColor="#ffffff"
             app:chip_detailed_textColor="#000000"
@@ -46,19 +55,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp" />
 
         <ImageButton
             android:id="@+id/adressBtn"
-            android:layout_gravity="right|center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical" />
     </LinearLayout>
 
+
     <RelativeLayout
+        android:id="@+id/second_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/first_layout"
         android:layout_margin="5dp">
 
         <TextView
@@ -79,25 +90,28 @@
             android:textSize="15sp" />
     </RelativeLayout>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/attach_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/second_layout"
         android:layout_margin="5dp"></android.support.v7.widget.RecyclerView>
 
-
     <RelativeLayout
+        android:id="@+id/third_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/attach_recycler"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
+
 
         <EditText
             android:id="@+id/email_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#F6F6F6"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:gravity="start"
             android:padding="5dp"
             android:scrollbars="vertical" />
@@ -133,4 +147,5 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+
+</RelativeLayout>
