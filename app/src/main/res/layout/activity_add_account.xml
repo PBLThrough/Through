@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/EditTheme"
-    tools:context=".account.AddAccountActivity">
+    tools:context=".activity.AddAccountActivity">
 
     <ProgressBar
         android:id="@+id/authen_progress"
