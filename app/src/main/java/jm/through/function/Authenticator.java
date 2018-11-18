@@ -13,9 +13,9 @@ import javax.mail.Session;
 import javax.mail.Store;
 
 public class Authenticator {
-    static int count = 0;
+    public static int count = 0;
 
-    boolean authen(String host, String id, String pass) {
+    public boolean authen(String host, String id, String pass) {
         final String userId = id;
         final String userPass = pass;
         final String hostName = "imap."+host;

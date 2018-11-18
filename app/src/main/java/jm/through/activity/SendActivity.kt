@@ -23,7 +23,7 @@ import android.widget.Toast
 import com.pchmn.materialchips.adapter.ChipsAdapter.mChipList
 import jm.through.adapter.AttachAdapter
 import jm.through.data.AttachData
-import jm.through.send.MailSender
+import jm.through.function.MailSender
 import jm.through.fragment.SendBarFragment
 import java.io.File
 import java.net.URISyntaxException
