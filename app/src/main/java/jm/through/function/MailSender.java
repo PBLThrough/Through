@@ -30,8 +30,7 @@ import java.util.Properties;
 import jm.through.data.AttachData;
 
 public class MailSender extends javax.mail.Authenticator {
-    private String mailhost = "smtp.naver.com";
-    //TODO 계정 연동 시 host 변경 되게
+    private String mailhost;
     private String user;
     private String password;
     private Session session;
@@ -43,6 +42,7 @@ public class MailSender extends javax.mail.Authenticator {
     public MailSender(String user, String password) {
         this.user = user;
         this.password = password;
+        mailhost = "smtp." + user.split("@")[1];
 
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");

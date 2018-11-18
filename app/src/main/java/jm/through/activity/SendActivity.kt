@@ -25,6 +25,7 @@ import com.pchmn.materialchips.adapter.ChipsAdapter.mChipList
 import jm.through.AccountData.accountList
 import jm.through.adapter.AttachAdapter
 import jm.through.data.AttachData
+import jm.through.data.DetailData
 import jm.through.function.MailSender
 import jm.through.fragment.SendBarFragment
 import java.io.File
@@ -35,6 +36,7 @@ class SendActivity : AppCompatActivity() {
     lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapter
     lateinit var barTitle: TextView
     lateinit var spinBtn: ImageButton
+    lateinit var accountinfo:DetailData
     var context: Context = this
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
@@ -127,11 +129,15 @@ class SendActivity : AppCompatActivity() {
         var barText = accountList.get(0).id
         var splitText = barText.split("@")
         barTitle.text = splitText[0] + "\n" + "@" + splitText[1]
+
+        accountinfo = accountList.get(0)
     }
 
     //아이템 클릭시 보내는 사람 지정(클릭했을 때만 동작)
     fun setSender(position: Int) {
-        var barText = accountList.get(position).id
+        accountinfo = accountList.get(position)
+
+        var barText = accountinfo.id
         var splitText = barText.split("@")
         barTitle.text = splitText[0] + "\n" + "@" + splitText[1]
     }
@@ -240,15 +246,15 @@ class SendActivity : AppCompatActivity() {
                     var subject = edit_title.text.toString().trim()
                     var body = email_body.text.toString().trim()
 
-                    var sender = MailSender("^^^^",
-                            "^^^^")
+                    var sender = MailSender(accountinfo.id,
+                            accountinfo.pass)
                     var flag = sender.sendMail(subject,
-                            "^^^^", recipientList, body, attach_list)
+                            accountinfo.id, recipientList, body, attach_list)
 
                     if (flag) {
-                        this.runOnUiThread({ Toast.makeText(this, "메일 전송 성공", Toast.LENGTH_SHORT).show() })
+                        this.runOnUiThread { Toast.makeText(this, "메일 전송 성공", Toast.LENGTH_SHORT).show() }
                     } else {
-                        this.runOnUiThread({ Toast.makeText(this, "메일 발송 실패", Toast.LENGTH_SHORT).show() })
+                        this.runOnUiThread { Toast.makeText(this, "메일 발송 실패", Toast.LENGTH_SHORT).show() }
                     }
                 } catch (e: Exception) {
                     Log.e("SendMailLog", e.message)
