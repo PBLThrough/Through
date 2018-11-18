@@ -19,8 +19,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import com.pchmn.materialchips.adapter.ChipsAdapter.mChipList
+import jm.through.AccountData.accountList
 import jm.through.adapter.AttachAdapter
 import jm.through.data.AttachData
 import jm.through.function.MailSender
@@ -31,12 +33,15 @@ import java.net.URISyntaxException
 
 class SendActivity : AppCompatActivity() {
     lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapter
+    lateinit var barTitle: TextView
+    lateinit var spinBtn: ImageButton
     var context: Context = this
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
     var click = true
     var attach_list: ArrayList<AttachData> = ArrayList()
     val sendbarFragment = SendBarFragment()
+    lateinit var sendBar: Toolbar
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -80,10 +85,21 @@ class SendActivity : AppCompatActivity() {
         attach_recycler.layoutManager = LinearLayoutManager(this)
     }
 
+
     fun addToolbar() {
-        val sendBar = findViewById(R.id.sendbar) as Toolbar
-        val spinBtn = sendBar.findViewById(R.id.send_spin_btn) as ImageButton
+        sendBar = findViewById(R.id.sendbar) as Toolbar
+        spinBtn = sendBar.findViewById(R.id.send_spin_btn) as ImageButton
+        barTitle = sendBar.findViewById(R.id.toolbar_title) as TextView
+
         setSupportActionBar(sendBar)
+        defaultSender()
+        spinButton()
+
+        supportActionBar!!.setDisplayShowTitleEnabled(false) //기본 타이틀 보여줄지 말지 설정
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun spinButton() {
 
         spinBtn.setOnClickListener {
             ObjectAnimator.ofFloat(spinBtn, "rotation", if (click) 180f else 0f).start()
@@ -94,7 +110,7 @@ class SendActivity : AppCompatActivity() {
                 val tr = fm.beginTransaction()
                 tr.add(R.id.send_frame, sendbarFragment).commit()
                 send_frame.bringToFront() //최상위 뷰로 올림
-                Log.v("open","open")
+                Log.v("open", "open")
             } else {
                 val fm = supportFragmentManager
                 val tr = fm.beginTransaction()
@@ -103,13 +119,32 @@ class SendActivity : AppCompatActivity() {
             click = !click
 
         }
-
-
-        supportActionBar!!.setDisplayShowTitleEnabled(false) //기본 타이틀 보여줄지 말지 설정
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
 
+    //초기 툴바 설정 시 선택한 것이 없으면 첫번째 값으로 세팅
+    fun defaultSender() {
+        var barText = accountList.get(0).id
+        var splitText = barText.split("@")
+        barTitle.text = splitText[0] + "\n" + "@" + splitText[1]
+    }
+
+    //아이템 클릭시 보내는 사람 지정(클릭했을 때만 동작)
+    fun setSender(position: Int) {
+        var barText = accountList.get(position).id
+        var splitText = barText.split("@")
+        barTitle.text = splitText[0] + "\n" + "@" + splitText[1]
+    }
+
+    //클릭 후 메뉴 받아주기
+    fun closeRecycler(){
+        ObjectAnimator.ofFloat(spinBtn, "rotation", if (click) 180f else 0f).start()
+        val fm = supportFragmentManager
+        val tr = fm.beginTransaction()
+        tr.remove(sendbarFragment).commit()
+        click = !click
+
+    }
 
 
     //toolbar menu create
