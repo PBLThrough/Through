@@ -291,36 +291,11 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             var reader = FolderFetchImap()
 
             System.out.println("mailActivity-background loading..");
-            reader.readImapMail("cisspmit@naver.com", "@!gg1022")
+            reader.readImapMail("cisspmit@naver.com", "@!cjstkd10")
 
             return null
         }
 
-
-        fun receiveAttach(uri: String) {
-            var file: File = File(uri)
-            var totalFileSize: Long = 0
-
-            var fileUri = uri
-            var fileSize = file.length()
-            var fileName = file.name
-            var fileType = fileName.split('.')[1]
-
-            for (attachData in rattach_list) {
-                totalFileSize += attachData.receive_fileSize //기존 파일 크기
-            }
-            totalFileSize += fileSize //현재 select해서 가져온 파일 크기
-
-            //gmail 20MB 이상일 시, naver 10MB 이상일 시(상황에 따라 처리 But 속도가 느릴 수 있음.)
-            if (totalFileSize > 10485760) {
-                System.out.println("파일첨부 10MB 넘어감")
-                //Toast.makeText(this, "파일첨부는 10MB를 넘을 수 없습니다", Toast.LENGTH_SHORT).show()
-            } else {
-                rattach_list.add(RattachData(fileUri, fileType, fileName, fileSize))
-                Log.v("fileInfo", rattach_list.toString())
-                Log.v("totalFileSize", totalFileSize.toString())
-            }
-        }
 
         override fun onPreExecute() {
             super.onPreExecute()

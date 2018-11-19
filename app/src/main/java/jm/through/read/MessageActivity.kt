@@ -21,27 +21,31 @@ import javax.mail.internet.MimeMultipart
 import javax.mail.internet.MimeUtility
 
 
+
 /*
 메일 상세보기 창
  */
 
 
 class MessageActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
+
+//        var transaction = supportFragmentManager.beginTransaction();
+//        transaction.add(R.id.external,null);
+//        transaction.commit();
+
         Log.v("Loading.. ", "MessageActivity!");
 
-        /*
-        boundary = 본문의 서로 다른 부분을 구분하기 위한 구분자로 쓰임
-        본문에서 boundary 뽑고 따로 읽기
 
-        */
 //        // 여기서 에러남
 //        val t = findViewById<Toolbar>(R.id.message_bar)
 //        setSupportActionBar(t)
 //        supportActionBar!!.setTitle("MessageActivity 툴바!!")
 //        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
         Log.v("messageActivity - ", "toolbar ");
         val titleString = findViewById(R.id.message_content_title) as TextView // 제목
@@ -52,6 +56,9 @@ class MessageActivity : AppCompatActivity() {
         val webSettings = mWebView.getSettings()
         webSettings.setJavaScriptEnabled(true)
         webSettings.defaultTextEncodingName = "UTF-8"
+        mWebView.webViewClient = mWebViewClient()
+
+
 
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
 
@@ -160,6 +167,14 @@ class MessageActivity : AppCompatActivity() {
              * onclick="callFunction(); return false;
              */
 
+            fun replaceFragment(){
+                val mainFragment = urlDialogFragment()
+                val fragmentManager = fragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                //fragmentTransaction.replace(R.id.ll_fragment, mainFragment)
+                fragmentTransaction.commit()
+            }
+
             fun JavaScriptParser(mContext: Context) {
                 @JavascriptInterface
                 fun showToast(toast: String) {
@@ -170,25 +185,21 @@ class MessageActivity : AppCompatActivity() {
           //  mWebView.addJavascriptInterface(JavaScriptPasser(this), "Android")
 
             //TODO Comment by jiran
-            /* 메일 파싱 부분은 Network이기 때문에 별도의 WorkingThread로 변경
+            /** 메일 파싱 부분은 Network이기 때문에 별도의 WorkingThread로 변경
             (별도 스레드로 추출하지 않으면, NetworkOnMainThreadException 발생.) */
             Thread(Runnable {
                 var temp = getTestFromMessage(getContents)
-
-//                val count = StringUtils.countOccurrences(temp, "<a href")
                 //TODO Comment by jiran
-                /* UI 컴포넌트의 API는 메인스레드(UI)에서만 요청할 수 있음
+                /** UI 컴포넌트의 API는 메인스레드(UI)에서만 요청할 수 있음
                 (GUI 프로그래밍은 동기화 문제 방지를 위해 모두 같은 개념을 가짐.) */
                 runOnUiThread({ mWebView.loadData(temp, "text/html", "UTF-8"); })
             }).start()
         }
     }
 
-
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
     }
-
 }
 

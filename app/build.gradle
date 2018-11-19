@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "jm.through"
         minSdkVersion 21
@@ -33,6 +33,8 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0-alpha1'
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha1'
     implementation 'com.android.support:design:28.0.0-alpha1'
+    implementation 'org.jsoup:jsoup:1.8.3' // required
+    implementation 'com.leocardz:link-preview:2.0.0@aar'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -57,4 +59,6 @@ configurations.all {
 
 repositories {
     mavenCentral()
+    maven { url 'https://github.com/leonardocardoso/mvn-repo/raw/master/maven-deploy' }
+
 }
