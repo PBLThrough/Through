@@ -6,7 +6,6 @@
     android:layout_margin="3dp"
     >
 
-
     <ImageView
         android:id="@+id/type_image"
         android:layout_width="50dp"

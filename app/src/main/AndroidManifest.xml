@@ -31,12 +31,12 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignActivity" />
         <activity android:name=".activity.MailActivity" />
-        <activity android:name=".read.MessageActivity" />
-        <activity android:name=".send.SendActivity" />
-        <activity android:name=".form.FormActivity" />
-        <activity android:name=".account.AccountActivity" />
+        <activity android:name=".activity.MessageActivity" />
+        <activity android:name=".activity.SendActivity" />
+        <activity android:name=".activity.FormActivity" />
+        <activity android:name=".activity.AccountActivity" />
         <activity
-            android:name=".account.AddAccountActivity"
+            android:name=".activity.AddAccountActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.SettingActivity"></activity>
     </application>

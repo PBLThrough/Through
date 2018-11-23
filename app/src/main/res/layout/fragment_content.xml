@@ -7,12 +7,18 @@
 
     <include
         android:id="@+id/tool_bar"
-        layout="@layout/app_bar_mail"
+        layout="@layout/app_bar_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-        <!--layout="@layout/app_bar_message">-->
 
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/scroll_linew"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 <!-- 메일 상세내용 창 -->
     <TextView
         android:id="@+id/message_content_title"
@@ -46,35 +52,24 @@
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
         android:text="첨부파일"
-        android:textSize="15dp" />
+        android:textSize="12dp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/content_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/content_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
 
     <WebView
         android:id="@+id/message_content_web"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </WebView>
-
-    <!---->
-    <TextView
-        android:id="@+id/message_content_memo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:text="내용"
-        android:textSize="16dp" />
+    </LinearLayout>
+</ScrollView>
 
     <!--<ImageView-->
         <!--android:id="@+id/message_content_image"-->

@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private var PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
+
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,17 +88,9 @@ class MainActivity : AppCompatActivity() {
         return permissionResult == PackageManager.PERMISSION_GRANTED //true, false 반환
     }
 
-//    fun requestPermission(activity:Activity, permissions:Array<String>, requestCode:Int){
-//        ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,REQUEST_STORAGE)
-//    }
 
     /**뒤로가기키 메인에서 누를 시 다이얼로그 출력**/
     override fun onBackPressed() {
-//        if (getFragmentManager().getBackStackEntryCount() > 0){
-//            getFragmentManager().popBackStack();
-//        }else {
-//            super.onBackPressed()
-//        }
         Log.v("MainActivity : ","onBackPressed Called")
 
         Toast.makeText(applicationContext,"메인 뒤로가기",Toast.LENGTH_SHORT);
@@ -105,29 +98,6 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(applicationContext,"종료",Toast.LENGTH_SHORT)
         finish()
-
-//
-
-//        @Override
-//        public void onBackPressed() {
-//            if ( pressedTime == 0 ) {
-//                Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
-//                pressedTime = System.currentTimeMillis();
-//            }
-//            else {
-//                int seconds = (int) (System.currentTimeMillis() - pressedTime);
-//
-//                if ( seconds > 2000 ) {
-//                    Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
-//                    pressedTime = 0 ;
-//                }
-//                else {
-//                    super.onBackPressed();
-////                finish(); // app 종료 시키기
-//                }
-//            }
-//        }
-
 
        
     }

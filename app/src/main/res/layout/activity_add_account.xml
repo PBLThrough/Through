@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/EditTheme"
-    tools:context=".account.AddAccountActivity">
+    tools:context=".activity.AddAccountActivity">
 
     <ProgressBar
         android:id="@+id/authen_progress"
@@ -32,6 +32,7 @@
         android:src="@drawable/naver"
         app:civ_border_width="2dp"
         app:civ_border_color="@color/grayColor"/>
+
 
     <EditText
         android:id="@+id/email_edit"

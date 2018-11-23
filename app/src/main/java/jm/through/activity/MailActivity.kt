@@ -5,73 +5,53 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.Toast
-import com.sun.mail.imap.IMAPFolder
 import jm.through.AccountData
 import jm.through.AccountData.accountList
 import jm.through.AccountData.selectedData
 import jm.through.R
-import jm.through.account.AccountActivity
-import jm.through.account.AddAccountActivity
-import jm.through.attachment.RattachAdapter
-import jm.through.attachment.RattachData
+import jm.through.adapter.ReadAdapter
+import jm.through.function.FolderFetchImap
 import jm.through.read.*
-import jm.through.read.FolderFetchImap.readList
-import jm.through.send.SendActivity
+import jm.through.function.FolderFetchImap.readList
 import kotlinx.android.synthetic.main.fragment_check.*
-import kotlinx.android.synthetic.main.fragment_content.*
 import kotlinx.android.synthetic.main.nav_header_mail.*
-import java.io.File
-import java.util.*
-import javax.mail.*
-import javax.mail.internet.MimeUtility
 import kotlin.collections.ArrayList
 
 
 class MailActivity : AppCompatActivity(), View.OnClickListener {
+    var list_lastitemcheck = false;
 
     var click = true
     val context = this
     lateinit var uAdapter: UserAdapter
     lateinit var rAdapter: ReadAdapter
-    lateinit var  receiveAdapter: RattachAdapter
-    lateinit var checkRecycler: RecyclerView
-    lateinit var readProgress: ProgressBar
-    var rattach_list: ArrayList<RattachData> = ArrayList()
     var readId = ""
     var readPass = ""
-
-    companion object Task {
-        var readTask = MailActivity().ReadTask()
-      //  var readList = ArrayList<ReadData>()
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mail)
 
-        toolbarSetting() //toolbar에 대한 설정
-        navSetting() //navigation에 대한 설정
+        //toolbar에 대한 설정
+        toolbarSetting()
+
+        //navigation에 대한 설정
+        navSetting()
 
 
         //헤더 뷰 클릭하면 버튼 회전 & 리사이클러뷰 변경
         header_layout.setOnClickListener {
-            //버튼 1번 클릭시 180도 회전하면서 recyclerview 교체, 클릭은 false로 변경
             animateMenu()
         }
 
@@ -90,39 +70,71 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
-        //환경 설정 버튼 클릭 시
-        settingBtn.setOnClickListener{
+        //TODO 환경설정에서 계정관리 가능
+        settingBtn.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
         }
 
+        // 계정 정보 없으면 계정 추가 화면으로, 계정 정보 있으면 메일 읽기
+        if (AccountData.accountList.isEmpty()) {
+            val intent = Intent(this, AccountActivity::class.java)
+            startActivity(intent)
+        } else {
+            readEmail()
+        }
 
-        var readTask = ReadTask()
-        readTask.execute()
+    }
 
-        receiveAdapter = RattachAdapter(this,rattach_list)
-        recycler.adapter = receiveAdapter
-        recycler.layoutManager = LinearLayoutManager(this)
+    private fun readEmail() {
 
+        if (read_progress.visibility == View.INVISIBLE) {
+            read_progress.visibility = View.VISIBLE
+        }
+
+        //스레드 & 핸들러, mHandler.post이후에 UI작업
+        val mHandler = Handler()
+        val t = Thread(Runnable {
+
+            var reader = FolderFetchImap()
+            reader.setIndex(readId)
+            Log.v("정보", readId + readPass)
+
+            reader.readImapMail(readId, readPass)
+
+            mHandler.post {
+                try {
+                    Log.v("listlist", readList.toString())
+                    rAdapter = ReadAdapter(readList)
+                    rAdapter.notifyDataSetChanged()
+                    rAdapter.setOnItemClickListener(context)
+                    recycler.adapter = rAdapter
+                    recycler.layoutManager = LinearLayoutManager(context)
+                    read_progress.visibility = View.INVISIBLE
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.v("fail", "")
+                }
+            }
+        })
+        t.start()
 
     }
 
 
-    fun inflating(inflager: LayoutInflater?, container:ViewGroup?,saveInstanceState: Bundle? ):View{
-        val checkView = layoutInflater.inflate(R.layout.fragment_check, container) as View
-        checkRecycler = checkView.findViewById(R.id.recycler) as RecyclerView
-        readProgress = checkView.findViewById(R.id.read_progress) as ProgressBar
-        return checkView
-    }
-
+    /**뷰 클릭 이벤트**/
     override fun onClick(v: View?) {
         when (v?.parent) {
+
+            //메인 리사이클러뷰, 메일 리스트 항목 클릭 시 상세보기
             recycler -> {
                 val idx: Int = recycler.getChildAdapterPosition(v!!)
                 val messageIntent = Intent(this.context, MessageActivity::class.java)
                 messageIntent.putExtra("position", idx)
                 startActivity(messageIntent)
-                Log.v("position, idx = ", idx.toString())
             }
 
+            //계정 선택 리사이클러뷰
             user_recycler -> {
                 val idx = user_recycler.getChildAdapterPosition(v!!)
                 val data = AccountData.accountList.get(idx)
@@ -130,30 +142,27 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                 readId = selectedData!!.id
                 readPass = selectedData!!.pass
 
+                //View에 표시, 메인 아이디는 크게, 서브는 작게
                 var str = readId.split("@")
                 email_main_text.text = str[0]
                 email_sub_text.text = "@" + str[1]
                 animateMenu()
             }
 
+            //메일 확인 리사이클러뷰
             nav_recycler -> {
                 val idx = nav_recycler.getChildAdapterPosition(v!!)
                 when (idx) {
-                    //받은 메일
+                    //메일 읽어오기
                     0 -> {
-                        if (readTask.status == AsyncTask.Status.RUNNING) {
-                            readTask.cancel(true)
-                        }
-                        readTask = ReadTask()
-                        readTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                        drawer_layout.closeDrawer(GravityCompat.START)
+                        Log.v("hihihi", "눌렷음")
+                        readEmail()
                     }
 
-                    //보낸메일
-                    1 -> {
-                    }
                 }
             }
+
+
         }
 
 
@@ -176,30 +185,28 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun readSetting() {
+        selectedData = null
 
         if (accountList.isEmpty()) {
-            //이메일 계정 등록 안되어있으면 sub_text GONE
             email_sub_text.visibility = View.GONE
         } else {
-            //계정 등록 되있으면 VISIBLE
+
             email_sub_text.visibility = View.VISIBLE
 
             //계정리스트가 null이 아니지만 선택된 data가 없을 때, 리스트 마지막 값으로 read
             if (selectedData == null) {
+
                 selectedData = accountList.last()
+
                 readId = selectedData!!.id
                 readPass = selectedData!!.pass
+
                 email_main_text.text = readId.split("@")[0]
-                email_sub_text.text = "@"+readId.split("@")[1]
-                readTask = ReadTask()
-                readTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                email_sub_text.text = "@" + readId.split("@")[1]
+                readEmail()
+
             }
-
-
-
         }
-
-
     }
 
     fun navSetting() {
@@ -258,15 +265,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            //backPressCloseHandler.onBackPressed()
-            //  fm.popBackStack()
-            System.out.println("작동")
-            Toast.makeText(applicationContext, "메일 뒤로가기", Toast.LENGTH_SHORT)
-            //super.onBackPressed();
-
             finish()
         }
     }
+
 
 
     inner class ReadTask : AsyncTask<Void, Void, Void>() {
@@ -288,11 +290,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
-            var reader = FolderFetchImap()
-
             System.out.println("mailActivity-background loading..");
-            reader.readImapMail("cisspmit@naver.com", "@!cjstkd10")
-
             return null
         }
 
@@ -325,11 +323,9 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     //사용자와 상호작용하기 직전 (pause -> resume)
     override fun onResume() {
         super.onResume()
-        Log.v("onResume", "resume")
-        Log.v("accountList", AccountData.accountList.toString())
 
-
-        readSetting() //read recycler에 대한 설정
+        //계정 추가 후 돌아왔을 때 accountList의 가장 마지막 계정으로 메일 읽기
+        readSetting()
 
     }
 

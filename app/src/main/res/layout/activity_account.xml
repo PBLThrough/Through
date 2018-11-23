@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".account.AccountActivity">
+    tools:context=".activity.AccountActivity">
 
 
     <!--계정추가 나타내는 이미지로 대체-->
