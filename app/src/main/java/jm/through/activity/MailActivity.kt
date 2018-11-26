@@ -76,13 +76,8 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
-        // 계정 정보 없으면 계정 추가 화면으로, 계정 정보 있으면 메일 읽기
-        if (AccountData.accountList.isEmpty()) {
-            val intent = Intent(this, AccountActivity::class.java)
-            startActivity(intent)
-        } else {
             readEmail()
-        }
+
 
     }
 

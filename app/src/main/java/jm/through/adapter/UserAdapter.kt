@@ -23,7 +23,7 @@ class UserAdapter(var accountList: ArrayList<DetailData>) : RecyclerView.Adapter
         Log.v("accountList2", accountList.toString())
         var detail = accountList.get(position)
         holder!!.userEmail.text = detail.id
-        if (detail.count >= 100) {
+        if (detail.count!! >= 100) {
             holder!!.userEmailCount.text = "99+"
         } else {
             holder!!.userEmailCount.text = detail.count.toString()

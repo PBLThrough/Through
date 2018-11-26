@@ -10,7 +10,7 @@ data class DetailData(
         var platform:String,
         var id:String,
         var pass:String,
-        var count:Int
+        var count:Int?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
@@ -23,7 +23,7 @@ data class DetailData(
         dest?.writeString(platform)
         dest?.writeString(id)
         dest?.writeString(pass)
-        dest?.writeInt(count)
+        dest?.writeInt(this.count!!)
     }
 
     //보통 구현을 안하고 0을 리
