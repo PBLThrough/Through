@@ -112,7 +112,10 @@ class AddAccountActivity : AppCompatActivity() {
                     dialog.show(supportFragmentManager, "중복 다이얼로그")
                 } else {
                     accountList.add(newAccount)
+                    var intent = Intent(applicationContext, MailActivity::class.java)
+                    startActivity(intent)
                     finish()
+
                 }
 
             } else {
