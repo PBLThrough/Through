@@ -16,7 +16,6 @@ import java.util.*
  * ReadAdapter <- ReadData
  * */
 class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadViewHolder>() {
-
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
     // 현재 시각
     val currentTime = Date()
@@ -29,15 +28,9 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
         var title:String=dataList!!.get(position).mailTitle
         var memo:String=dataList!!.get(position).mailMemo
         var dates:Date? =dataList!!.get(position).mailDate
-        //var contents:Object = dataList!!.get(position).mailContent
-      //  var image:ImageView = dataList!!.get(position).mailImage
 
-//        var check:Boolean=dataList!!.get(position).check
-        // ReadViewHolder의 text를 가져온 ReadData 로 채우기
         holder!!.mailSender.text = title.split("<")[0] // 발신자
         holder!!.mailSubject.text = memo // 내용
-        //holder!!.mail
-
 
 
         // 메일 날짜가 오늘일 때 오전, 오후 표시

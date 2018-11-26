@@ -11,6 +11,7 @@ import android.webkit.WebView
 import android.widget.TextView
 import android.widget.Toast
 import jm.through.R
+import jm.through.fragment.urlDialogFragment
 import jm.through.function.FolderFetchImap.readList
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -19,7 +20,6 @@ import javax.mail.MessagingException
 import javax.mail.internet.ContentType
 import javax.mail.internet.MimeMultipart
 import javax.mail.internet.MimeUtility
-import jm.through.fragment.urlDialogFragment
 import jm.through.function.mWebViewClient
 
 /*
@@ -52,6 +52,9 @@ class MessageActivity : AppCompatActivity() {
         mWebView.webViewClient = mWebViewClient()
 
 
+        val dialog = urlDialogFragment()
+        dialog.show(supportFragmentManager,"Dialog")
+
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
 
         /** 메일 요소 변수로 가져오기 */
@@ -64,14 +67,10 @@ class MessageActivity : AppCompatActivity() {
             val getDate = readList[a].mailDate // date
             val getContents = readList[a].mailContent
             val getContenttype = readList[a].mailContenttype
-
             val mTime = df.format(getDate)
 
             dateString.text = mTime
             titleString.text = getSubject
-
-
-            System.out.println("mail's contenttype : " + getContenttype);
 
             /** 메일 디코딩 */
             @Throws(MessagingException::class, IOException::class)
@@ -121,15 +120,14 @@ class MessageActivity : AppCompatActivity() {
                     result = getTextFromMimeMultipart(mimeMultipart)
                     Log.v("multipart debug","multipart decoding");
                 }
-
                 return MimeUtility.decodeText(result)
             }
 
 
-            fun replaceFragment(){
-                val mainFragment = urlDialogFragment()
-                mainFragment.show(supportFragmentManager, "url 다이얼로그")
-            }
+//            fun replaceFragment(){
+//                val urlFragment =
+//                urlFragment.show(supportFragmentManager, "url 다이얼로그")
+//            }
 
             fun JavaScriptParser(mContext: Context) {
                 @JavascriptInterface

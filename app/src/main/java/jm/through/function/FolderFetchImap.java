@@ -32,6 +32,8 @@ public class FolderFetchImap extends javax.mail.Authenticator{
     public static ArrayList<ReadData> readList = new ArrayList<>();
     public static String index;
 
+
+
     static {
         Security.addProvider(new JSSEProvider());
     }
@@ -88,10 +90,10 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println(messages.length);
             System.out.println("FolderFetchItem on!!");
 
+            int start = messages.length -1;
+            int end = start - 20;
 
-            int states = 20; // 새로고침 할 때 + 20개 해주기
-
-            for (int i= messages.length-1; i > messages.length - states -1 ;i--)
+            for (int i = start; i > end ;i--)
             {
                 Log.v("index",savedIndex.toString() + index.toString());
                 Log.v("indexhost",host);

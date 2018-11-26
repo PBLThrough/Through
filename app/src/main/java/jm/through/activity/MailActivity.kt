@@ -108,8 +108,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                     rAdapter = ReadAdapter(readList)
                     rAdapter.notifyDataSetChanged()
                     rAdapter.setOnItemClickListener(context)
+
                     recycler.adapter = rAdapter
                     recycler.layoutManager = LinearLayoutManager(context)
+
                     read_progress.visibility = View.INVISIBLE
                 } catch (e: Exception) {
                     e.printStackTrace()

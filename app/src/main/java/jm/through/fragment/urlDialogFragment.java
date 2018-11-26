@@ -4,13 +4,16 @@ package jm.through.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +24,7 @@ import com.leocardz.link.preview.library.SourceContent;
 import com.leocardz.link.preview.library.TextCrawler;
 import org.jetbrains.annotations.Nullable;
 import jm.through.R;
+import jm.through.activity.MessageActivity;
 
 
 public class urlDialogFragment extends DialogFragment {
@@ -52,10 +56,20 @@ public class urlDialogFragment extends DialogFragment {
             return false;
     }
 
+    public static urlDialogFragment newInstance(){
+        return new urlDialogFragment();
+    }
+
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         AlertDialog dialog;
+
+        // 다이얼로그 외부 화면 흐리게 표현
+        WindowManager.LayoutParams lpWindow = new WindowManager.LayoutParams();
+        lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        lpWindow.dimAmount = 0.8f;
+        // getWindow().setAttributes(lpWindow);
 
         View v = inflater.inflate(R.layout.fragment_content, null);
 
@@ -63,44 +77,37 @@ public class urlDialogFragment extends DialogFragment {
         web_title_textview = v.findViewById(R.id.web_title);
         web_contents_textview = v.findViewById(R.id.web_contents);
         web_url_textview = v.findViewById(R.id.web_url);
+
         web_yesbtn_button = v.findViewById(R.id.web_btn_yes);
         web_nobtn_button = v.findViewById(R.id.web_btn_no);
 
         dialog = builder.create();
         dialog.setView(v);
 
+        textCrawler.makePreview(callback, url);
+
         web_yesbtn_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                textCrawler
-                        .makePreview(callback, url);
+                dialog.dismiss();
+              // Intent intent = new Intent(Intent.ACTION_VIEW,)
+              //  startActivity(intent)
                 Log.v("dialogFM","open url");
                 flag = true;
-                dialog.dismiss();
             }
         });
 
         web_nobtn_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                dialog.dismiss();
                 Log.v("dialogFM","close url");
                 flag = false;
-                dialog.dismiss();
             }
         });
 
+        dialog.show();
 
-//        builder.setView(view)
-//                .setPositiveButton("확인",
-//                        new DialogInterface.OnClickListener()
-//                        {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int id)
-//                            {
-//                                listener.onNameInputComplete(mName
-//                                        .getText().toString());
-//                            }
-//                        }).setNegativeButton("취소", null);
         return dialog;
     }
 
@@ -119,10 +126,9 @@ public class urlDialogFragment extends DialogFragment {
 
         @Override
         public void onPre() {
-            // preview를 만들기 전에 해아하는 것으로 보통 커스텀 preview layout을 설정함
+            //preview를 만들기 전에 해아하는 것으로 보통 커스텀 preview layout을 설정함
             //dialogView = getLayoutInflater().inflate(R.layout.dialogfragment,null);
             linearLayout = dialogView.findViewById(R.id.external);
-
         }
 
         @Override

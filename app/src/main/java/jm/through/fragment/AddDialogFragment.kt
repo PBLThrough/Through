@@ -17,10 +17,6 @@ class AddDialogFragment : DialogFragment() {
     lateinit var data: DetailData
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        if(arguments!=null){
-            data = arguments!!.getParcelable("newData")
-        }
-
         var builder: Builder = AlertDialog.Builder(activity!!)
         var dialog: AlertDialog
 
