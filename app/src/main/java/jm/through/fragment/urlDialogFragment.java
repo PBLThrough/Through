@@ -37,6 +37,7 @@ public class urlDialogFragment extends DialogFragment {
     TextView web_url_textview;
     Button web_yesbtn_button;
     Button web_nobtn_button;
+    View v;
     Context context;
 
     TextCrawler textCrawler = new TextCrawler();
@@ -71,7 +72,7 @@ public class urlDialogFragment extends DialogFragment {
         lpWindow.dimAmount = 0.8f;
         // getWindow().setAttributes(lpWindow);
 
-        View v = inflater.inflate(R.layout.fragment_content, null);
+        v = inflater.inflate(R.layout.fragment_content, null);
 
         web_image_Imageview = v.findViewById(R.id.web_image);
         web_title_textview = v.findViewById(R.id.web_title);
@@ -127,8 +128,7 @@ public class urlDialogFragment extends DialogFragment {
         @Override
         public void onPre() {
             //preview를 만들기 전에 해아하는 것으로 보통 커스텀 preview layout을 설정함
-            //dialogView = getLayoutInflater().inflate(R.layout.dialogfragment,null);
-            linearLayout = dialogView.findViewById(R.id.external);
+
         }
 
         @Override
