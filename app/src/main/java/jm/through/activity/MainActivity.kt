@@ -102,7 +102,6 @@ class MainActivity : AppCompatActivity() {
 
         Log.v("MainActivity : ","onBackPressed Called")
 
-
         Toast.makeText(applicationContext, "메인 뒤로가기", Toast.LENGTH_SHORT);
         super.onBackPressed();
 
@@ -130,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
 
-        
+
     }
 
 

@@ -11,7 +11,7 @@ import com.leocardz.link.preview.library.TextCrawler;
 
 
 public class mWebViewClient extends WebViewClient {
-    public boolean check;
+    public boolean check = urlDialogFragment.checkFlag();
 
     /**
      * 처음 한번만 호출되는 메소드
@@ -23,9 +23,7 @@ public class mWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         urlDialogFragment.getURL(url);
-        check = urlDialogFragment.checkFlag();
-
-        Log.v("webview","check is "+check);
+        Log.v("webview","check is " + check);
 
         if(check == true){
             super.onPageStarted(view, url, favicon);
