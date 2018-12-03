@@ -17,15 +17,13 @@ import com.leocardz.link.preview.library.TextCrawler;
 
 
 public class mWebViewClient extends WebViewClient {
-
-    public boolean check = urlDialogFragment.checkFlag();
     Context context;
-
+    static String firstUrl;
+    int count = 0;
 
     public mWebViewClient(Context context){
         this.context = context;
     }
-
 
     /**
      * 처음 한번만 호출되는 메소드
@@ -37,7 +35,7 @@ public class mWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         urlDialogFragment.getURL(url);
-        Log.v("webview","check is " + check);
+        firstUrl = url;
         super.onPageStarted(view, url, favicon);
     }
 
@@ -148,11 +146,14 @@ public class mWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         Log.v("webview","shouldOverrideUrlLoading");
+        count++;
 
         //다이얼로그 띄우기
-        ((MessageActivity) context).showDialog();
+        ((MessageActivity) context).showDialog(url);
 
         view.loadUrl(url);
+        if (count > 1) view.stopLoading();
+
         return true;
     }
 

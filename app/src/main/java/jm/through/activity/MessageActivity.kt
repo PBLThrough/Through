@@ -164,10 +164,12 @@ class MessageActivity : AppCompatActivity() {
         finish()
     }
 
-    fun showDialog(){
+    fun showDialog(url:String){
         var urlDialogFragment = urlDialogFragment()
         Log.v("showDialog","Dialog show")
-        urlDialogFragment.show(supportFragmentManager,"미리보기")
+        if(url.contains("http")){
+            urlDialogFragment.show(supportFragmentManager,"미리보기")
+        }
     }
 }
 
