@@ -1,6 +1,10 @@
 package jm.through.function;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.HttpAuthHandler;
@@ -13,7 +17,15 @@ import com.leocardz.link.preview.library.TextCrawler;
 
 
 public class mWebViewClient extends WebViewClient {
+
     public boolean check = urlDialogFragment.checkFlag();
+    Context context;
+
+
+    public mWebViewClient(Context context){
+        this.context = context;
+    }
+
 
     /**
      * 처음 한번만 호출되는 메소드
@@ -26,13 +38,7 @@ public class mWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         urlDialogFragment.getURL(url);
         Log.v("webview","check is " + check);
-
-       // MessageActivity activity = (MessageActivity) getActivity();
-
-        if(check == true){
-            super.onPageStarted(view, url, favicon);
-        }
-
+        super.onPageStarted(view, url, favicon);
     }
 
     // 리소스를 로드하는 중 여러번 호출
@@ -41,13 +47,13 @@ public class mWebViewClient extends WebViewClient {
      * */
     @Override
     public void onLoadResource(WebView view, String url) {
-        if(check == true) super.onLoadResource(view, url);
+         super.onLoadResource(view, url);
     }
 
     // 방문 내역을 히스토리에 업데이트 할 때
     @Override
     public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-        if(check == true) super.doUpdateVisitedHistory(view, url, isReload);
+         super.doUpdateVisitedHistory(view, url, isReload);
     }
 
     // 로딩이 완료됬을 때 한번 호출
@@ -58,15 +64,14 @@ public class mWebViewClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         Log.v("webview","onPageFinished");
-        if(check == true) super.onPageFinished(view, url);
+        super.onPageFinished(view, url);
     }
 
     // 오류가 났을 경우, 오류는 복수할 수 없음
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        if(check == true) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
 
+            super.onReceivedError(view, errorCode, description, failingUrl);
 
             switch (errorCode) {
                 case ERROR_AUTHENTICATION:
@@ -100,8 +105,8 @@ public class mWebViewClient extends WebViewClient {
                 case ERROR_UNSUPPORTED_SCHEME:
                     break;          // URI가 지원되지 않는 방식
             }
-        }
     }
+
 
     // http 인증 요청이 있는 경우, 기본 동작은 요청 취소
     /**
@@ -109,7 +114,7 @@ public class mWebViewClient extends WebViewClient {
      * */
     @Override
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-        if(check == true) super.onReceivedHttpAuthRequest(view, handler, host, realm);
+        super.onReceivedHttpAuthRequest(view, handler, host, realm);
     }
 
     // 확대나 크기 등의 변화가 있는 경우
@@ -117,7 +122,7 @@ public class mWebViewClient extends WebViewClient {
      * Webview가 변화하기 위해 scale이 적용된다고 알림*/
     @Override
     public void onScaleChanged(WebView view, float oldScale, float newScale) {
-        if(check == true) super.onScaleChanged(view, oldScale, newScale);
+        super.onScaleChanged(view, oldScale, newScale);
     }
 
     // 잘못된 키 입력이 있는 경우
@@ -129,8 +134,7 @@ public class mWebViewClient extends WebViewClient {
      * */
     @Override
     public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
-        if(check == true) return super.shouldOverrideKeyEvent(view, event);
-        else return false;
+        return super.shouldOverrideKeyEvent(view, event);
     }
 
     // 새로운 URL이 webview에 로드되려 할 경우 컨트롤을 대신할 기회를 줌
@@ -145,15 +149,11 @@ public class mWebViewClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         Log.v("webview","shouldOverrideUrlLoading");
 
-       // Intent intent = new Intent(getC)
-        /**
-         * 여기서 다이얼로그 띄우고 url 넣어주기
-         */
-        if(check == true) {
-            view.loadUrl(url);
-            return true;
-        }
-        else return false;
+        //다이얼로그 띄우기
+        ((MessageActivity) context).showDialog();
+
+        view.loadUrl(url);
+        return true;
     }
 
 }

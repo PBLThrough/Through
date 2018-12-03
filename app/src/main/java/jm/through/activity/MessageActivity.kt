@@ -49,21 +49,19 @@ class MessageActivity : AppCompatActivity() {
         webSettings.defaultTextEncodingName = "UTF-8"
         webSettings.setBuiltInZoomControls(false) // 확대 축소 기능
         webSettings.setLoadsImagesAutomatically(true)
-        mWebView.webViewClient = mWebViewClient()
+        mWebView.webViewClient = mWebViewClient(this)
 
-        /** 에러 */
-//        val dialog = urlDialogFragment()
-//        dialog.show(supportFragmentManager,"Dialog")
 
-        val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
+
+        val df = SimpleDateFormat("yyyy.MM.dd EE, aa hh:mm")
 
         /** 메일 요소 변수로 가져오기 */
         Log.v("messageActivity -", "getIntent()");
         if (getIntent() != null) {
             val intent = getIntent();
-            val a = intent.getIntExtra("position", 0);
-            Log.v("intent ", " is " + a);
-            val getSubject = readList[a].mailTitle.split("<".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0] // subject
+            val a =intent.extras["position"] as Int
+            Log.v("intent ", " is " + a)
+            val getSubject = readList[a].mailTitle // subject
             val getDate = readList[a].mailDate // date
             val getContents = readList[a].mailContent
             val getContenttype = readList[a].mailContenttype
@@ -165,5 +163,12 @@ class MessageActivity : AppCompatActivity() {
         super.onBackPressed()
         finish()
     }
+
+    fun showDialog(){
+        var urlDialogFragment = urlDialogFragment()
+        Log.v("showDialog","Dialog show")
+        urlDialogFragment.show(supportFragmentManager,"미리보기")
+    }
 }
+
 
