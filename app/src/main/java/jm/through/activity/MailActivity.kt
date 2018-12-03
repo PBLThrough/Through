@@ -126,11 +126,11 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    fun onLoadMore(){
-        read_progress.visibility = View.VISIBLE
-        callMoreMails = true;
-        readEmail();
-    }
+//    fun onLoadMore(){
+//        read_progress.visibility = View.VISIBLE
+//        callMoreMails = true;
+//        readEmail();
+//    }
 
     /**뷰 클릭 이벤트**/
     override fun onClick(v: View?) {

@@ -51,9 +51,9 @@ class MessageActivity : AppCompatActivity() {
         webSettings.setLoadsImagesAutomatically(true)
         mWebView.webViewClient = mWebViewClient()
 
-
-        val dialog = urlDialogFragment()
-        dialog.show(supportFragmentManager,"Dialog")
+        /** 에러 */
+//        val dialog = urlDialogFragment()
+//        dialog.show(supportFragmentManager,"Dialog")
 
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
 

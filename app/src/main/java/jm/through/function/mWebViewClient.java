@@ -6,6 +6,8 @@ import android.view.KeyEvent;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import jm.through.activity.MessageActivity;
 import jm.through.fragment.urlDialogFragment;
 import com.leocardz.link.preview.library.TextCrawler;
 
@@ -24,6 +26,8 @@ public class mWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         urlDialogFragment.getURL(url);
         Log.v("webview","check is " + check);
+
+       // MessageActivity activity = (MessageActivity) getActivity();
 
         if(check == true){
             super.onPageStarted(view, url, favicon);
