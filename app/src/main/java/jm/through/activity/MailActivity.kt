@@ -76,8 +76,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
-        readSetting()
-        readEmail()
+            readSetting()
 
 
     }

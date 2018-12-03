@@ -1,17 +1,29 @@
 package jm.through.function;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import jm.through.activity.MessageActivity;
 import jm.through.fragment.urlDialogFragment;
 import com.leocardz.link.preview.library.TextCrawler;
 
 
 public class mWebViewClient extends WebViewClient {
     public boolean check;
+    Context context;
+
+
+    public mWebViewClient(Context context){
+        this.context = context;
+    }
 
     /**
      * 처음 한번만 호출되는 메소드
@@ -147,7 +159,15 @@ public class mWebViewClient extends WebViewClient {
         /**
          * 여기서 다이얼로그 띄우고 url 넣어주기
          */
+
+        //다이얼로그 띄우기
+        ((MessageActivity) context).showDialog();
+
+
+
+
         if(check == true) {
+
             view.loadUrl(url);
             return true;
         }
