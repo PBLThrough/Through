@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.view.GravityCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ import jm.through.AccountData.selectedData
 import jm.through.R
 import jm.through.adapter.ReadAdapter
 import jm.through.function.FolderFetchImap
+import jm.through.function.FolderFetchImap.callMoreMails
 import jm.through.read.*
 import jm.through.function.FolderFetchImap.readList
 import kotlinx.android.synthetic.main.fragment_check.*
@@ -82,6 +84,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun readEmail() {
+        val swipeRefresh = findViewById(R.id.swipeRefresh) as SwipeRefreshLayout
 
         if (read_progress.visibility == View.INVISIBLE) {
             read_progress.visibility = View.VISIBLE
@@ -106,6 +109,9 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
                     recycler.adapter = rAdapter
                     recycler.layoutManager = LinearLayoutManager(context)
+                    swipeRefresh.setOnRefreshListener { this }
+
+                    /** 여기에 리사이클러뷰 .addOnScrollListener 추가 */
 
                     read_progress.visibility = View.INVISIBLE
                 } catch (e: Exception) {
@@ -118,6 +124,12 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+
+//    fun onLoadMore(){
+//        read_progress.visibility = View.VISIBLE
+//        callMoreMails = true;
+//        readEmail();
+//    }
 
     /**뷰 클릭 이벤트**/
     override fun onClick(v: View?) {
@@ -164,6 +176,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
 
     }
+
 
 
     fun animateMenu() {

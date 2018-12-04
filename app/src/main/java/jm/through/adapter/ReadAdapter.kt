@@ -17,6 +17,8 @@ import java.util.*
  * */
 class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadViewHolder>() {
     private var onItemClick: View.OnClickListener? = null //item클릭 시 event
+    private var isMoreLoading = false
+
     // 현재 시각
     val currentTime = Date()
     val mSimpleDateFormat = SimpleDateFormat("yy.MM.dd", Locale.KOREA)
@@ -46,10 +48,6 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
 
     }
 
-    /**
-     * 새로고침
-     */
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadViewHolder {
         val mainView:View=LayoutInflater.from(parent!!.context).inflate(R.layout.check_board_item,parent,false)
@@ -62,4 +60,6 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
     fun setOnItemClickListener(l: MailActivity) {
         onItemClick = l
     }
+
+
 }

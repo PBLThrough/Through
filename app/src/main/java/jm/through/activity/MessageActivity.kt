@@ -57,7 +57,8 @@ class MessageActivity : AppCompatActivity() {
         mWebView.webViewClient = mWebViewClient
 
 
-        val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
+
+        val df = SimpleDateFormat("yyyy.MM.dd EE, aa hh:mm")
 
         /** 메일 요소 변수로 가져오기 */
         Log.v("messageActivity -", "getIntent()");
@@ -168,14 +169,15 @@ class MessageActivity : AppCompatActivity() {
         finish()
     }
 
-    fun showDialog(){
-        urlDialogFragment = urlDialogFragment()
-        urlDialogFragment.show(supportFragmentManager,"미리보기")
+
+    fun showDialog(url:String){
+        var urlDialogFragment = urlDialogFragment()
+        Log.v("showDialog","Dialog show")
+        if(url.contains("http")){
+            urlDialogFragment.show(supportFragmentManager,"미리보기")
+        }
     }
 
-    fun requestShowUrl(){
-
-    }
 }
 
 

@@ -31,8 +31,7 @@ import jm.through.data.ReadData;
 public class FolderFetchImap extends javax.mail.Authenticator{
     public static ArrayList<ReadData> readList = new ArrayList<>();
     public static String index;
-
-
+    public static boolean callMoreMails = false;
 
     static {
         Security.addProvider(new JSSEProvider());
@@ -41,6 +40,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
     public void setIndex(String index){
         this.index = index;
     }
+
 
     //String[] args
     public ArrayList<ReadData> readImapMail(String username, String password) {
@@ -90,32 +90,31 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println(messages.length);
             System.out.println("FolderFetchItem on!!");
 
-            int start = messages.length -1;
+            int start = messages.length - 1;
+            if(callMoreMails) start -= 20;
             int end = start - 20;
 
-            for (int i = start; i > end ;i--)
-            {
-                Log.v("index",savedIndex.toString() + index.toString());
-                Log.v("indexhost",host);
-                if(!savedIndex.equals(index)) break;
+                for (int i = start; i > end; i--) {
+                    Log.v("index", savedIndex.toString() + index.toString());
+                    Log.v("indexhost", host);
+                    if (!savedIndex.equals(index)) break;
 
-                System.out.println("*****************************************************************************");
-                System.out.println("MESSAGE " + (i + 1) + ":");
-                Message msg =  messages[i];
+                    System.out.println("*****************************************************************************");
+                    System.out.println("MESSAGE " + (i + 1) + ":");
+                    Message msg = messages[i];
 
-                String subject =  MimeUtility.decodeText(msg.getSubject());
-                String from = MimeUtility.decodeText(String.valueOf(msg.getFrom()[0]));
-                Date date = msg.getSentDate();
-                String contenttype = msg.getContentType();
-                int size = msg.getSize();
-                Object content = msg.getContent();
+                    String subject = MimeUtility.decodeText(msg.getSubject());
+                    String from = MimeUtility.decodeText(String.valueOf(msg.getFrom()[0]));
+                    Date date = msg.getSentDate();
+                    String contenttype = msg.getContentType();
+                    Object content = msg.getContent();
 
-                System.out.println("Subject: " + subject);
-                System.out.println("Body : " + content);
-                System.out.println("\n"+messages[i] + "의 타입은 "+ msg.getContentType());
+                    System.out.println("Subject: " + subject);
 
-                readList.add(new ReadData(from, subject, date, contenttype, content, false));
-            }
+                    readList.add(new ReadData(from, subject, date, contenttype, content, false));
+                }
+
+            callMoreMails = false;
 
             /**
              * 컨텐츠(ex:html) 획득을 위해 세션 종료를 주석처리.
@@ -141,4 +140,5 @@ public class FolderFetchImap extends javax.mail.Authenticator{
         }
         return readList;
     }
+
 }
