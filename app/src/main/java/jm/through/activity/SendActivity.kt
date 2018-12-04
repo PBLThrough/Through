@@ -70,6 +70,9 @@ class SendActivity : AppCompatActivity() {
 
         }
 
+        //주소록 버튼 눌렀을 시
+        adressBtn.setOnClickListener{}
+
         //인텐트 있으면
 
         if (intent != null) {
