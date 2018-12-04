@@ -147,8 +147,8 @@ class AddAccountActivity : AppCompatActivity() {
         val addAccountData = data1
         val addAccountCallback = networkService!!.addAccount(addAccountData)
 
-        addAccountCallback.enqueue(object : Callback<addAccountResult> {
-            override fun onResponse(call: Call<addAccountResult>, response: Response<addAccountResult>) {
+        addAccountCallback.enqueue(object : Callback<AddAccountResult> {
+            override fun onResponse(call: Call<AddAccountResult>, response: Response<AddAccountResult>) {
                 if (response.isSuccessful) {
                     //로컬에 저장하고 나중에 로그인 다시하면 서버에 저장되게
                     accountList.add(data2)
@@ -159,7 +159,7 @@ class AddAccountActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<addAccountResult>, t: Throwable) {
+            override fun onFailure(call: Call<AddAccountResult>, t: Throwable) {
                 Toast.makeText(ApplicationController.context, "네트워크가 원할하지 않습니다.", Toast.LENGTH_SHORT).show()
             }
 

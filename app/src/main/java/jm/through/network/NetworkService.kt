@@ -16,7 +16,9 @@ interface NetworkService {
 
     //쓰루유저의 이메일 계정 추가 -> 아마도 완료
     @POST("addAccount")
-    fun addAccount(@Body addAccountData: AddAccountData): Call<addAccountResult>
+    fun addAccount(@Body addAccountData: AddAccountData): Call<AddAccountResult>
 
-
+    //메일 정상 발송 시 신뢰 리스트 추가
+    @POST("push")
+    fun addTrustList(@Body addTrustData:AddTrustData):Call<AddTrustResult>
 }
