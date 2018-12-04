@@ -14,7 +14,7 @@ interface NetworkService {
     @POST("signin")
     fun signIn(@Body signInData: SignInData): Call<SignInResult>
 
-    //쓰루유저의 이메일 계정 추가
+    //쓰루유저의 이메일 계정 추가 -> 아마도 완료
     @POST("addAccount")
     fun addAccount(@Body addAccountData: AddAccountData): Call<addAccountResult>
 

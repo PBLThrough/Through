@@ -157,7 +157,6 @@ public class ChipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if ((actionId == EditorInfo.IME_ACTION_DONE) || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN))) {
-                    Log.v("hihi","hihi");
                     String label = mEditText.getText().toString().trim();
                     String info = label;
                     Chip eChip = new Chip(label, info);
@@ -253,35 +252,35 @@ public class ChipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         });
 
         // show detailed chip
-        if (mChipsInput.isShowChipDetailed()) {
-            chipView.setOnChipClicked(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // get chip position
-                    int[] coord = new int[2];
-                    v.getLocationInWindow(coord);
-                    Log.v("coord0", String.valueOf(coord[0])); //x좌표
-                    Log.v("coord1", String.valueOf(coord[1])); //y좌표
-
-                    final DetailedChipView detailedChipView = mChipsInput.getDetailedChipView(getItem(position));
-                    detailedChipView.currentChip(chipView); //pass chipView to detailChipView
-                    setDetailedChipViewPosition(detailedChipView, coord);
-
-                    // delete button
-                    detailedChipView.setOnDeleteClicked(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            removeChip(position);
-                            detailedChipView.fadeOut();
-                        }
-                    });
-
-
-                }
-            });
-
-
-        }
+//        if (mChipsInput.isShowChipDetailed()) {
+//            chipView.setOnChipClicked(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    // get chip position
+//                    int[] coord = new int[2];
+//                    v.getLocationInWindow(coord);
+//                    Log.v("coord0", String.valueOf(coord[0])); //x좌표
+//                    Log.v("coord1", String.valueOf(coord[1])); //y좌표
+//
+//                    final DetailedChipView detailedChipView = mChipsInput.getDetailedChipView(getItem(position));
+//                    detailedChipView.currentChip(chipView); //pass chipView to detailChipView
+//                    setDetailedChipViewPosition(detailedChipView, coord);
+//
+//                    // delete button
+//                    detailedChipView.setOnDeleteClicked(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            removeChip(position);
+//                            detailedChipView.fadeOut();
+//                        }
+//                    });
+//
+//
+//                }
+//            });
+//
+//
+//        }
     }
 
 

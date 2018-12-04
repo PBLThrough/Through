@@ -74,9 +74,10 @@
 
         <ImageButton
             android:id="@+id/settingBtn"
-            android:background="@drawable/sign"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:background="@drawable/ic_settings_black_24dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
             android:layout_gravity="right|bottom"/>
     </android.support.design.widget.NavigationView>
 
