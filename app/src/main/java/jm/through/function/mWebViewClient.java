@@ -21,6 +21,7 @@ public class mWebViewClient extends WebViewClient {
     Context context;
 
 
+
     public mWebViewClient(Context context){
         this.context = context;
     }
@@ -160,19 +161,18 @@ public class mWebViewClient extends WebViewClient {
          * 여기서 다이얼로그 띄우고 url 넣어주기
          */
 
-        //다이얼로그 띄우기
         ((MessageActivity) context).showDialog();
 
 
-
-
         if(check == true) {
-
             view.loadUrl(url);
             return true;
         }
-        else return false;
+        return false;
     }
+
+
+
 
 }
 

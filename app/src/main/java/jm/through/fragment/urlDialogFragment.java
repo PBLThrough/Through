@@ -35,6 +35,7 @@ import jm.through.activity.MessageActivity;
 public class urlDialogFragment extends DialogFragment {
     static String url;
     static boolean flag = false;
+
     /**
      * 각종 뷰 변수 선언
      */
@@ -56,7 +57,6 @@ public class urlDialogFragment extends DialogFragment {
     Bitmap currentImage;
 
 
-
     /**
      * mWebViewClient 에서 url을 가져오기
      */
@@ -74,6 +74,8 @@ public class urlDialogFragment extends DialogFragment {
             return false;
     }
 
+
+
     public static urlDialogFragment newInstance() {
         return new urlDialogFragment();
     }
@@ -87,13 +89,13 @@ public class urlDialogFragment extends DialogFragment {
         // getWindow().setAttributes(lpWindow);
 
         v = LayoutInflater.from(getActivity()).inflate(R.layout.dialogfragment, null);
-        web_image_Imageview = (ImageView)v.findViewById(R.id.web_image);
-        web_title_textview = (TextView)v.findViewById(R.id.web_title);
-        web_contents_textview = (TextView)v.findViewById(R.id.web_contents);
-        web_url_textview = (TextView)v.findViewById(R.id.web_url);
+        web_image_Imageview = (ImageView) v.findViewById(R.id.web_image);
+        web_title_textview = (TextView) v.findViewById(R.id.web_title);
+        web_contents_textview = (TextView) v.findViewById(R.id.web_contents);
+        web_url_textview = (TextView) v.findViewById(R.id.web_url);
 
-        web_yesbtn_button = (Button)v.findViewById(R.id.web_btn_yes);
-        web_nobtn_button = (Button)v.findViewById(R.id.web_btn_no);
+        web_yesbtn_button = (Button) v.findViewById(R.id.web_btn_yes);
+        web_nobtn_button = (Button) v.findViewById(R.id.web_btn_no);
 
 
         dialog = builder.create();
@@ -105,11 +107,7 @@ public class urlDialogFragment extends DialogFragment {
         web_yesbtn_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-                // Intent intent = new Intent(Intent.ACTION_VIEW,)
-                //  startActivity(intent)
-                Log.v("dialogFM", "open url");
-                flag = true;
+                ((MessageActivity) context).requestShowUrl();
             }
         });
 
@@ -117,8 +115,7 @@ public class urlDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Log.v("dialogFM", "close url");
-                flag = false;
+
             }
         });
 
@@ -126,7 +123,6 @@ public class urlDialogFragment extends DialogFragment {
         return dialog;
 
     }
-
 
 
     public interface urlDialogFragmentListener {
@@ -171,7 +167,6 @@ public class urlDialogFragment extends DialogFragment {
                         }
                     }
                 });
-
 
 
             }

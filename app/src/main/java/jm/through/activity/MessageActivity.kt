@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
 import jm.through.R
@@ -28,6 +29,8 @@ import jm.through.function.mWebViewClient
 
 class MessageActivity : AppCompatActivity() {
 
+    lateinit var mWebViewClient:WebViewClient
+    lateinit var urlDialogFragment: urlDialogFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
@@ -49,7 +52,9 @@ class MessageActivity : AppCompatActivity() {
         webSettings.defaultTextEncodingName = "UTF-8"
         webSettings.setBuiltInZoomControls(false) // 확대 축소 기능
         webSettings.setLoadsImagesAutomatically(true)
-        mWebView.webViewClient = mWebViewClient(this)
+
+        mWebViewClient = jm.through.function.mWebViewClient(this)
+        mWebView.webViewClient = mWebViewClient
 
 
         val df = SimpleDateFormat("yyyy.MM.dd EE요일, aa hh:mm")
@@ -164,8 +169,13 @@ class MessageActivity : AppCompatActivity() {
     }
 
     fun showDialog(){
-        var urlDialogFragment = urlDialogFragment()
+        urlDialogFragment = urlDialogFragment()
         urlDialogFragment.show(supportFragmentManager,"미리보기")
     }
+
+    fun requestShowUrl(){
+
+    }
 }
+
 

@@ -1,5 +1,5 @@
 package jm.through.data
 
-class SignInResult {
-
-}
+data class SignInResult (
+var token:String
+)
