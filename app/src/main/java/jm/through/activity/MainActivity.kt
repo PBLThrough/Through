@@ -10,17 +10,25 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.ActivityCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import jm.through.AccountData
 import jm.through.R
 import jm.through.UserData
+import jm.through.adapter.ReadAdapter
 import jm.through.data.*
 import jm.through.data.SignInResult.SocialEmailData
+import jm.through.function.Authenticator
+import jm.through.function.Authenticator.count
+import jm.through.function.FolderFetchImap
 import jm.through.network.ApplicationController
 import jm.through.network.ApplicationController.Companion.context
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_check.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -106,28 +114,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun signInSetting(body: SignInResult?) {
+
         //토큰 설정
         UserData.token = body!!.token //토큰 세팅
 
-        if(body.SocialEmailList.isEmpty()){
+        if (body.SocialEmailList.isEmpty()) {
             val intent = Intent(context, AccountActivity::class.java)
             startActivity(intent)
-        }else {
+        } else {
             //신뢰할 수 있는 리스트 설정
             UserData.trustList = body!!.EmailList
+            AccountData.accountList = ArrayList()
 
             //소셜 계정
-            for(data in body!!.SocialEmailList){
+            for (data in body!!.SocialEmailList) {
                 val platform = data.email.split("@")[1]
                 val email = data.email
                 var passwd = data.passwd
-                var detailData = DetailData(platform,email,passwd,null)
+
+                val count = getCount(platform, email, passwd)
+                var detailData = DetailData(platform, email, passwd, count)
                 AccountData.accountList.add(detailData)
             }
 
             var intent = Intent(context, MailActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun getCount(platform: String, email: String, passwd: String): Int {
+
+        var authentication = Authenticator()
+
+        val t = Thread(Runnable {
+            authentication.authen(platform, email, passwd)
+        })
+
+        t.start()
+
+        while(t.isAlive){}
+
+        return count
+
     }
 
 

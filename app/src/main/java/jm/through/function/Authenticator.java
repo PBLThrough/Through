@@ -48,6 +48,7 @@ public class Authenticator {
             IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX"); // This doesn't work for other email account
             folder.open(Folder.READ_ONLY);
             count = folder.getMessageCount();
+            Log.v("countcount2",String.valueOf(count));
         } catch (Exception e) {
             e.printStackTrace();
             return false;

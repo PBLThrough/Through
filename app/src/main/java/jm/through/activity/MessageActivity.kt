@@ -66,6 +66,8 @@ class MessageActivity : AppCompatActivity() {
             val intent = getIntent();
             val a =intent.extras["position"] as Int
             Log.v("intent ", " is " + a)
+
+            //TODO 여기 한번씩 null exception 나니까 null 처리 해줘
             val getSubject = readList[a].mailTitle // subject
             val getDate = readList[a].mailDate // date
             val getContents = readList[a].mailContent

@@ -235,6 +235,7 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
         uAdapter = UserAdapter(accountList)
         user_recycler.adapter = uAdapter
+        uAdapter.notifyDataSetChanged()
         uAdapter.setOnItemClickListener(this@MailActivity)
         user_recycler.layoutManager = LinearLayoutManager(this)
 
