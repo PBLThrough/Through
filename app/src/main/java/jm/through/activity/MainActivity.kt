@@ -15,7 +15,15 @@ import android.util.Log
 import android.widget.Toast
 import jm.through.AccountData
 import jm.through.R
+import jm.through.UserData
+import jm.through.data.*
+import jm.through.data.SignInResult.SocialEmailData
+import jm.through.network.ApplicationController
+import jm.through.network.ApplicationController.Companion.context
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.security.Permission
 
 class MainActivity : AppCompatActivity() {
@@ -66,24 +74,59 @@ class MainActivity : AppCompatActivity() {
             var id = edit_id.text.toString()
             var pwd = edit_pwd.text.toString()
 
-            if (id != "" && pwd != "") {
-                if (id == sp_id && pwd == sp_pwd) {
+            signIn(id, pwd)
 
-                    if (AccountData.accountList.isEmpty()) {
-                        val intent = Intent(this, AccountActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        var intent = Intent(applicationContext, MailActivity::class.java)
-                        startActivity(intent)
+        }
+    }
+
+    fun signIn(id: String, pwd: String) {
+
+        if (id != "" && pwd != "") {
+            val networkService = ApplicationController.instance!!.networkService
+            val signInData = SignInData(id, pwd)
+            val signInCallBack = networkService!!.signIn(signInData)
+
+            signInCallBack.enqueue(object : Callback<SignInResult> {
+                override fun onResponse(call: Call<SignInResult>, response: Response<SignInResult>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(applicationContext, "로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+                        signInSetting(response.body())
                     }
-
-
-                } else {
-                    Toast.makeText(applicationContext, "아이디나 패스워드가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(applicationContext, "아이디와 패스워드를 입력하세요", Toast.LENGTH_SHORT).show()
+
+                override fun onFailure(call: Call<SignInResult>, t: Throwable) {
+                    Toast.makeText(ApplicationController.context, "네트워크가 원할하지 않습니다.", Toast.LENGTH_SHORT).show()
+                }
+
+            })
+        } else {
+            Toast.makeText(applicationContext, "아이디와 패스워드를 입력하세요", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    fun signInSetting(body: SignInResult?) {
+        //토큰 설정
+        UserData.token = body!!.token //토큰 세팅
+
+        if(body.SocialEmailList.isEmpty()){
+            val intent = Intent(context, AccountActivity::class.java)
+            startActivity(intent)
+        }else {
+            //신뢰할 수 있는 리스트 설정
+            UserData.trustList = body!!.EmailList
+
+            //소셜 계정
+            for(data in body!!.SocialEmailList){
+                val platform = data.email.split("@")[1]
+                val email = data.email
+                var passwd = data.passwd
+                var detailData = DetailData(platform,email,passwd,null)
+                AccountData.accountList.add(detailData)
             }
+
+            var intent = Intent(context, MailActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -100,34 +143,13 @@ class MainActivity : AppCompatActivity() {
     /**뒤로가기키 메인에서 누를 시 다이얼로그 출력**/
     override fun onBackPressed() {
 
-        Log.v("MainActivity : ","onBackPressed Called")
+        Log.v("MainActivity : ", "onBackPressed Called")
 
         Toast.makeText(applicationContext, "메인 뒤로가기", Toast.LENGTH_SHORT);
         super.onBackPressed();
 
         Toast.makeText(applicationContext, "종료", Toast.LENGTH_SHORT)
         finish()
-
-
-//        @Override
-//        public void onBackPressed() {
-//            if ( pressedTime == 0 ) {
-//                Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
-//                pressedTime = System.currentTimeMillis();
-//            }
-//            else {
-//                int seconds = (int) (System.currentTimeMillis() - pressedTime);
-//
-//                if ( seconds > 2000 ) {
-//                    Toast.makeText(MainActivity.this, " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
-//                    pressedTime = 0 ;
-//                }
-//                else {
-//                    super.onBackPressed();
-////                finish(); // app 종료 시키기
-//                }
-//            }
-//        }
 
 
     }

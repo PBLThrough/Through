@@ -9,11 +9,11 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface NetworkService {
-    //회원가입
+    //회원가입 -> 완료
     @POST("signup")
     fun signUp(@Body signUpData: SignUpData): Call<SignUpResult>
 
-    //로그인
+    //로그인 -> 완료
     @POST("signin")
     fun signIn(@Body signInData: SignInData): Call<SignInResult>
 

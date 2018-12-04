@@ -50,6 +50,7 @@ class SignActivity : AppCompatActivity() {
                 signUp()
             }
 
+
         }
 
     }
