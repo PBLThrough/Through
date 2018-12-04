@@ -7,6 +7,10 @@
     <color name="whiteColor">#ffffff</color>
     <color name="blackColor">#000000</color>
     <color name="grayColor">#BDBDBD</color>
+    <color name="settingColor">#F4F4F4</color>
+    <color name="settingTextColor">#626262</color>
+
+
 
     <color name ="mainColor">#98b3da</color>
     <color name="colorStatus">#a5bbd6</color>

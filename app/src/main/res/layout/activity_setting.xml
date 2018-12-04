@@ -8,16 +8,54 @@
     tools:context=".activity.SettingActivity">
 
     <include
+        layout="@layout/app_bar_mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/app_bar_mail"
-        ></include>
+        android:background="@color/settingColor">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:textColor="@color/settingTextColor"
+            android:gravity="bottom"
+            android:text="내 계정"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/setting_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"></android.support.v7.widget.RecyclerView>
 
+    <RelativeLayout
+        android:id="@+id/account_add_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recycler_layout"
+        android:layout_margin="10dp">
+
+        <ImageButton
+            android:id="@+id/setting_add_btn"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/add2"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/setting_add_btn"
+            android:text="계정 추가"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
 </LinearLayout>
