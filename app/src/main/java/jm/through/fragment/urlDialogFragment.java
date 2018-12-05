@@ -40,6 +40,7 @@ import jm.through.activity.MessageActivity;
 public class urlDialogFragment extends DialogFragment {
     static String url;
     static boolean flag = false;
+
     /**
      * 각종 뷰 변수 선언
      */
@@ -61,7 +62,6 @@ public class urlDialogFragment extends DialogFragment {
     Bitmap currentImage;
 
 
-
     /**
      * mWebViewClient 에서 url을 가져오기
      */
@@ -74,6 +74,8 @@ public class urlDialogFragment extends DialogFragment {
      */
     public static boolean checkFlag() { return flag; }
 
+
+
     public static urlDialogFragment newInstance() {
         return new urlDialogFragment();
     }
@@ -82,6 +84,7 @@ public class urlDialogFragment extends DialogFragment {
         builder = new AlertDialog.Builder(getActivity());
 
         v = LayoutInflater.from(getActivity()).inflate(R.layout.dialogfragment, null);
+
         web_image_Imageview = v.findViewById(R.id.web_image);
         web_title_textview = v.findViewById(R.id.web_title);
         web_contents_textview = v.findViewById(R.id.web_contents);
@@ -171,6 +174,7 @@ public class urlDialogFragment extends DialogFragment {
                         }
                     }
                 });
+
             }
         }
     };

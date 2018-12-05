@@ -9,11 +9,16 @@ import android.widget.Toast
 import com.pchmn.EmailValidator
 import jm.through.AccountData.accountList
 import jm.through.R
+import jm.through.UserData
+import jm.through.data.*
 import jm.through.fragment.AddDialogFragment
 import jm.through.function.Authenticator
 import jm.through.function.Authenticator.count
-import jm.through.data.DetailData
+import jm.through.network.ApplicationController
 import kotlinx.android.synthetic.main.activity_add_account.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AddAccountActivity : AppCompatActivity() {
     var id: String = ""
@@ -99,23 +104,24 @@ class AddAccountActivity : AppCompatActivity() {
             //계정 인증에 성공했을 시 -> 저장
             if (check) {
 
-                //새로운 게정 정보
-                val newAccount = DetailData(host, id, pass, count)
+                //서버용
+                val serverAccount = AddAccountData(id, pass, UserData.token)
+
+                //로컬용
+                val localAccount = DetailData(host, id, pass, count)
+
 
                 //중복처리
-                if (accountList.contains(newAccount)) {
+                if (accountList.contains(localAccount)) {
+                    //중복이면 저장불가하게 막기(이게 편할 것 같음)
                     val dialog = AddDialogFragment()
-
                     var bundle = Bundle()
-                    bundle.putParcelable("newData", newAccount)
+                    bundle.putParcelable("newData", localAccount)
                     dialog.arguments = bundle
                     dialog.show(supportFragmentManager, "중복 다이얼로그")
                 } else {
-                    accountList.add(newAccount)
-                    var intent = Intent(applicationContext, MailActivity::class.java)
-                    startActivity(intent)
-                    finish()
-
+                    //중복이 아니면 서버 통신
+                    addAccount(serverAccount,localAccount)
                 }
 
             } else {
@@ -132,6 +138,37 @@ class AddAccountActivity : AppCompatActivity() {
             check = authenticator.authen(host, id, pass)
             return null
         }
+    }
+
+    fun addAccount(data1: AddAccountData, data2:DetailData) {
+        // accountList.add()
+
+        val networkService = ApplicationController.instance!!.networkService
+        val addAccountData = data1
+        val addAccountCallback = networkService!!.addAccount(addAccountData)
+
+        addAccountCallback.enqueue(object : Callback<AddAccountResult> {
+            override fun onResponse(call: Call<AddAccountResult>, response: Response<AddAccountResult>) {
+                if (response.isSuccessful) {
+                    //로컬에 저장하고 나중에 로그인 다시하면 서버에 저장되게
+                    accountList.add(data2)
+                    Toast.makeText(applicationContext, "계정 추가 완료", Toast.LENGTH_SHORT).show()
+                    var intent = Intent(ApplicationController.context,  MailActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+
+            override fun onFailure(call: Call<AddAccountResult>, t: Throwable) {
+                Toast.makeText(ApplicationController.context, "네트워크가 원할하지 않습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+
+        var intent = Intent(applicationContext, MailActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {

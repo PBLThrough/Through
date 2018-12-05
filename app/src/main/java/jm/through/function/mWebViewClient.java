@@ -21,6 +21,7 @@ public class mWebViewClient extends WebViewClient {
     static String firstUrl;
     int count = 0;
 
+
     public mWebViewClient(Context context){
         this.context = context;
     }
@@ -148,6 +149,7 @@ public class mWebViewClient extends WebViewClient {
         Log.v("webview","shouldOverrideUrlLoading");
         count++;
 
+
         //다이얼로그 띄우기
         ((MessageActivity) context).showDialog(url);
 
@@ -156,6 +158,9 @@ public class mWebViewClient extends WebViewClient {
 
         return true;
     }
+
+
+
 
 }
 

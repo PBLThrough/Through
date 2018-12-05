@@ -23,11 +23,15 @@ import android.widget.TextView
 import android.widget.Toast
 import com.pchmn.materialchips.adapter.ChipsAdapter.mChipList
 import jm.through.AccountData.accountList
+import jm.through.UserData
 import jm.through.adapter.AttachAdapter
-import jm.through.data.AttachData
-import jm.through.data.DetailData
+import jm.through.data.*
 import jm.through.function.MailSender
 import jm.through.fragment.SendBarFragment
+import jm.through.network.ApplicationController
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.net.URISyntaxException
 
@@ -36,7 +40,7 @@ class SendActivity : AppCompatActivity() {
     lateinit var rAdapter: AttachAdapter //recycler연결시킬 adapter
     lateinit var barTitle: TextView
     lateinit var spinBtn: ImageButton
-    lateinit var accountinfo:DetailData
+    lateinit var accountinfo: DetailData
     var context: Context = this
     val REQ_PICK_CODE = 100
     var attach_uri: String? = null
@@ -69,6 +73,9 @@ class SendActivity : AppCompatActivity() {
             startActivityForResult(intent, REQ_PICK_CODE)
 
         }
+
+        //주소록 버튼 눌렀을 시
+        adressBtn.setOnClickListener {}
 
         //인텐트 있으면
 
@@ -143,7 +150,7 @@ class SendActivity : AppCompatActivity() {
     }
 
     //클릭 후 메뉴 받아주기
-    fun closeRecycler(){
+    fun closeRecycler() {
         ObjectAnimator.ofFloat(spinBtn, "rotation", if (click) 180f else 0f).start()
         val fm = supportFragmentManager
         val tr = fm.beginTransaction()
@@ -235,8 +242,6 @@ class SendActivity : AppCompatActivity() {
         Thread {
             run {
                 try {
-                    Log.v("start sending", attach_list.toString())
-
                     var recipientList = ArrayList<String>()
 
                     for (chip in mChipList) {
@@ -253,6 +258,7 @@ class SendActivity : AppCompatActivity() {
 
                     if (flag) {
                         this.runOnUiThread { Toast.makeText(this, "메일 전송 성공", Toast.LENGTH_SHORT).show() }
+                        addTrustList(recipientList)
                     } else {
                         this.runOnUiThread { Toast.makeText(this, "메일 발송 실패", Toast.LENGTH_SHORT).show() }
                     }
@@ -262,6 +268,34 @@ class SendActivity : AppCompatActivity() {
             }
         }.start()
 
+
+
+    }
+
+    fun addTrustList(recipientList: ArrayList<String>) {
+        /**서버 통신 -> 신뢰 리스트 서버로 보내기*/
+
+        val networkService = ApplicationController.instance!!.networkService
+        val addTrustData = AddTrustData()
+        addTrustData.token = UserData.token
+        addTrustData.list = recipientList
+
+        val addTrustCallback = networkService!!.addTrustList(addTrustData)
+
+        addTrustCallback.enqueue(object : Callback<AddTrustResult> {
+            override fun onResponse(call: Call<AddTrustResult>, response: Response<AddTrustResult>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(applicationContext, "신뢰리스트에 추가되었습니다", Toast.LENGTH_SHORT).show()
+                }else {
+                    Log.v("messagemessage2",response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<AddTrustResult>, t: Throwable) {
+                Log.v("messagemessage3", t.message)
+            }
+
+        })
 
     }
 

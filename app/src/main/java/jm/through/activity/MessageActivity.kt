@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
 import jm.through.R
@@ -28,6 +29,8 @@ import jm.through.function.mWebViewClient
 
 class MessageActivity : AppCompatActivity() {
 
+    lateinit var mWebViewClient:WebViewClient
+    lateinit var urlDialogFragment: urlDialogFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
@@ -49,7 +52,9 @@ class MessageActivity : AppCompatActivity() {
         webSettings.defaultTextEncodingName = "UTF-8"
         webSettings.setBuiltInZoomControls(false) // 확대 축소 기능
         webSettings.setLoadsImagesAutomatically(true)
-        mWebView.webViewClient = mWebViewClient(this)
+
+        mWebViewClient = jm.through.function.mWebViewClient(this)
+        mWebView.webViewClient = mWebViewClient
 
 
 
@@ -61,6 +66,8 @@ class MessageActivity : AppCompatActivity() {
             val intent = getIntent();
             val a =intent.extras["position"] as Int
             Log.v("intent ", " is " + a)
+
+            //TODO 여기 한번씩 null exception 나니까 null 처리 해줘
             val getSubject = readList[a].mailTitle // subject
             val getDate = readList[a].mailDate // date
             val getContents = readList[a].mailContent
@@ -164,6 +171,7 @@ class MessageActivity : AppCompatActivity() {
         finish()
     }
 
+
     fun showDialog(url:String){
         var urlDialogFragment = urlDialogFragment()
         Log.v("showDialog","Dialog show")
@@ -171,6 +179,7 @@ class MessageActivity : AppCompatActivity() {
             urlDialogFragment.show(supportFragmentManager,"미리보기")
         }
     }
+
 }
 
 

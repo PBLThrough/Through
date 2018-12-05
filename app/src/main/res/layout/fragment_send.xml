@@ -44,23 +44,17 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/text_receiver"
             android:layout_weight="1"
-            app:chip_deletable="false"
+            app:chip_deletable="true"
             app:chip_detailed_backgroundColor="#ffffff"
             app:chip_detailed_textColor="#000000"
             app:chip_hasAvatarIcon="false"></com.pchmn.materialchips.ChipsInput>
 
 
         <ImageButton
-            android:id="@+id/toMeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp" />
-
-        <ImageButton
             android:id="@+id/adressBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:background="@drawable/phonebook"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="right|center_vertical" />
     </LinearLayout>
 

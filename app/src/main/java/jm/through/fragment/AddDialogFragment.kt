@@ -14,7 +14,6 @@ import jm.through.activity.MailActivity
 import jm.through.data.DetailData
 
 class AddDialogFragment : DialogFragment() {
-    lateinit var data: DetailData
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var builder: Builder = AlertDialog.Builder(activity!!)
@@ -22,18 +21,10 @@ class AddDialogFragment : DialogFragment() {
 
         var dialogView = LayoutInflater.from(activity).inflate(R.layout.double_account_dialog, null)
         var cancelBtn = dialogView.findViewById(R.id.btn_cancle) as Button
-        var okBtn = dialogView.findViewById(R.id.btn_ok) as Button
 
         dialog = builder.create()
         dialog!!.setView(dialogView)
 
-        okBtn.setOnClickListener {
-            dialog.dismiss()
-            accountList.add(data)
-            val intent = Intent(activity, MailActivity::class.java)
-            startActivity(intent)
-            activity!!.finish()
-        }
 
         cancelBtn.setOnClickListener{
             dialog.dismiss()
