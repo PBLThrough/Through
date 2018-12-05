@@ -44,7 +44,7 @@ public class FolderFetchImap extends javax.mail.Authenticator{
 
     //String[] args
     public ArrayList<ReadData> readImapMail(String username, String password) {
-        readList.clear();
+        //readList.clear();
         final String id = username;
         final String pass = password;
         final String host = "imap." + username.split("@")[1]; // port = 993
