@@ -91,8 +91,8 @@ public class FolderFetchImap extends javax.mail.Authenticator{
             System.out.println("FolderFetchItem on!!");
 
             int start = messages.length - 1;
-            if(callMoreMails) start -= 20;
-            int end = start - 20;
+            if(callMoreMails) start -= 5;
+            int end = start - 5;
 
                 for (int i = start; i > end; i--) {
                     Log.v("index", savedIndex.toString() + index.toString());

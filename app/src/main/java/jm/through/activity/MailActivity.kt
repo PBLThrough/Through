@@ -16,6 +16,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import jm.through.AccountData
 import jm.through.AccountData.accountList
 import jm.through.AccountData.selectedData
@@ -31,8 +32,6 @@ import kotlin.collections.ArrayList
 
 
 class MailActivity : AppCompatActivity(), View.OnClickListener {
-    var list_lastitemcheck = false;
-
     var click = true
     val context = this
     lateinit var uAdapter: UserAdapter
@@ -83,6 +82,10 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    fun fetchTimeLineAsync(page:Int){
+
+    }
+
     private fun readEmail() {
         val swipeRefresh = findViewById(R.id.swipeRefresh) as SwipeRefreshLayout
 
@@ -93,14 +96,13 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         //스레드 & 핸들러, mHandler.post이후에 UI작업
         val mHandler = Handler()
         val t = Thread(Runnable {
-
             var reader = FolderFetchImap()
+
             reader.setIndex(readId)
             Log.v("정보", readId + readPass)
 
             reader.readImapMail(readId, readPass)
-
-            mHandler.post {
+            fun adapting(){
                 try {
                     Log.v("listlist", readList.toString())
                     rAdapter = ReadAdapter(readList)
@@ -110,18 +112,32 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                     recycler.adapter = rAdapter
                     recycler.layoutManager = LinearLayoutManager(context)
 
-                    swipeRefresh.setOnRefreshListener { this }
-
-                    /** 여기에 리사이클러뷰 .addOnScrollListener 추가 */
-
                     read_progress.visibility = View.INVISIBLE
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Log.v("fail", "")
                 }
             }
+
+            /** 새로고침용 코드에 adapting() 코드 씀, 처음 시작할 때와 새로고침 시 adapting 코드를 부름*/
+            swipeRefresh.setOnRefreshListener {
+                Handler().postDelayed(Runnable {
+                    swipeRefresh.isRefreshing = false
+                }, 4000)
+                adapting()
+                swipeRefresh.isRefreshing = false
+                fetchTimeLineAsync(0);
+            }
+
+            swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,android.R.color.holo_orange_light, android.R.color.holo_red_light)
+
+            mHandler.post {
+                adapting()
+            }
         })
         t.start()
+
 
     }
 
@@ -301,7 +317,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
-            System.out.println("mailActivity-background loading..");
             return null
         }
 
