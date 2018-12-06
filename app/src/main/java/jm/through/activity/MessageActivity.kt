@@ -56,8 +56,6 @@ class MessageActivity : AppCompatActivity() {
         mWebViewClient = jm.through.function.mWebViewClient(this)
         mWebView.webViewClient = mWebViewClient
 
-
-
         val df = SimpleDateFormat("yyyy.MM.dd EE, aa hh:mm")
 
         /** 메일 요소 변수로 가져오기 */
@@ -68,11 +66,13 @@ class MessageActivity : AppCompatActivity() {
             Log.v("intent ", " is " + a)
 
             //TODO 여기 한번씩 null exception 나니까 null 처리 해줘
-            val getSubject = readList[a].mailTitle // subject
-            val getDate = readList[a].mailDate // date
-            val getContents = readList[a].mailContent
-            val getContenttype = readList[a].mailContenttype
-            val mTime = df.format(getDate)
+            var getSubject = readList[a].mailTitle  // subject
+            var getDate = readList[a].mailDate // date
+            var getContents = readList[a].mailContent
+            var getContenttype = readList[a].mailContenttype
+            var mTime = df.format(getDate)
+
+            if(getSubject ==null) getSubject = "제목 없음"
 
             dateString.text = mTime
             titleString.text = getSubject

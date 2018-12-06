@@ -11,23 +11,28 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_mail.*
 import kotlinx.android.synthetic.main.app_bar_mail.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.AbsListView
+import android.widget.Adapter
 import android.widget.Toast
 import jm.through.AccountData
 import jm.through.AccountData.accountList
 import jm.through.AccountData.selectedData
 import jm.through.R
 import jm.through.adapter.ReadAdapter
+import jm.through.data.ReadData
 import jm.through.function.FolderFetchImap
 import jm.through.function.FolderFetchImap.callMoreMails
 import jm.through.read.*
 import jm.through.function.FolderFetchImap.readList
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.nav_header_mail.*
+import javax.mail.Folder
 import kotlin.collections.ArrayList
 
 
@@ -38,6 +43,14 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var rAdapter: ReadAdapter
     var readId = ""
     var readPass = ""
+
+    var previousTotal = 0;
+    var loading = true;
+    var visibleThreshold = 300; /** 메일 불러오기 한계 300개 */
+    var visibleItemCount = 0
+    var totalItemCount = 0
+    var firstVisibleItem = 0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,14 +90,11 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
             startActivity(intent)
         }
 
-            readSetting()
+        readSetting()
 
 
     }
 
-    fun fetchTimeLineAsync(page:Int){
-
-    }
 
     private fun readEmail() {
         val swipeRefresh = findViewById(R.id.swipeRefresh) as SwipeRefreshLayout
@@ -95,58 +105,85 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
         //스레드 & 핸들러, mHandler.post이후에 UI작업
         val mHandler = Handler()
-        val t = Thread(Runnable {
-            var reader = FolderFetchImap()
 
-            reader.setIndex(readId)
-            Log.v("정보", readId + readPass)
+        fun adapting(){
+            try {
+                //Log.v("listlist", readList.toString())
+                rAdapter = ReadAdapter(readList)
+                rAdapter.notifyDataSetChanged()
+                rAdapter.setOnItemClickListener(context)
 
-            reader.readImapMail(readId, readPass)
-            fun adapting(){
-                try {
-                    Log.v("listlist", readList.toString())
-                    rAdapter = ReadAdapter(readList)
-                    rAdapter.notifyDataSetChanged()
-                    rAdapter.setOnItemClickListener(context)
+                recycler.adapter = rAdapter
+                recycler.layoutManager = LinearLayoutManager(context)
 
-                    recycler.adapter = rAdapter
-                    recycler.layoutManager = LinearLayoutManager(context)
+                read_progress.visibility = View.INVISIBLE
 
-                    read_progress.visibility = View.INVISIBLE
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.v("fail", "")
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.v("fail", "")
+            }
+        }
+
+        fun callThread() {
+            val t = Thread(Runnable {
+                var reader = FolderFetchImap()
+
+                reader.setIndex(readId)
+                reader.setState(true)
+                //Log.v("정보", readId + readPass)
+                reader.readImapMail(readId, readPass)
+
+                mHandler.post {
+                    adapting()
+                }
+            })
+            t.start()
+        }
+
+        callThread()
+
+        /** 새로고침용 코드에 adapting() 코드 씀, 처음 시작할 때와 새로고침 시 adapting 코드를 부름*/
+        swipeRefresh.setOnRefreshListener {
+            Handler().postDelayed(Runnable {
+                swipeRefresh.isRefreshing = false
+            }, 4000)
+            adapting()
+            swipeRefresh.isRefreshing = false
+
+        }
+
+        swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light)
+
+
+        /** 스크롤 시 더 불러오기 */
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if(!recycler.canScrollVertically(1)){
+                    visibleItemCount = recycler.layoutManager.childCount
+                    totalItemCount = recycler.layoutManager.itemCount
+                    firstVisibleItem = LinearLayoutManager(context).findFirstVisibleItemPosition()
+
+                    if (loading) {
+                        if (totalItemCount > previousTotal) {
+                            previousTotal = totalItemCount
+                            loading = false
+                        }
+                    }
+                    if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                        val initialsize = readList.size
+                        callThread()
+                        recycler.post { rAdapter.notifyItemRangeInserted(initialsize, initialsize) }
+                        loading = true
+                    }
                 }
             }
-
-            /** 새로고침용 코드에 adapting() 코드 씀, 처음 시작할 때와 새로고침 시 adapting 코드를 부름*/
-            swipeRefresh.setOnRefreshListener {
-                Handler().postDelayed(Runnable {
-                    swipeRefresh.isRefreshing = false
-                }, 4000)
-                adapting()
-                swipeRefresh.isRefreshing = false
-                fetchTimeLineAsync(0);
-            }
-
-            swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,
-                    android.R.color.holo_green_light,android.R.color.holo_orange_light, android.R.color.holo_red_light)
-
-            mHandler.post {
-                adapting()
-            }
         })
-        t.start()
-
 
     }
 
-    /** 밑으로 스크롤 시 메일 20개 추가 */
-    fun onLoadMore(){
-        read_progress.visibility = View.VISIBLE
-        //callMoreMails = true;
-        //readEmail();
-    }
 
     /** 뷰 클릭 이벤트 **/
     override fun onClick(v: View?) {
@@ -184,14 +221,9 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
                         Log.v("hihihi", "눌렷음")
                         readEmail()
                     }
-
                 }
             }
-
-
         }
-
-
     }
 
 
@@ -237,7 +269,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
 
     fun navSetting() {
         //드로어 첫 화면
-
         val navList = ArrayList<NavData>()
 
         if (navList.size == 0) {
@@ -296,40 +327,6 @@ class MailActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
-
-    inner class ReadTask : AsyncTask<Void, Void, Void>() {
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            read_progress.visibility = View.INVISIBLE
-            try {
-                Log.v("listlist",readList.toString());
-                rAdapter = ReadAdapter(readList)
-                rAdapter.notifyDataSetChanged()
-                rAdapter.setOnItemClickListener(context)
-                recycler.adapter = rAdapter
-                recycler.layoutManager = LinearLayoutManager(context)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.v("fail", "")
-            }
-        }
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            return null
-        }
-
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            readList.clear()
-            if (read_progress.visibility == View.INVISIBLE) {
-                read_progress.visibility = View.VISIBLE
-            }
-        }
-
-    }
 
     //onStop상태에서 돌아올 때, onRestart->onStart-> onResume
     override fun onRestart() {

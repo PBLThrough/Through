@@ -62,4 +62,9 @@ class ReadAdapter(var dataList: ArrayList<ReadData>): RecyclerView.Adapter<ReadV
     }
 
 
+    fun addMoreItems(location:Int, newItems:ArrayList<ReadData>){
+        this.dataList.addAll(location, newItems)
+        notifyDataSetChanged()
+    }
+
 }
