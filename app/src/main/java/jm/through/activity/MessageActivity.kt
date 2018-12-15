@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import jm.through.R
@@ -28,7 +30,6 @@ import jm.through.function.mWebViewClient
  */
 
 class MessageActivity : AppCompatActivity() {
-
     lateinit var mWebViewClient:WebViewClient
     lateinit var urlDialogFragment: urlDialogFragment
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,6 @@ class MessageActivity : AppCompatActivity() {
         /** 툴바 적용 */
         val t = findViewById(R.id.message_bar) as Toolbar
         setSupportActionBar(t)
-        supportActionBar!!.setTitle("메일 확인")
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         /** message xml 변수 */
@@ -154,6 +154,12 @@ class MessageActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.readbar, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item != null) {
             when (item.itemId) {
@@ -161,6 +167,10 @@ class MessageActivity : AppCompatActivity() {
                     finish()
                     return true
                 }
+
+        /** 이곳에다 toolbar item 추가해야하는데 불러오지 못함
+         * toolbar item = res/menu/readbar */
+
             }
         }
         return super.onOptionsItemSelected(item)

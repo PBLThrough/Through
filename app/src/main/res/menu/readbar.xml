@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/message_resend"
+        android:icon="@drawable/ic_menu_share"
+        android:title="전달"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/message_answer"
+        android:icon="@drawable/ic_menu_send"
+        android:title="답장"
+        app:showAsAction="ifRoom"/>
+</menu>
