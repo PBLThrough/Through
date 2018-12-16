@@ -356,6 +356,8 @@ class SendActivity : AppCompatActivity() {
         addTrustCallback.enqueue(object : Callback<AddTrustResult> {
             override fun onResponse(call: Call<AddTrustResult>, response: Response<AddTrustResult>) {
                 if (response.isSuccessful) {
+                    Log.v("status",response.code().toString())
+
                     when (response.code()) {
                         200 -> {
                             for ( i in recipientList){
@@ -371,6 +373,7 @@ class SendActivity : AppCompatActivity() {
                         409 -> {
                             Log.v("status 409", "중복된 유저입니다")
                         }
+
                     }
 
                 }

@@ -6,32 +6,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import jm.through.R
+import jm.through.activity.TrustActivity
 import jm.through.data.SignInResult
-import jm.through.fragment.SendBarFragment
-import jm.through.viewholder.SendBarViewHolder
+import jm.through.viewholder.TrustViewHolder
 
-class TrustAdapter(var context: Context, var dataList:ArrayList<SignInResult.EmailData>): RecyclerView.Adapter<SendBarViewHolder>() {
+class TrustAdapter(var context: Context, var dataList:ArrayList<SignInResult.EmailData>): RecyclerView.Adapter<TrustViewHolder>() {
 
-    private var onItemClick: View.OnClickListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SendBarViewHolder {
-        val sendBarItemView: View = LayoutInflater.from(parent!!.context).inflate(R.layout.sendbar_item,parent,false)
-        sendBarItemView.setOnClickListener(onItemClick)
-        return SendBarViewHolder(sendBarItemView)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TrustViewHolder {
+        val trustView: View = LayoutInflater.from(parent!!.context).inflate(R.layout.trust_item,parent,false)
+        return TrustViewHolder(trustView)
     }
 
 
-    override fun onBindViewHolder(holder: SendBarViewHolder?, position: Int) {
-        //holder!!.email_text.text = dataList.get(position).id
+    override fun onBindViewHolder(holder: TrustViewHolder?, position: Int)  {
+        holder!!.trustEmail.text = dataList.get(position).email
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    fun setOnItemClickListenr(l: SendBarFragment){
-        onItemClick = l
-    }
+
 
 
 }

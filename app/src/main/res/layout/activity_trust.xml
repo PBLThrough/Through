@@ -7,11 +7,12 @@
     android:orientation="vertical"
     tools:context=".activity.TrustActivity">
 
+
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/app_bar_mail"
-        ></include>
+        layout="@layout/app_bar_mail"></include>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/trust_recycler"
