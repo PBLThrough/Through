@@ -358,7 +358,12 @@ class SendActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     when (response.code()) {
                         200 -> {
-                            Toast.makeText(applicationContext, "신뢰리스트에 추가되었습니다", Toast.LENGTH_SHORT).show()
+                            for ( i in recipientList){
+                                var data = SignInResult().EmailData()
+                                data.email = i
+                                UserData.trustList.add(data)
+                            }
+
                         }
                         404 -> {
                             Log.v("status 404", "미확인 된 유저입니다")
