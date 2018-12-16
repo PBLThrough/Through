@@ -30,7 +30,7 @@ interface NetworkService {
     @POST("removeAccount")
     fun removeAccount(@Body removeAccountData: RemoveAccountData): Call<RemoveAccountResult>
 
-
-
+    @POST("pullOne")
+    fun deleteTrust(@Body deleteTrustData: DeleteTrustData): Call<DeleteTrustResult>
 
 }

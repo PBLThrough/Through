@@ -74,7 +74,8 @@ class SettingActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(applicationContext, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
                     Log.v("token", UserData.token)
                 } else {
-                    Toast.makeText(applicationContext, "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    //TODO 서버랑 message가 안맞음
+                    Toast.makeText(applicationContext, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
