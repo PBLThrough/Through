@@ -7,7 +7,5 @@ import jm.through.R
 
 
 class TrustViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
-    var userEmail: TextView = itemView!!.findViewById(R.id.user_email) as TextView
-    var userEmailCount: TextView = itemView!!.findViewById(R.id.user_email_count) as TextView
-
+    var trustEmail: TextView = itemView!!.findViewById(R.id.trust_text) as TextView
 }

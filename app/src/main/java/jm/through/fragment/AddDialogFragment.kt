@@ -20,7 +20,7 @@ class AddDialogFragment : DialogFragment() {
         var dialog: AlertDialog
 
         var dialogView = LayoutInflater.from(activity).inflate(R.layout.double_account_dialog, null)
-        var cancelBtn = dialogView.findViewById(R.id.btn_cancle) as Button
+        var cancelBtn = dialogView.findViewById(R.id.cancel_btn) as Button
 
         dialog = builder.create()
         dialog!!.setView(dialogView)

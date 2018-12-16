@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.pchmn.EmailValidator
@@ -147,10 +148,12 @@ class AddAccountActivity : AppCompatActivity() {
         val addAccountData = data1
         val addAccountCallback = networkService!!.addAccount(addAccountData)
 
+        //서버에 계정을 넣어주고 업데이트는 로컬로만 함(로컬 detailData)
         addAccountCallback.enqueue(object : Callback<AddAccountResult> {
             override fun onResponse(call: Call<AddAccountResult>, response: Response<AddAccountResult>) {
                 if (response.isSuccessful) {
                     //로컬에 저장하고 나중에 로그인 다시하면 서버에 저장되게
+                    Log.v("serversendEmail",data1.toString())
                     accountList.add(data2)
                     Toast.makeText(applicationContext, "계정 추가 완료", Toast.LENGTH_SHORT).show()
                     var intent = Intent(ApplicationController.context,  MailActivity::class.java)

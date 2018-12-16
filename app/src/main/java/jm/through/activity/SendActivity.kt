@@ -26,8 +26,11 @@ import jm.through.AccountData.accountList
 import jm.through.UserData
 import jm.through.adapter.AttachAdapter
 import jm.through.data.*
+import jm.through.data.SignInResult.EmailData
+import jm.through.fragment.AddDialogFragment
 import jm.through.function.MailSender
 import jm.through.fragment.SendBarFragment
+import jm.through.fragment.TrustDialogFragment
 import jm.through.network.ApplicationController
 import retrofit2.Call
 import retrofit2.Callback
@@ -75,10 +78,13 @@ class SendActivity : AppCompatActivity() {
         }
 
         //주소록 버튼 눌렀을 시
-        adressBtn.setOnClickListener {}
+        adressBtn.setOnClickListener {
+            val intent = Intent(this, TrustActivity::class.java)
+            startActivity(intent)
+        }
+
 
         //인텐트 있으면
-
         if (intent != null) {
             var detail = intent.getStringExtra("formDetail")
             email_body.setText(detail)
@@ -149,14 +155,13 @@ class SendActivity : AppCompatActivity() {
         barTitle.text = splitText[0] + "\n" + "@" + splitText[1]
     }
 
-    //클릭 후 메뉴 받아주기
+    //클릭 후 메뉴 닫아주기
     fun closeRecycler() {
         ObjectAnimator.ofFloat(spinBtn, "rotation", if (click) 180f else 0f).start()
         val fm = supportFragmentManager
         val tr = fm.beginTransaction()
         tr.remove(sendbarFragment).commit()
         click = !click
-
     }
 
 
@@ -176,6 +181,17 @@ class SendActivity : AppCompatActivity() {
                 if (mChipList.isEmpty() ||
                         edit_title.text.toString().trim() == "") {
                     Toast.makeText(this, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show()
+                } else if (!checkRecipient()) {
+
+                    var annonymousList = getRecipientList()
+
+                    val dialog = TrustDialogFragment()
+
+                    var bundle = Bundle()
+                    bundle.putStringArrayList("annymous", annonymousList)
+
+                    dialog.arguments = bundle
+                    dialog.show(supportFragmentManager, "신뢰 다이얼로그")
                 } else {
                     goMail()
                 }
@@ -185,6 +201,62 @@ class SendActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    fun getRecipientList(): ArrayList<String>? {
+
+        var checked: Boolean
+        var anonymousList = ArrayList<String>()
+
+        for (recipient in mChipList) {
+            var recipt = recipient.label
+
+            checked = false
+
+            for (i in UserData.trustList) {
+                var str = i.email
+                if (str == recipt) {
+                    checked = true
+                    break
+                }
+            }
+
+            if (!checked) {
+                anonymousList.add(recipt)
+            }
+
+        }
+
+
+        return anonymousList
+    }
+
+
+    fun checkRecipient(): Boolean {
+
+        var checked: Boolean
+
+
+        for (recipient in mChipList) {
+            var recipt = recipient.label
+
+            checked = false
+
+            for (i in UserData.trustList) {
+                var str = i.email
+                if (str == recipt) {
+                    checked = true
+                }
+            }
+
+            if (!checked) {
+                return false
+            }
+
+        }
+
+
+        return true
     }
 
 
@@ -269,7 +341,6 @@ class SendActivity : AppCompatActivity() {
         }.start()
 
 
-
     }
 
     fun addTrustList(recipientList: ArrayList<String>) {
@@ -285,14 +356,23 @@ class SendActivity : AppCompatActivity() {
         addTrustCallback.enqueue(object : Callback<AddTrustResult> {
             override fun onResponse(call: Call<AddTrustResult>, response: Response<AddTrustResult>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(applicationContext, "신뢰리스트에 추가되었습니다", Toast.LENGTH_SHORT).show()
-                }else {
-                    Log.v("messagemessage2",response.message())
+                    when (response.code()) {
+                        200 -> {
+                            Toast.makeText(applicationContext, "신뢰리스트에 추가되었습니다", Toast.LENGTH_SHORT).show()
+                        }
+                        404 -> {
+                            Log.v("status 404", "미확인 된 유저입니다")
+                        }
+                        409 -> {
+                            Log.v("status 409", "중복된 유저입니다")
+                        }
+                    }
+
                 }
             }
 
             override fun onFailure(call: Call<AddTrustResult>, t: Throwable) {
-                Log.v("messagemessage3", t.message)
+                Toast.makeText(applicationContext, "네트워크 연결이 불안정합니다.", Toast.LENGTH_SHORT).show()
             }
 
         })

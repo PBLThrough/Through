@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:id="@+id/setting_email_text"
+        android:id="@+id/trust_text"
         android:text="dream7739@naver.com"
         android:textSize="16sp"
         android:layout_marginLeft="10dp"

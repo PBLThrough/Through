@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             //신뢰할 수 있는 리스트 설정
             UserData.trustList = body!!.EmailList
+
             AccountData.accountList = ArrayList()
 
             //소셜 계정
