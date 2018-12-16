@@ -11,34 +11,19 @@
 
 
         <TextView
-            android:id="@+id/trust_title"
+            android:id="@+id/delete_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="주의"
+            android:text="연동 계정 삭제"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/trust_text"
+            android:id="@+id/sub_text"
+            android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="40dp"
-            android:text=""
-            android:textColor="@color/mainColor" />
-
-        <TextView
-            android:id="@+id/sub_text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/trust_text"
-            android:text="은 신뢰할 수 없는 계정입니다" />
-
-        <TextView
-            android:id="@+id/sub_text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sub_text1"
-            android:text="계속 진행하시겠습니까?" />
+            android:layout_below="@id/delete_title"
+            android:text="계정을 삭제하시겠습니까?" />
 
 
         <ImageView
@@ -54,13 +39,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_layout"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginRight="10dp">
 
 
         <Button
-            android:id="@+id/btn_ok"
+            android:id="@+id/delete_ok_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -70,7 +55,7 @@
 
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/delete_cancel_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
